@@ -1,0 +1,73 @@
+<div class="container">
+    <div class="panel panel-default">
+        <nav id="gcbc-toolbar" class="panel-heading">
+            <div class="col-sm-6">
+                <div class="btn-group">
+                    <button class="btn btn-default" data-toggle="tooltip" title="Nuevo free-text"><i class="glyphicon glyphicon-pencil"></i></button>
+                    <button class="btn btn-default" data-toggle="tooltip" title="Nuevo mult-choice"><i class="glyphicon glyphicon-minus"></i></button>
+                    <button class="btn btn-default" data-toggle="tooltip" title="Nuevo mult-choice-list"><i class="glyphicon glyphicon-th-list"></i></button>
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="btn-group">
+                    <button class="btn btn-default" data-toggle="tooltip" title="Nuevo free-text"><i class="glyphicon glyphicon-pencil"></i></button>
+                    <button class="btn btn-default" data-toggle="tooltip" title="Nuevo mult-choice"><i class="glyphicon glyphicon-minus"></i></button>
+                    <button class="btn btn-default" data-toggle="tooltip" title="Nuevo mult-choice-list"><i class="glyphicon glyphicon-th-list"></i></button>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+
+    <div id="questions-container" class="panel panel-default">
+        <div class="question-wrapper" ng-repeat="pregunta in preguntas">
+
+            <div class="questions-inside-left">
+                <span class="glyphicon glyphicon-move"></span>
+            </div>
+
+
+            <div class="questions-inside-right"><div class="question-wrap">
+                    <span><b>Prev HTML: </b></span>
+                    <span class="form-control" contenteditable="true" ng-bind-html="pregunta.prevHTML"></span>
+                </div>
+                <div class="question-wrap">
+                    <span><b>Pregunta: </b></span>
+                    <span class="form-control" contenteditable="true" ng-bind-html="pregunta.questionHTML"></span>
+                </div>
+
+                <!-- FreeText question -->
+                <div class="container-fluid" ng-show="pregunta.questionType == 'freetext'">
+                    <div class="col-sm-4">
+                        <input class="form-control" type="text" placeholder="Respuesta..." ng-model="pregunta.correctAnswerString">
+                    </div>
+                    <div class="col-sm-4">
+                        <input class="form-control" type="text" placeholder="Salida mal..." ng-model="pregunta.correctAnswerOutput">
+                    </div>
+                    <div class="col-sm-4">
+                        <input class="form-control" type="text" placeholder="Salida OK..." ng-model="pregunta.incorrectAnswerOutput">
+                    </div>
+                </div>
+
+
+                <!-- Multiple choice question -->
+                <div class="container-fluid multiple-choice-wrap" ng-show="pregunta.questionType == 'multiple choice'">
+                   <b>Respuestas: </b>
+                    <ul ng-repeat="choice in pregunta.choices">
+                        <li class="col-sm-4">
+                            <input class="form-control" type="text" placeholder="Texto..." ng-model="choice[0]">
+                        </li>
+                        <li class="col-sm-4"><input type="checkbox" ng-model="choice[1]"> Correcta</li>
+                        <li class="col-sm-4">
+                            <input class="form-control" type="text" placeholder="Salida..." ng-model="choice[2]">
+                        </li>
+                    </ul>
+                </div>
+
+
+                <!-- Group multiple choice question --></div>
+
+        </div>
+    </div>
+</div>
