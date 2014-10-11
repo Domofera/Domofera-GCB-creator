@@ -54,12 +54,22 @@ angular.module('gcb-creatorApp')
 
 
 
-
-
-
-
     $(function () {
         $('#gcbc-toolbar .btn').tooltip({container: 'body'});
+
+
+        // Codigo para que no interfiera el UI-Sortable con el ContentEditable
+        $('body').on('click','span[contenteditable=true]', function(){
+            $(this).focus();
+        });
+
+        $('body').on('focus','span[contenteditable=true]', function(){
+            $(this).parent().parent().parent().parent().sortable('disable');
+        });
+
+        $('body').on('blur','span[contenteditable=true]', function(){
+            $(this).parent().parent().parent().parent().sortable('enable');
+        });
     });
 
   });

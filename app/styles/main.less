@@ -1,7 +1,5 @@
 @cl-question: #258de6;
 
-html, body {margin:0;padding:0;height:100%;}
-
 main{
     min-height: 450px;
     padding: 20px 0;
@@ -12,6 +10,13 @@ main{
     }
 
     #questions-container{
+        position: relative;
+        z-index: 3;
+
+        .form-control{
+            position: relative;
+            z-index: 5;
+        }
 
         div.question-wrapper{
             width: 100%;
@@ -45,6 +50,12 @@ main{
             {
                 padding-left: 35px;
 
+                >h3{
+                    margin: 5px 0 15px 0;
+                    font-size: 22px;
+
+                }
+
                 div.question-wrap{
                     width: 100%;
                     padding: 5px 0;
@@ -60,14 +71,15 @@ main{
                     }
                     >span:last-child{
                         width: 80%;
-
-
                     }
                 }
 
-                ul>li{
-                    width: 29%;
-                    float: left;
+                ul{
+                   list-style: none;
+                    >li{
+                        width: 29%;
+                        float: left;
+                    }
                 }
             }
         }

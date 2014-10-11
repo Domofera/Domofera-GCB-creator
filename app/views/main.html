@@ -11,16 +11,16 @@
 
             <div class="col-sm-6">
                 <div class="btn-group">
-                    <button class="btn btn-default" data-toggle="tooltip" title="Nuevo free-text"><i class="glyphicon glyphicon-pencil"></i></button>
-                    <button class="btn btn-default" data-toggle="tooltip" title="Nuevo mult-choice"><i class="glyphicon glyphicon-minus"></i></button>
-                    <button class="btn btn-default" data-toggle="tooltip" title="Nuevo mult-choice-list"><i class="glyphicon glyphicon-th-list"></i></button>
+                    <button class="btn btn-default" data-toggle="tooltip" disabled="disabled" title="Negrita"><i class="glyphicon glyphicon-bold"></i></button>
+                    <button class="btn btn-default" data-toggle="tooltip" disabled="disabled" title="Italica"><i class="glyphicon glyphicon-italic"></i></button>
+                    <button class="btn btn-default" data-toggle="tooltip" disabled="disabled" title="Subrayado"><i class="glyphicon glyphicon-font"></i></button>
                 </div>
             </div>
         </nav>
     </div>
 
 
-    <div id="questions-container" class="panel panel-default">
+    <div id="questions-container" class="panel panel-default" ui-sortable ng-model="preguntas">
         <div class="question-wrapper" ng-repeat="pregunta in preguntas">
 
             <div class="questions-inside-left">
@@ -28,7 +28,10 @@
             </div>
 
 
-            <div class="questions-inside-right"><div class="question-wrap">
+            <div class="questions-inside-right">
+               <h3>Pregunta {{$index + 1}}</h3>
+
+                <div class="question-wrap">
                     <span><b>Prev HTML: </b></span>
                     <span class="form-control" contenteditable="true" ng-bind-html="pregunta.prevHTML"></span>
                 </div>
@@ -66,7 +69,13 @@
                 </div>
 
 
-                <!-- Group multiple choice question --></div>
+                <!-- Group multiple choice question -->
+                <div class="container-fluid multiple-choice-group-wrap" ng-show="pregunta.questionType == 'multiple choice group'">
+                    <b>Codigo aún por hacer: </b>
+
+                </div>
+
+            </div>
 
         </div>
     </div>
