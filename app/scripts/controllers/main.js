@@ -56,24 +56,34 @@ angular.module('gcb-creatorApp')
 
 
     var lastFocused;
+    var isFixed = false;
 
   //***** jQuery
 
     $(function () {
 
-        setTimeout(function(){ $('#questions-container').sortable('disable'); }, 1000); //Esperamos 1s para que no de error
+        //setTimeout(function(){ $('#questions-container').sortable('disable'); }, 1000); //Esperamos 1s para que no de error
         $('#gcbc-toolbar .btn').tooltip({container: 'body'}); // Seteamos el tooltip
 
+    $(window).scroll(function(){
+      if ($(this).scrollTop() > 105 && !isFixed) {
+          $('#gcbc-toolbar').hide().fadeIn(200).addClass('fixed');
+          $('#gcbc-toolbar .btn').tooltip('destroy');
+          isFixed = !isFixed;
+      } else if ($(this).scrollTop() <= 115 && isFixed){
+          $('#gcbc-toolbar').hide().fadeIn(200).removeClass('fixed');
+          $('#gcbc-toolbar .btn').tooltip({container: 'body'});
+          isFixed = !isFixed;
+      }
+  });
 
-        // Codigo para que no interfiera el UI-Sortable con el ContentEditable
-        $('body').on('mouseenter','.questions-inside-left', function(){
-            $(this).parent().parent().sortable('enable');
-        });
-        $('body').on('click','.questions-inside-left', function(){
-            $(this).parent().parent().sortable('enable');
+
+    // Codigo para que no interfiera el UI-Sortable con el ContentEditable
+        $('body').on('mouseenter mousedown','.questions-inside-left', function(){
+            $('#questions-container').sortable('enable');
         });
         $('body').on('mouseleave','.questions-inside-left', function(){
-            $(this).parent().parent().sortable('disable');
+            $('#questions-container').sortable('disable');
         });
 
 
@@ -82,6 +92,13 @@ angular.module('gcb-creatorApp')
         // Controlar los disabled de los botones
         $('body').on('focus','span[contenteditable=true]', function(){
             lastFocused = $(this);
+            $('#questions-container').sortable('disable');
+        })
+        .on('click','span[contenteditable=true]', function(){
+            $(this).focus();
+        })
+        .on('blur','span[contenteditable=true]', function(){
+            $('#questions-container').sortable('enable');
         });
 
         $('body').on('mouseenter','#editor-buttons>button, span[contenteditable=true]', function(){

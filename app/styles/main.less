@@ -1,23 +1,34 @@
 @cl-question: #258de6;
 @cl-question-font: #fff;
 
+@cl-nav-fixed: #444; //#e66519
+
 main{
     min-height: 450px;
     padding: 20px 0;
+
+    .panel.panel-default{
+        min-height: 45px;
+    }
 
     nav#gcbc-toolbar{
         padding: 5px 0;
         overflow: hidden;
     }
 
-    #questions-container{
-        position: relative;
-        z-index: 3;
+    #gcbc-toolbar.fixed{
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%;
+        transition: all 0.2s ease;
+        z-index: 5;
+        background: @cl-nav-fixed;
+        border: 1px solid darken(@cl-nav-fixed, 5%);
+        margin: 0 auto;
+        border-radius: 5px;
+    }
 
-        .form-control{
-            position: relative;
-            z-index: 5;
-        }
+    #questions-container{
 
         div.question-wrapper{
             width: 100%;
