@@ -1,4 +1,5 @@
 @cl-question: #258de6;
+@cl-question-font: #fff;
 
 main{
     min-height: 450px;
@@ -28,15 +29,16 @@ main{
             padding: 10px 15px;
             overflow: hidden;
 
+      // Panel izquierdo para mover
             .questions-inside-left{
                 position: absolute;
                 top: 50%;
                 left: 0;
                 transform: translateY(-50%);
                 background: @cl-question;
-                width: 30px;
+                width: 40px;
                 height: 100%;
-                color: white;
+                color: @cl-question-font;
                 cursor: move;
 
                 &>span{
@@ -46,14 +48,34 @@ main{
                 }
             }
 
+      // Panel derecho, donde van las preguntas
             .questions-inside-right
             {
-                padding-left: 35px;
+                padding-left: 40px;
 
                 >h3{
                     margin: 5px 0 15px 0;
                     font-size: 22px;
+                    color: @cl-question;
+                }
 
+                .container-fluid{
+                    padding:0;
+                }
+
+                span[contenteditable="true"]{
+                    height: 100%;
+                    position: relative;
+                    overflow:scroll;
+                    max-height: 100px;
+
+                    p{margin: 0;}
+                }
+
+                button.my-disabled{
+                    background-color: #fff;
+                    border-color: #ccc;
+                    color: #ccc;
                 }
 
                 div.question-wrap{
@@ -65,26 +87,72 @@ main{
                         display: inline-block;
                         float: left;
                     }
-                    >span:first-child{
+                    >span.span-label{
                         width: 25%;
-                        max-width: 130px;
+                        max-width: 110px;
                     }
-                    >span:last-child{
+                    >span.span-label+span{
                         width: 80%;
                     }
                 }
 
-                ul{
-                   list-style: none;
-                    >li{
-                        width: 29%;
-                        float: left;
+                .multiple-choice-wrap{
+                    ul{
+                        list-style: none;
+                        display: inline-block;
+                        width: 98%;
+                        margin: 10px 0;
+
+                        @media (min-width: 768px){
+                            margin: 0;
+                        }
+                    }
+                }
+
+                ol{
+                    counter-reset: li; // Inicia contador
+                    list-style: none;
+                    *list-style: decimal; // Mantiene contador en IE 6/7
+                    padding: 0;
+
+                    span{
+                        position: relative;
+                        display: inline-block;
+                        margin: .5em 0;
+                        background: #ddd;
+                        color: @cl-question-font;
+                        text-decoration: none;
+                        border-radius: .3em;
+                        transition: all .3s ease-out;
+                        cursor: default;
+
+                        &:hover:before{
+                            //transform: rotate(360deg);
+                        }
+                        &:before{
+                            content: counter(li,upper-latin);
+                            counter-increment: li;
+                            position: absolute;
+                            top: -50px;
+                            margin-left: 15px;
+                            line-height: 1.7em;
+                            margin-top: -1.7em;
+                            background: @cl-question;
+                            height: 2em;
+                            width: 2em;
+                            border: .2em solid #fff;
+                            text-align: center;
+                            font-weight: bold;
+                            border-radius: 2em;
+                            transition: all .3s ease-out;
+
+                            @media (min-width: 768px){
+                                top: 0;
+                            }
+                        }
                     }
                 }
             }
         }
-
-
-
     }
 }
