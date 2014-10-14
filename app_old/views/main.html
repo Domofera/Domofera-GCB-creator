@@ -39,6 +39,8 @@
 
 
             <div class="questions-inside-right">
+                
+                <a class="question-close" ng-click="Close()"></a>
 
                 <h3>Pregunta {{$index + 1}} <i>({{pregunta.questionType}}<span ng-show="pregunta.questionType == undefined">Sólo HTML</span>)</i></h3>
 
@@ -51,6 +53,7 @@
                     <span class="form-control" contenteditable="true" ng-bind-html="pregunta.questionHTML"></span>
                 </div>
 
+               
                 <!-- FreeText question -->
                 <div class="container-fluid" ng-show="pregunta.questionType == 'freetext'">
                     <div class="col-sm-4">
