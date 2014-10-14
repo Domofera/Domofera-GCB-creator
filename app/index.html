@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
   </head>
-  <body ng-app="gcb-creatorApp">
+  <body ng-app="gcbCreatorApp">
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
@@ -31,9 +31,9 @@
                       <span class="icon-bar"></span>
                       <span class="icon-bar"></span>
                   </button>
-                  <a class="navbar-brand">GCB creator</a>
+                  <a href="" class="navbar-brand">GCB creator</a>
               </div>
-              <nav id="nav-list" class="collapse navbar-collapse" role="navigation" ng-controller="HeaderController">
+              <nav id="nav-list" class="collapse navbar-collapse" role="navigation"  ng-controller="HeaderController">
                   <ul class="nav navbar-nav">
                       <li ng-class="{ active: isActive('/')}"><a ng-href="#/">Home</a></li>
                       <li ng-class="{ active: isActive('/about')}"><a ng-href="#/about">Acerca de</a></li>
@@ -42,7 +42,7 @@
           </div>
       </header>
 
-      <main ng-view=""></main>
+      <main><div class="view" ng-view=""></div></main>
 
       <footer class="footer">
         <div class="container">
@@ -90,7 +90,7 @@
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
         <script src="scripts/controllers/main.js"></script>
-        <script src="scripts/main-func.js"></script>
+        <script src="scripts/controllers/main2.js"></script>
         <script src="scripts/controllers/about.js"></script>
         <!-- endbuild -->
 </body>

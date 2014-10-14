@@ -1,17 +1,17 @@
-/*global $:false, prompt:true */
+/*global $:false*/
 'use strict';
 
 /**
  * @ngdoc function
- * @name pppApp.controller:MainCtrl
+ * @name gcbCreatorApp.controller:MainCtrl
  * @description
- * # MainCtrl
- * Controller of the pppApp
+ * # Este controlador se encarga de llevar las tareas relacionadas con el $scope y AngularJS en sí
  */
-angular.module('gcb-creatorApp')
-  .controller('MainCtrl', function ($scope) {
 
-  //******** MODELOS
+angular.module('gcbCreatorApp')
+.controller('MainCtrl', function ($scope) {
+
+    //******** MODELOS
 
     $scope.preguntas = [
         { questionType: 'freetext',
@@ -23,17 +23,17 @@ angular.module('gcb-creatorApp')
         },
 
         {
-         prevHTML:'<b>Letra <i>negrita</i></b> que introduce la pregunta'
+            prevHTML:'<b>Letra <i>negrita</i></b> que introduce la pregunta'
         },
 
         { questionType:'multiple choice',
-          questionHTML:'<b>Tienes mucho feeling?</b>',
-          choices: [
+         questionHTML:'<b>Tienes mucho feeling?</b>',
+         choices: [
              ['Puede', false, '"A" is wrong, try again.'],
              ['Algo pero no mucho', true, '"B" is correct!'],
              ['Depende como lo veas', false, '"C" is wrong, try again.'],
              ['Por supuesto!', false, '"D" is wrong, try again.']
-          ]
+         ]
         },
 
         { questionType: 'multiple choice group',
@@ -53,42 +53,41 @@ angular.module('gcb-creatorApp')
         },
     ];
 
-
-
-
-
-   //***** Funciones auxiliares
+    //***** Funciones auxiliares
     $scope.LimpiarScope = function(){
         $scope.preguntas = [];
     };
 
 
+    $scope.Close = function($index){
+        $scope.preguntas.splice($index,1);
+    };
 
 
-   //***** Factories
+//***** Factories
 
     $scope.CrearFreetext = function(){
         $scope.preguntas.push({
-                    questionType: 'freetext',
-                    prevHTML:'',
-                    questionHTML: '',
-                    correctAnswerString: '',
-                    correctAnswerOutput: '',
-                    incorrectAnswerOutput: '',
-                    showAnswerOutput: ''
-                });
+            questionType: 'freetext',
+            prevHTML:'',
+            questionHTML: '',
+            correctAnswerString: '',
+            correctAnswerOutput: '',
+            incorrectAnswerOutput: '',
+            showAnswerOutput: ''
+        });
     };
 
     $scope.CrearMultiplechoice = function(){
         $scope.preguntas.push({
-                    questionType:'multiple choice',
-                    prevHTML:'',
-                    questionHTML:'',
-                    choices: [
-                        ['', false, '']
-                    ]
-                });
+            questionType:'multiple choice',
+            prevHTML:'',
+            questionHTML:'',
+            choices: [
+                ['', false, '']
+            ]
+        });
     };
 
-  });
+});
 

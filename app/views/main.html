@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" ng-controller="Main2Ctrl">
     <div class="panel panel-default">
         <nav id="gcbc-toolbar" class="btn-toolbar">
             <div class="col-sm-6">
@@ -28,6 +28,7 @@
 
 
 
+   
     <!--  CONTENIDO de las Preguntas -->
 
     <div id="questions-container" class="panel panel-default" ui-sortable ng-model="preguntas">
@@ -40,7 +41,7 @@
 
             <div class="questions-inside-right">
                 
-                <a class="question-close" ng-click="Close()"></a>
+                <a class="question-close" ng-click="Close($index)"><span class="fa fa-remove"></span></a>
 
                 <h3>Pregunta {{$index + 1}} <i>({{pregunta.questionType}}<span ng-show="pregunta.questionType == undefined">Sólo HTML</span>)</i></h3>
 
@@ -53,7 +54,6 @@
                     <span class="form-control" contenteditable="true" ng-bind-html="pregunta.questionHTML"></span>
                 </div>
 
-               
                 <!-- FreeText question -->
                 <div class="container-fluid" ng-show="pregunta.questionType == 'freetext'">
                     <div class="col-sm-4">

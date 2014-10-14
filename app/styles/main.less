@@ -1,33 +1,78 @@
 @cl-question: #258de6;
 @cl-question-font: #fff;
+@cl-question-close: #d9534f;
+
+@cl-editor-glow: #fa5f00;
 
 @cl-nav-fixed: #444; //#e66519
 
-main{
+@anim-view-dur: 0.25s;
+
+
+//******************** ANIMACIONES
+.view.ng-enter{
+    animation: view_enter (@anim-view-dur * 2);
+}
+
+.view.ng-leave{
+    animation: view_leave @anim-view-dur;
+}
+
+@keyframes view_enter{
+    0% { opacity: 0; }
+    50% { opacity: 0; }
+    100% { opacity: 1; }
+}
+@keyframes view_leave{
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+
+
+//********************  CONTENIDO
+main{ 
+    position: relative;
     min-height: 450px;
     padding: 20px 0;
+    
+    >div{
+        position: relative;
+    }
 
     .panel.panel-default{
         min-height: 45px;
     }
+    
 
+ //*** TOOLBAR
     nav#gcbc-toolbar{
         padding: 5px 0;
         overflow: hidden;
+        
+        &.fixed{
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%;
+            transition: all 0.2s ease;
+            z-index: 5;
+            background: @cl-nav-fixed;
+            border: 1px solid darken(@cl-nav-fixed, 5%);
+            margin: 0 auto;
+            border-radius: 5px;
+        }
+        
+        #editor-buttons{
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        #editor-buttons.editor-glow{
+            box-shadow: 0px 0px 10px 0px @cl-editor-glow;
+        }
     }
+    
 
-    #gcbc-toolbar.fixed{
-        position: fixed;
-        top: 0; left: 0;
-        width: 100%;
-        transition: all 0.2s ease;
-        z-index: 5;
-        background: @cl-nav-fixed;
-        border: 1px solid darken(@cl-nav-fixed, 5%);
-        margin: 0 auto;
-        border-radius: 5px;
-    }
-
+//*** PREGUNTAS
     #questions-container{
 
         div.question-wrapper{
@@ -43,12 +88,12 @@ main{
       // Panel izquierdo para mover
             .questions-inside-left{
                 position: absolute;
-                top: 50%;
+                top: 49%;
                 left: 0;
                 transform: translateY(-50%);
                 background: @cl-question;
                 width: 40px;
-                height: 100%;
+                height: 102%;
                 color: @cl-question-font;
                 cursor: move;
 
@@ -72,6 +117,25 @@ main{
 
                 .container-fluid{
                     padding:0;
+                }
+                
+                .question-close{ 
+                    position: absolute;
+                    top: -2px; right: -2px;
+                    display: block;
+                    padding: 4px 10px;
+                    cursor: pointer;
+                    color: @cl-question-font;
+                    background: @cl-question-close;
+                    transition: all 0.1s ease;
+                    font-size: 18px;
+                    border-radius: 0 3px 0 6px;
+                    border: 1px solid @cl-question;
+                    
+                    &:hover,&:focus{
+                        text-decoration: none;
+                        background: multiply(saturate(@cl-question-close,20%),#e4e4e4);
+                    }
                 }
 
                 span[contenteditable="true"]{
