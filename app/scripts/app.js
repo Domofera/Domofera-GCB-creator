@@ -41,15 +41,13 @@ mainModule.config(function ($routeProvider) {
 mainModule.animation('.question-wrapper', function() {
     return {
         enter : function(element, done) { 
-            var height = jQuery(element).height();
-            jQuery(element).css({ 'max-height': 0, padding: '0 15px', 'opacity': 0 });
-            jQuery(element).animate({'max-height': height+30, padding: '10px 15px', 'opacity': 1 }, 400, done);
+            jQuery(element).css({ 'opacity': 0 });
+            jQuery(element).animate({'opacity': 1 }, 400, done);
         },
 
         leave : function(element, done) {
-            var height = jQuery(element).height();
-            jQuery(element).css({ 'max-height': height+30, padding: '10px 15px', 'opacity': 1 });
-            jQuery(element).animate({'max-height': 0, padding: '0 15px', 'opacity': 0 }, 400, done);
+            jQuery(element).css({'opacity': 1 });
+            jQuery(element).animate({'opacity': 0 }, 400, done);
         }
     };
 });

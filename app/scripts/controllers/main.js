@@ -63,8 +63,17 @@ angular.module('gcbCreatorApp')
         $scope.preguntas.splice($index,1);
     };
 
+    $scope.CloseChoice = function($pIndex, $index){
+        $scope.preguntas[$pIndex].choices.splice($index,1);
+    };
+
 
 //***** Factories
+
+    $scope.AddQuestion = function($index){ 
+        var arr = ['', false, ''];
+        $scope.preguntas[$index].choices.push(arr);
+    };
 
     $scope.CrearFreetext = function(){
         $scope.preguntas.push({

@@ -5,13 +5,19 @@
 @cl-question-selected: #0bbc7f;
 
 @cl-editor-glow: #fa5f00;
-
 @cl-nav-fixed: #444; //#e66519
 
+@cl-add-button: #12c464;
+@tam-question-left: 40px;
+@tam-add-button: 30px;
+
 @anim-view-dur: 0.25s;
+@trans-buttons: 0.2s;
 
 
 //******************** ANIMACIONES
+
+// Vistas
 .view.ng-enter{
     animation: view_enter (@anim-view-dur * 2);
 }
@@ -29,6 +35,33 @@
     0% { opacity: 1; }
     100% { opacity: 0; }
 }
+
+
+// Choices
+.choice-animation.ng-enter, .choice-animation.ng-leave{ 
+  position: relative;
+  transition: 0.8s ease all;
+}
+
+.choice-animation.ng-enter {
+  left: -90%;
+  opacity: 0;
+}
+.choice-animation.ng-enter.ng-enter-active {
+  left: 0;
+  opacity:1;
+}
+
+.choice-animation.ng-leave {
+  left: 0;
+  opacity:1;
+}
+.choice-animation.ng-leave.ng-leave-active {
+  left: -90%;
+  opacity:0;
+}
+
+
 
 
 //** SORTABLE
@@ -63,7 +96,7 @@ main{
             position: fixed;
             top: 0; left: 0;
             width: 100%;
-            transition: all 0.2s ease;
+            transition: all @trans-buttons ease;
             z-index: 5;
             background: @cl-nav-fixed;
             border: 1px solid darken(@cl-nav-fixed, 5%);
@@ -73,7 +106,7 @@ main{
         
         #editor-buttons{
             border-radius: 4px;
-            transition: all 0.2s ease;
+            transition: all @trans-buttons ease;
         }
         #editor-buttons.editor-glow{
             box-shadow: 0px 0px 10px 0px @cl-editor-glow;
@@ -93,7 +126,6 @@ main{
             border-radius: 6px;
             padding: 7px 15px; 
             overflow: hidden;
-            //transition: all 0.2s ease;
             
 
       // Panel izquierdo para mover
@@ -103,10 +135,11 @@ main{
                 left: 0;
                 transform: translateY(-50%);
                 background: @cl-question;
-                width: 40px;
+                width: @tam-question-left;
                 height: 102%;
                 color: @cl-question-font;
                 cursor: move;
+                z-index: 2;
 
                 &>span{
                     position: absolute;
@@ -119,7 +152,8 @@ main{
             .questions-inside-right
             {
                 padding-left: 40px;
-
+                
+            // General
                 .form-control{
                     padding: 4px 10px;
                     height: auto;
@@ -143,14 +177,14 @@ main{
                     cursor: pointer;
                     color: @cl-question-font;
                     background: @cl-question-close;
-                    transition: all 0.1s ease;
+                    transition: all @trans-buttons ease;
                     font-size: 18px;
                     border-radius: 0 3px 0 6px;
                     border: 1px solid @cl-question;
                     
                     &:hover,&:focus{
                         text-decoration: none;
-                        background: multiply(saturate(@cl-question-close,20%),#e4e4e4);
+                        background: screen(saturate(@cl-question-close,35%),#333);
                     }
                 }
 
@@ -187,7 +221,23 @@ main{
                     }
                 }
 
-                .multiple-choice-wrap{
+         // Multiple choice
+                .multiple-choice-wrap{ 
+                    transition: all @trans-buttons ease;
+                    padding-bottom: 3px;
+                    
+                    &:hover{
+                        padding-bottom: (@tam-add-button);
+                        
+                        ol>span.add-question{
+                            bottom: 0;
+                            
+                            >span.arrow{
+                                opacity: 0;
+                            }
+                        }
+                    }
+                    
                     ul{
                         list-style: none;
                         display: inline-block;
@@ -197,53 +247,99 @@ main{
                         @media (min-width: 768px){
                             margin: 0;
                         }
-                    }
-                }
+                        
+                        span.close-choice{
+                            padding: 6px 8px;
+                            margin-left: 20px;
+                            background: red;
+                            color: white;
+                            border-radius: 200px;
+                            cursor: pointer;
+                            color: @cl-question-font;
+                            border: 1px solid multiply(@cl-question-close, #ddd);
+                            background: @cl-question-close;
+                            transition: all @trans-buttons ease;
 
-                ol{
-                    counter-reset: li; // Inicia contador
-                    list-style: none;
-                    *list-style: decimal; // Mantiene contador en IE 6/7
-                    padding: 0; 
-                    margin: 5px 0 0 0;
-
-                    span{
-                        position: relative;
-                        display: inline-block;
-                        margin: .5em 0;
-                        background: #ddd;
-                        color: @cl-question-font;
-                        text-decoration: none;
-                        border-radius: .3em;
-                        transition: all .3s ease-out;
-                        cursor: default;
-
-                        &:hover:before{
-                            //transform: rotate(360deg);
-                        }
-                        &:before{
-                            content: counter(li,upper-latin);
-                            counter-increment: li;
-                            position: absolute;
-                            top: -50px;
-                            margin-left: 15px;
-                            line-height: 1.7em;
-                            margin-top: -1.7em;
-                            background: @cl-question;
-                            height: 2em;
-                            width: 2em;
-                            border: .2em solid #fff;
-                            text-align: center;
-                            font-weight: bold;
-                            border-radius: 2em;
-                            transition: all .3s ease-out;
-
-                            @media (min-width: 768px){
-                                top: 0;
+                            &:hover,&:focus{
+                                background: screen(saturate(@cl-question-close,35%),#333);
                             }
                         }
                     }
-                }   
+                    
+                    ol{
+                        counter-reset: li; // Inicia contador
+                        list-style: none;
+                        *list-style: decimal; // Mantiene contador en IE 6/7
+                        padding: 0; 
+                        margin: 5px 0 0 0;
+
+                        >span.add-question{ 
+                            position: absolute;
+                            left: @tam-question-left;
+                            bottom: -27px;
+                            width: 100%;
+                            padding: 6px 0;
+                            display: block;
+                            font-size: 20px;
+                            text-align: center;
+                            background: @cl-add-button;
+                            color: white;
+                            cursor: pointer;
+                            transition: all @trans-buttons ease;
+                            
+                            &:hover, &:focus{
+                                background: multiply(@cl-add-button, #ddd);
+                            }
+                            
+                            &>.arrow{
+                                font-size: 14px;
+                                position: absolute;
+                                height: 10px;
+                                top: 0;
+                                opacity: 1;
+                                transition: all (@trans-buttons - 0.1) ease;
+                            }
+                        }
+
+                        span.num-list{
+                            position: relative;
+                            display: inline-block;
+                            margin: .5em 0;
+                            background: #ddd;
+                            color: @cl-question-font;
+                            text-decoration: none;
+                            border-radius: .3em;
+                            transition: all @trans-buttons ease-out;
+                            cursor: default;
+
+                            &:hover:before{
+                                //transform: rotate(360deg);
+                            }
+                            &:before{
+                                content: counter(li,upper-latin);
+                                counter-increment: li;
+                                position: absolute;
+                                top: -50px;
+                                margin-left: 15px;
+                                line-height: 1.7em;
+                                margin-top: -1.7em;
+                                background: @cl-question;
+                                height: 2em;
+                                width: 2em;
+                                border: .2em solid #fff;
+                                text-align: center;
+                                font-weight: bold;
+                                border-radius: 2em;
+
+                                @media (min-width: 768px){
+                                    top: 0;
+                                }
+                            }
+                        }
+                    }   
+                }
+
+                
             }
             
             &.selected{

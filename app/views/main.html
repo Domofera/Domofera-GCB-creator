@@ -72,8 +72,8 @@
                 <div class="container-fluid multiple-choice-wrap" ng-show="pregunta.questionType == 'multiple choice'">
                     <span class="span-label"><b>Respuestas: </b></span>
                    <ol>
-                       <li ng-repeat="choice in pregunta.choices">
-                           <span></span>
+                       <li class="choice-animation" ng-repeat="choice in pregunta.choices">
+                          <span class="num-list"></span>
                            <ul>
                                <li class="col-sm-4">
                                    <input class="form-control" type="text" placeholder="Texto..." ng-model="choice[0]">
@@ -81,9 +81,10 @@
                                <li class="col-sm-4">
                                    <input class="form-control" type="text" placeholder="Salida..." ng-model="choice[2]">
                                </li>
-                               <li class="col-sm-4"><input type="checkbox" ng-model="choice[1]"> Correcta</li>
+                               <li class="col-sm-4"><input type="checkbox" ng-model="choice[1]"> Correcta <span class="close-choice fa fa-remove" ng-click="CloseChoice($parent.$index, $index)"></span></li>
                            </ul>
                        </li>
+                       <span class="add-question" ng-click="AddQuestion($index)"><span class="arrow fa fa-caret-square-o-up"></span><span class="fa fa-plus"></span></span>
                    </ol>
 
                 </div>
