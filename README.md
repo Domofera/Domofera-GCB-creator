@@ -196,6 +196,10 @@ function HeaderController($scope, $location)
     };
 }
 ```
+and in `index.html`, where the navbar is, the following code:
+```html
+<nav ng-controller="HeaderController" id="nav-list" class="collapse navbar-collapse" role="navigation" >
+```
 
 
 

@@ -2,6 +2,8 @@
 @cl-question-font: #fff;
 @cl-question-close: #d9534f;
 
+@cl-question-selected: #0bbc7f;
+
 @cl-editor-glow: #fa5f00;
 
 @cl-nav-fixed: #444; //#e66519
@@ -27,6 +29,13 @@
     0% { opacity: 1; }
     100% { opacity: 0; }
 }
+
+
+//** SORTABLE
+.sortable-placeholder{
+    background: screen(@cl-question-selected,#ccc);
+}
+
 
 
 
@@ -82,8 +91,10 @@ main{
             background: screen(@cl-question,#eee);
             margin: 10px auto;
             border-radius: 6px;
-            padding: 10px 15px;
+            padding: 7px 15px; 
             overflow: hidden;
+            //transition: all 0.2s ease;
+            
 
       // Panel izquierdo para mover
             .questions-inside-left{
@@ -109,9 +120,14 @@ main{
             {
                 padding-left: 40px;
 
+                .form-control{
+                    padding: 4px 10px;
+                    height: auto;
+                }
+                
                 >h3{
-                    margin: 5px 0 15px 0;
-                    font-size: 22px;
+                    margin: 1px 0 8px 0;
+                    font-size: 18px;
                     color: @cl-question;
                 }
 
@@ -188,7 +204,8 @@ main{
                     counter-reset: li; // Inicia contador
                     list-style: none;
                     *list-style: decimal; // Mantiene contador en IE 6/7
-                    padding: 0;
+                    padding: 0; 
+                    margin: 5px 0 0 0;
 
                     span{
                         position: relative;
@@ -226,6 +243,17 @@ main{
                             }
                         }
                     }
+                }   
+            }
+            
+            &.selected{
+                border: 2px solid @cl-question-selected;
+                background: screen(@cl-question-selected,#eee);
+                
+                .questions-inside-left{ background: @cl-question-selected; }
+                .questions-inside-right{ 
+                    >h3{color: @cl-question-selected;} 
+                    .question-close{ border: 1px solid @cl-question-selected; }
                 }
             }
         }

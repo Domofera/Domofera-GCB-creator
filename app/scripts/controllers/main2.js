@@ -10,7 +10,6 @@
 
 angular.module('gcbCreatorApp').controller('Main2Ctrl', function ($scope) {
     
-    $('#gcbc-toolbar .btn').tooltip({container: 'body'}); // Seteamos el tooltip
 
     var lastFocused;
     var isHover = false;
@@ -40,8 +39,7 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl', function ($scope) {
 
     $(document).ready(function () {
 
-        //setTimeout(function(){ $('#questions-container').sortable('disable'); }, 1000); //Esperamos 1s para que no de error
-
+        $('#gcbc-toolbar .btn').tooltip({container: 'body'}); // Seteamos el tooltip
 
         // Cambiamos el valor de isFixed, para que ponga el toolbar fijo
         $(window).scroll(function(){
@@ -56,6 +54,26 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl', function ($scope) {
             }
         });
 
+        
+    //****************** SORTABLE
+        $('#questions-container').sortable({placeholder: 'sortable-placeholder'});
+        
+        $('#questions-container').on('sortbeforestop', function( event, ui ) {
+            ui.item.removeClass('selected');
+            ui.helper.removeClass('selected');
+        });
+        
+        $('#questions-container').on('sortstart', function( event, ui ) {
+            ui.helper.addClass('selected');
+            ui.placeholder.height(ui.helper.outerHeight());
+        });
+        
+        setTimeout(function(){ $('#questions-container').sortable('disable'); }, 100); //Esperamos 0.1s para que no de error
+        
+        
+        
+        
+    
 
         // Codigo para que no interfiera el UI-Sortable con el ContentEditable
         $('body').on('mouseenter mousedown','.questions-inside-left', function(){
@@ -64,21 +82,24 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl', function ($scope) {
         $('body').on('mouseleave','.questions-inside-left', function(){
             $('#questions-container').sortable('disable');
         });
+        
+        // Controlar los disabled de los botones
+        $('body').on('focus','span[contenteditable=true]', function(){
+            lastFocused = $(this);
+        });
+        $('body').on('mousedown','span[contenteditable=true]', function(){ 
+            if(!$(this).is(':focus')){
+                $('#questions-container').sortable('disable');
+                $(this).focus();
+            }
+        });
+        $('body').on('blur','span[contenteditable=true]', function(){
+            //$('#questions-container').sortable('enable');
+        });
 
 
         //************* EDITOR DE TEXTO
 
-        // Controlar los disabled de los botones
-        $('body').on('focus','span[contenteditable=true]', function(){
-            lastFocused = $(this);
-            $('#questions-container').sortable('disable');
-        })
-        .on('click','span[contenteditable=true]', function(){
-            $(this).focus();
-        })
-        .on('blur','span[contenteditable=true]', function(){
-            $('#questions-container').sortable('enable');
-        });
 
         $('body').on('mouseenter','#editor-buttons>button, span[contenteditable=true]', function(){
             isHover = true;
