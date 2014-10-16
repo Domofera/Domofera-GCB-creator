@@ -1,6 +1,8 @@
 @cl-question: #258de6;
 @cl-question-font: #fff;
-@cl-question-close: #d9534f;
+
+@cl-red: #d9534f;
+@cl-yellow-orange: #f5cc1e;
 
 @cl-question-selected: #0bbc7f;
 
@@ -13,6 +15,24 @@
 
 @anim-view-dur: 0.25s;
 @trans-buttons: 0.2s;
+
+
+//****************  MIXINGS
+
+.make-rounded-button(@cl; @cl-fn: #fff; @mult: #3c3c3c; @porc: 35%){
+    padding: 6px 8px;
+    transition: all @trans-buttons ease;
+    border-radius: 200px;
+    cursor: pointer;
+    color: @cl-fn;
+    border: 1px solid multiply(@cl, #ddd);
+    background: @cl;
+
+    &:hover,&:focus{
+        background: screen(saturate(@cl,@porc), @mult);
+    }
+}
+
 
 
 //******************** ANIMACIONES
@@ -37,37 +57,14 @@
 }
 
 
-// Choices
-.choice-animation.ng-enter, .choice-animation.ng-leave{ 
-  position: relative;
-  transition: 0.8s ease all;
-}
-
-.choice-animation.ng-enter {
-  left: -90%;
-  opacity: 0;
-}
-.choice-animation.ng-enter.ng-enter-active {
-  left: 0;
-  opacity:1;
-}
-
-.choice-animation.ng-leave {
-  left: 0;
-  opacity:1;
-}
-.choice-animation.ng-leave.ng-leave-active {
-  left: -90%;
-  opacity:0;
-}
-
-
-
 
 //** SORTABLE
 .sortable-placeholder{
     background: screen(@cl-question-selected,#ccc);
 }
+
+
+
 
 
 
@@ -159,33 +156,60 @@ main{
                     height: auto;
                 }
                 
-                >h3{
-                    margin: 1px 0 8px 0;
-                    font-size: 18px;
-                    color: @cl-question;
+                header{
+                    
+                    background: @cl-question;
+                    overflow: hidden;
+                    padding: 0 0px 0 18px;
+                    margin: -7px -15px 0 -18px;
+                    
+                    h3{ 
+                        display: inline-block;
+                        float: left;
+                        padding: 6px 0;
+                        margin: 0;
+                        font-size: 18px;
+                        color: @cl-question-font;
+                    }
+                    
+                    .question-header-buttons{ 
+                        float: right;
+                        display: inline-block;
+                        
+                        >a{
+                            float: left;
+                            display: inline-block;
+                            border-left: 1px solid #ccc;
+                            color: @cl-question-font;
+                            transition: all @trans-buttons ease;
+                            padding: 4px 10px;
+                            font-size: 17px;
+                            cursor: pointer;
+                            
+                            
+                            &.question-close{
+                                background: @cl-red;
+                                &:hover,&:focus{
+                                    text-decoration: none;
+                                    background: screen(saturate(@cl-red,35%),#333);
+                                }
+                            }
+                            
+                            &.question-collapse{
+                                background: @cl-yellow-orange;
+                                &:hover,&:focus{
+                                    text-decoration: none;
+                                    background: screen(saturate(@cl-yellow-orange,35%),#333);
+                                }
+                            }
+                        }
+                    }
                 }
+                
+                
 
                 .container-fluid{
                     padding:0;
-                }
-                
-                .question-close{ 
-                    position: absolute;
-                    top: -2px; right: -2px;
-                    display: block;
-                    padding: 4px 10px;
-                    cursor: pointer;
-                    color: @cl-question-font;
-                    background: @cl-question-close;
-                    transition: all @trans-buttons ease;
-                    font-size: 18px;
-                    border-radius: 0 3px 0 6px;
-                    border: 1px solid @cl-question;
-                    
-                    &:hover,&:focus{
-                        text-decoration: none;
-                        background: screen(saturate(@cl-question-close,35%),#333);
-                    }
                 }
 
                 span[contenteditable="true"]{
@@ -193,7 +217,12 @@ main{
                     position: relative;
                     overflow:scroll;
                     max-height: 100px;
+                    resize: vertical;
 
+                    &:empty:before{
+                        content: attr(placeholder);
+                        color: #888;
+                    }
                     p{margin: 0;}
                 }
 
@@ -223,20 +252,6 @@ main{
 
          // Multiple choice
                 .multiple-choice-wrap{ 
-                    transition: all @trans-buttons ease;
-                    padding-bottom: 3px;
-                    
-                    &:hover{
-                        padding-bottom: (@tam-add-button);
-                        
-                        ol>span.add-question{
-                            bottom: 0;
-                            
-                            >span.arrow{
-                                opacity: 0;
-                            }
-                        }
-                    }
                     
                     ul{
                         list-style: none;
@@ -248,21 +263,9 @@ main{
                             margin: 0;
                         }
                         
-                        span.close-choice{
-                            padding: 6px 8px;
+                        span.close-choice{ 
+                            .make-rounded-button(@cl-red);
                             margin-left: 20px;
-                            background: red;
-                            color: white;
-                            border-radius: 200px;
-                            cursor: pointer;
-                            color: @cl-question-font;
-                            border: 1px solid multiply(@cl-question-close, #ddd);
-                            background: @cl-question-close;
-                            transition: all @trans-buttons ease;
-
-                            &:hover,&:focus{
-                                background: screen(saturate(@cl-question-close,35%),#333);
-                            }
                         }
                     }
                     
@@ -273,32 +276,8 @@ main{
                         padding: 0; 
                         margin: 5px 0 0 0;
 
-                        >span.add-question{ 
-                            position: absolute;
-                            left: @tam-question-left;
-                            bottom: -27px;
-                            width: 100%;
-                            padding: 6px 0;
-                            display: block;
-                            font-size: 20px;
-                            text-align: center;
-                            background: @cl-add-button;
-                            color: white;
-                            cursor: pointer;
-                            transition: all @trans-buttons ease;
-                            
-                            &:hover, &:focus{
-                                background: multiply(@cl-add-button, #ddd);
-                            }
-                            
-                            &>.arrow{
-                                font-size: 14px;
-                                position: absolute;
-                                height: 10px;
-                                top: 0;
-                                opacity: 1;
-                                transition: all (@trans-buttons - 0.1) ease;
-                            }
+                        span.add-question{ 
+                            .make-rounded-button(#32cb2c; @mult: #222; @porc: 15%);
                         }
 
                         span.num-list{
@@ -348,8 +327,7 @@ main{
                 
                 .questions-inside-left{ background: @cl-question-selected; }
                 .questions-inside-right{ 
-                    >h3{color: @cl-question-selected;} 
-                    .question-close{ border: 1px solid @cl-question-selected; }
+                    header{ background: @cl-question-selected; }
                 }
             }
         }

@@ -41,7 +41,7 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl', function ($scope) {
 
         $('#gcbc-toolbar .btn').tooltip({container: 'body'}); // Seteamos el tooltip
 
-        // Cambiamos el valor de isFixed, para que ponga el toolbar fijo
+    // Cambiamos el valor de isFixed, para que ponga el toolbar fijo
         $(window).scroll(function(){
             if ($(this).scrollTop() > 105 && !isFixed) {
                 $('#gcbc-toolbar').hide().fadeIn(300).addClass('fixed');
@@ -73,9 +73,7 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl', function ($scope) {
         
         
         
-    
-
-        // Codigo para que no interfiera el UI-Sortable con el ContentEditable
+    // Codigo para que no interfiera el UI-Sortable con el ContentEditable
         $('body').on('mouseenter mousedown','.questions-inside-left', function(){
             $('#questions-container').sortable('enable');
         });
@@ -83,7 +81,7 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl', function ($scope) {
             $('#questions-container').sortable('disable');
         });
         
-        // Controlar los disabled de los botones
+    // Controlar los disabled de los botones
         $('body').on('focus','span[contenteditable=true]', function(){
             lastFocused = $(this);
         });

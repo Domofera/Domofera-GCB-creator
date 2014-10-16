@@ -35,6 +35,14 @@ mainModule.config(function ($routeProvider) {
 });
 
 
+//******* FILTROS
+mainModule.filter('unsafe', function($sce) {
+    return function(val) {
+        return $sce.trustAsHtml(val);
+    };
+});
+
+
 //*********************  ANIMACIONES
 // Animacion de las preguntas sd
 

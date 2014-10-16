@@ -15,7 +15,7 @@ angular.module('gcbCreatorApp')
 
     $scope.preguntas = [
         { questionType: 'freetext',
-         questionHTML: '<p>What color is the snow?</p>',
+         questionHTML: '<p style="color:red;">What or is the snow?</p>',
          correctAnswerString: 'white',
          correctAnswerOutput: 'Correct!',
          incorrectAnswerOutput: 'Try again.',
@@ -52,6 +52,11 @@ angular.module('gcbCreatorApp')
          someIncorrectOutput: 'You must answer at least two questions correctly.'
         },
     ];
+        
+        
+    
+        
+        
 
     //***** Funciones auxiliares
     $scope.LimpiarScope = function(){

@@ -40,18 +40,22 @@
 
 
             <div class="questions-inside-right">
+                <header>
+                   <h3>Pregunta {{$index + 1}} <i>({{pregunta.questionType}}<span ng-show="pregunta.questionType == undefined">Sólo HTML</span>)</i></h3>
+                    <div class="question-header-buttons">
+                        <a class="question-collapse" ng-click="Collapse()"><span class="fa fa-chevron-up"></span></a>
+                        <a class="question-close" ng-click="Close($index)"><span class="fa fa-remove"></span></a>
+                    </div>
+                </header>
                 
-                <a class="question-close" ng-click="Close($index)"><span class="fa fa-remove"></span></a>
-
-                <h3>Pregunta {{$index + 1}} <i>({{pregunta.questionType}}<span ng-show="pregunta.questionType == undefined">Sólo HTML</span>)</i></h3>
 
                 <div class="question-wrap" ng-show="pregunta.questionType == undefined">
-                    <span class="form-control" contenteditable="true" ng-bind-html="pregunta.prevHTML"></span>
+                    <span class="form-control" contenteditable="true" ng-bind-html="pregunta.prevHTML | unsafe"></span>
                 </div>
 
                 <div class="question-wrap" ng-show="pregunta.questionType != undefined">
                     <span class="span-label"><b>Pregunta: </b></span>
-                    <span class="form-control" contenteditable="true" ng-bind-html="pregunta.questionHTML"></span>
+                    <span class="form-control" contenteditable="true" ng-bind-html="pregunta.questionHTML | unsafe"></span>
                 </div>
 
                 <!-- FreeText question -->
@@ -60,10 +64,10 @@
                         <input class="form-control" type="text" placeholder="Respuesta..." ng-model="pregunta.correctAnswerString">
                     </div>
                     <div class="col-sm-4">
-                        <input class="form-control" type="text" placeholder="Salida mal..." ng-model="pregunta.correctAnswerOutput">
+                       <span class="form-control" contenteditable="true" ng-bind-html="pregunta.correctAnswerOutput | unsafe" placeholder="Feedback OK..."></span>
                     </div>
                     <div class="col-sm-4">
-                        <input class="form-control" type="text" placeholder="Salida OK..." ng-model="pregunta.incorrectAnswerOutput">
+                       <span class="form-control" contenteditable="true" ng-bind-html="pregunta.incorrectAnswerOutput | unsafe" placeholder="Feedback mal..."></span>
                     </div>
                 </div>
 
@@ -84,7 +88,7 @@
                                <li class="col-sm-4"><input type="checkbox" ng-model="choice[1]"> Correcta <span class="close-choice fa fa-remove" ng-click="CloseChoice($parent.$index, $index)"></span></li>
                            </ul>
                        </li>
-                       <span class="add-question" ng-click="AddQuestion($index)"><span class="arrow fa fa-caret-square-o-up"></span><span class="fa fa-plus"></span></span>
+                       <span class="add-question fa fa-plus" ng-click="AddQuestion($index)"></span>
                    </ol>
 
                 </div>
