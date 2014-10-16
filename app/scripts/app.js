@@ -19,7 +19,7 @@ var mainModule = angular.module('gcbCreatorApp', [
     'ui.sortable'
 ]);
 
-mainModule.config(function ($routeProvider) {
+mainModule.config(['$routeProvider', function ($routeProvider) {
     $routeProvider
     .when('/', {
         templateUrl: 'views/main.html',
@@ -32,15 +32,15 @@ mainModule.config(function ($routeProvider) {
     .otherwise({
         redirectTo: '/'
     });
-});
+}]);
 
 
 //******* FILTROS
-mainModule.filter('unsafe', function($sce) {
+mainModule.filter('unsafe',['$sce',  function($sce) {
     return function(val) {
         return $sce.trustAsHtml(val);
     };
-});
+}]);
 
 
 //*********************  ANIMACIONES
@@ -60,10 +60,9 @@ mainModule.animation('.question-wrapper', function() {
     };
 });
 
-
-function HeaderController($scope, $location) 
-{ 
+mainModule.controller('HeaderController',['$scope','$location',  function ($scope, $location) {
+    
     $scope.isActive = function (viewLocation) { 
         return viewLocation === $location.path();
     };
-}
+}]);

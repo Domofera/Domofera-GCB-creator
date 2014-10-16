@@ -9,7 +9,7 @@
  */
 
 angular.module('gcbCreatorApp')
-.controller('MainCtrl', function ($scope) {
+.controller('MainCtrl',['$scope',  function ($scope) {
 
     //******** MODELOS
 
@@ -103,5 +103,5 @@ angular.module('gcbCreatorApp')
         });
     };
 
-});
+}]);
 

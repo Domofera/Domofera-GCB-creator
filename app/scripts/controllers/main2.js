@@ -8,7 +8,7 @@
  * # Este controlador se encarga de realizar las cosas auxiliares, como jQuery, u otras funciones no propias de AngularJS
  */
 
-angular.module('gcbCreatorApp').controller('Main2Ctrl', function ($scope) {
+angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', function ($scope) {
     
 
     var lastFocused;
@@ -140,5 +140,5 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl', function ($scope) {
         });
 
     });
-});
+}]);
 
