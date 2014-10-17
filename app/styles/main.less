@@ -92,9 +92,6 @@
 
 
 
-
-
-
 //********************  CONTENIDO
 main{ 
     position: relative;
@@ -114,6 +111,10 @@ main{
     nav#gcbc-toolbar{
         padding: 5px 0;
         overflow: hidden;
+        
+        .container{
+            padding: 0;
+        }
         
         &.fixed{
             position: fixed;
@@ -159,7 +160,7 @@ main{
                 transform: translateY(-50%);
                 background: @cl-question;
                 width: @tam-question-left;
-                height: 102%;
+                height: 103%;
                 color: @cl-question-font;
                 cursor: move;
                 z-index: 2;
@@ -168,7 +169,12 @@ main{
                     position: absolute;
                     top: 45%;
                     left: 20%;
+                    transition: all 1s ease;
                 }
+            }
+            
+            .inner-questions-inside-left{
+                .questions-inside-left;
             }
 
       // Panel derecho, donde van las preguntas
@@ -178,16 +184,43 @@ main{
                 
             // General
                 .form-control{
-                    padding: 4px 10px;
+                    //padding: 4px 10px;
                     height: auto;
                 }
                 
+                .container-fluid{
+                    padding:0;
+                }
+
+                span[contenteditable="true"]{
+                    position: relative;
+                    overflow: scroll;
+                    max-height: 120px;
+                    resize: vertical;
+
+                    &:empty:before{
+                        content: attr(placeholder);
+                        color: #888;
+                    }
+                    p{margin: 0;}
+                }
+                
+                textarea.form-control{
+                    resize: vertical;
+                    height: 34px;
+                    max-height: 120px;
+                }
+                
+                
+               
+            // Header
                 header{
                     
                     background: @cl-question;
                     overflow: hidden;
                     padding: 0 0px 0 18px;
-                    margin: -7px -15px 0 -18px;
+                    margin: -7px -15px 10px -18px;
+                    border-bottom: 1px solid @cl-question;
                     
                     h3{ 
                         display: inline-block;
@@ -233,30 +266,21 @@ main{
                 }
                 
                 
-
-                .container-fluid{
-                    padding:0;
-                }
-
-                span[contenteditable="true"]{
-                    height: 100%;
-                    position: relative;
-                    overflow:scroll;
-                    max-height: 100px;
-                    resize: vertical;
-
-                    &:empty:before{
-                        content: attr(placeholder);
-                        color: #888;
+                .input-group{
+                    
+                    .input-group-btn>a{
+                        transition: all @trans-buttons ease;
+                        background: desaturate(multiply(@cl-question, #eee), 5%);
+                        color: white;
+                        margin-left: 0;
+                        
+                        &:hover, &:focus{
+                            background: saturate(screen(@cl-question,#222),5%);
+                            color:white;
+                        }
                     }
-                    p{margin: 0;}
                 }
-
-                button.my-disabled{
-                    background-color: #fff;
-                    border-color: #ccc;
-                    color: #ccc;
-                }
+                
 
                 div.question-wrap{
                     width: 100%;
@@ -270,6 +294,7 @@ main{
                     >span.span-label{
                         width: 25%;
                         max-width: 110px;
+                        line-height: 2;
                     }
                     >span.span-label+span{
                         width: 80%;
@@ -291,7 +316,31 @@ main{
                         
                         span.close-choice{ 
                             .make-rounded-button(@cl-red);
-                            margin-left: 20px;
+                            margin-left: 14px;
+                        }
+                        
+                        >li{ 
+                            float: none;
+                            width: 98%;
+                            padding: 0 10px;
+                        }
+                        
+                        @media (min-width: 768px){
+                            >li{ 
+                                float: left;
+                                width: 38%;
+                                padding: 0 10px;
+
+                                &:last-child{ width: 24%; }
+                            }
+                        }
+                        
+                        @media (min-width: 992px){
+                            >li{ 
+                                width: 40%;
+
+                                &:last-child{ width: 20%; }
+                            }
                         }
                     }
                     
@@ -326,7 +375,7 @@ main{
                                 position: absolute;
                                 top: -50px;
                                 margin-left: 15px;
-                                line-height: 1.7em;
+                                line-height: 1.8em;
                                 margin-top: -1.7em;
                                 background: @cl-question;
                                 height: 2em;
@@ -345,6 +394,12 @@ main{
                 }
 
                 
+                
+                .multiple-choice-group-wrap{ 
+                    .row{
+                        margin: 0;
+                    }
+                }
             }
             
             &.selected{
@@ -355,6 +410,12 @@ main{
                 .questions-inside-right{ 
                     header{ background: @cl-question-selected; }
                 }
+            }
+        }
+        
+        div.question-wrapper.colapsado{ 
+            .questions-inside-left>span{
+                top: 30%;
             }
         }
     }

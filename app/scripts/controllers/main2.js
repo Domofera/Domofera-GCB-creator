@@ -68,18 +68,52 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', function ($sco
             ui.placeholder.height(ui.helper.outerHeight());
         });
         
-        setTimeout(function(){ $('#questions-container').sortable('disable'); }, 100); //Esperamos 0.1s para que no de error
-        
-        
-        
-        
-    // Codigo para que no interfiera el UI-Sortable con el ContentEditable
+        // Codigo para que no interfiera el UI-Sortable con el ContentEditable
         $('body').on('mouseenter mousedown','.questions-inside-left', function(){
             $('#questions-container').sortable('enable');
+            $('.inner-sortable').sortable('disable');
         });
         $('body').on('mouseleave','.questions-inside-left', function(){
             $('#questions-container').sortable('disable');
         });
+        
+        // Seleccionar el bloque de la pregunta
+        $('body').on('click','.questions-inside-left', function(){
+            $(this).parent().addClass('selected');
+        });
+        
+        
+       // setTimeout(function(){ $('#questions-container').sortable('disable'); }, 100); //Esperamos 0.1s para que no de error
+        
+        
+    // INNER SORTABLE
+        $('.inner-sortable').sortable({placeholder: 'sortable-placeholder'});
+        
+        $('body').on('mouseenter mousedown','.inner-questions-inside-left', function(){
+            $('#questions-container').sortable('disable');
+            $('.inner-sortable').sortable('enable');
+        });
+        $('body').on('mouseleave','.inner-questions-inside-left', function(){
+            $('.inner-sortable').sortable('disable');
+        });
+        
+        $('body').on('click','.inner-questions-inside-left', function(){
+            $(this).parent().addClass('selected');
+        });
+        
+        
+    // Quitar
+        $('body').on('mouseup', function(e){
+            var container = $('#questions-container>div');
+            
+            if (!container.is(e.target)){ // Si no es el bloque con las flechas de movimiento
+                container.removeClass('selected');
+            }
+        });
+        
+        
+        
+        
         
     // Controlar los disabled de los botones
         $('body').on('focus','span[contenteditable=true]', function(){
@@ -91,47 +125,90 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', function ($sco
                 $(this).focus();
             }
         });
-        $('body').on('blur','span[contenteditable=true]', function(){
-            //$('#questions-container').sortable('enable');
-        });
 
+        
+        
+    //******* ACORDEON
+        $scope.colapsados = false;
+        var animColDur = 1000;
+        
+      // Colapsar TODOS
+        $('#boton-colapsado').on('click', function(e){
+            $('#questions-container>div').each(function(index){
+               if($scope.colapsados){ 
+                    var h = $(this).find('.questions-inside-right').outerHeight(true) + $(this).height();
+                    $(this).animate({ height: h }, animColDur);
+                    $(this).removeClass('colapsado');
+                    $(this).find('.question-collapse').children().eq(0).removeClass('fa-chevron-down').addClass('fa-chevron-up');
+               }
+               else{ 
+                    $(this).animate({ height: 36 }, animColDur);
+                    $(this).addClass('colapsado');
+                    $(this).find('.question-collapse').children().eq(0).removeClass('fa-chevron-up').addClass('fa-chevron-down');
+               }
+            });
+            
+            $scope.$apply(function(){
+                $scope.colapsados = !$scope.colapsados;
+            });
+        });
+        
+      // Colapsar UNO
+        $scope.Collapse = function($index){ 
+            var objeto = $($('#questions-container>div').get($index));
+
+            if(objeto.hasClass('colapsado')){ 
+                var h = objeto.find('.questions-inside-right').outerHeight(true) + objeto.height();
+                objeto.animate({ height: h }, animColDur);
+                objeto.removeClass('colapsado');
+                objeto.find('.question-collapse').children().eq(0).removeClass('fa-chevron-down').addClass('fa-chevron-up');
+           }
+           else{ 
+                objeto.animate({ height: 36 }, animColDur);
+                objeto.addClass('colapsado');
+                objeto.find('.question-collapse').children().eq(0).removeClass('fa-chevron-up').addClass('fa-chevron-down');
+           }
+        };
+        
+        
+        
 
         //************* EDITOR DE TEXTO
 
 
-        $('body').on('mouseenter','#editor-buttons>button, span[contenteditable=true]', function(){
+        $('body').on('mouseenter','#editor-buttons>a, span[contenteditable=true]', function(){
             isHover = true;
         });
 
-        $('body').on('mouseleave','#editor-buttons>button, span[contenteditable=true]', function(){
+        $('body').on('mouseleave','#editor-buttons>a, span[contenteditable=true]', function(){
             isHover = false;
         });
 
         $('body').on('click', function(){
             if(isHover){
-                $('#editor-buttons>button').removeClass('disabled');
+                $('#editor-buttons>a').removeClass('disabled');
                 $('#editor-buttons').addClass('editor-glow');
             }else{
-                $('#editor-buttons>button').addClass('disabled');
+                $('#editor-buttons>a').addClass('disabled');
                 $('#editor-buttons').removeClass('editor-glow');
             }
         });
 
 
         // Funciones bold, italic y link
-        $('button[data-edit="bold"]').click(function(){
+        $('a[data-edit="bold"]').click(function(){
             boldIt();
             if(lastFocused){
                 lastFocused.focus();
             }
         });
-        $('button[data-edit="italic"]').click(function(){
+        $('a[data-edit="italic"]').click(function(){
             italicIt();
             if(lastFocused){
                 lastFocused.focus();
             }
         });
-        $('button[data-edit="link"]').click(function(){
+        $('a[data-edit="link"]').click(function(){
             var urlp = prompt('Introduce el link:','http://');
             linkIt(urlp);
             if(lastFocused){

@@ -40,9 +40,11 @@ angular.module('gcbCreatorApp')
          questionGroupHTML: '<p>This section will test you on colors and numbers.</p>',
          questionsList: [
              {questionHTML: 'Pick all <i>odd</i> numbers:',
-              choices: ['1', '2', '3', '4', '5'], correctIndex: [0, 2, 4]},
+              choices: ['1', '5'], 
+              correctIndex: [0, 2, 4]
+             },
              {questionHTML: 'Pick one <i>even</i> number:',
-              choices: ['1', '2', '3', '4', '5'], correctIndex: [1, 3],
+              choices: ['1', '2', '3'], correctIndex: [1, 3],
               multiSelect: false},
              {questionHTML: 'What color is the sky?',
               choices: ['#00FF00', '#00FF00', '#0000FF'], correctIndex: 2}
