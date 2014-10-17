@@ -58,19 +58,28 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', function ($sco
         
     //****************** SORTABLE
         $('#questions-container').sortable({placeholder: 'sortable-placeholder'});
+        $('#questions-container').sortable({placeholder: 'sortable-placeholder'});
+        setTimeout(function(){ 
+            if($('#questions-container').length){
+                $('#questions-container').sortable('disable'); 
+            }
+        }, 400); //Esperamos para que cargue
         
         $('#questions-container').on('sortbeforestop', function( event, ui ) { 
-            if(!isInnerMoving){
+            if(isInnerMoving){
+                ui.item.removeClass('inner-selected');
+                ui.helper.removeClass('inner-selected');
+            }else{
                 ui.item.removeClass('selected');
                 ui.helper.removeClass('selected');
             }
+            ui.helper.css('opacity', 1);
+            ui.item.css('opacity', 1);
         });
         
         $('#questions-container').on('sortstart', function( event, ui ) { 
-            if(!isInnerMoving){
-                ui.helper.addClass('selected');
-                ui.placeholder.height(ui.helper.outerHeight());
-            }
+            ui.helper.css('opacity', 0.6);
+            ui.placeholder.height(ui.helper.outerHeight());
         });
         
         // Codigo para que no interfiera el UI-Sortable con el ContentEditable
@@ -88,23 +97,13 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', function ($sco
         });
         
         
-       // setTimeout(function(){ $('#questions-container').sortable('disable'); }, 100); //Esperamos 0.1s para que no de error
-        
-        
     // INNER SORTABLE
         $('.inner-sortable').sortable({placeholder: 'sortable-placeholder'});
-        
-        $('.inner-sortable').on('sortbeforestop', function( event, ui ) {
-            ui.item.removeClass('selected');
-            ui.helper.removeClass('selected');
-            isInnerMoving = false;
-        });
-        
-        $('.inner-sortable').on('sortstart', function( event, ui ) {
-            ui.helper.addClass('selected');
-            ui.placeholder.height(ui.helper.outerHeight());
-            isInnerMoving = true;
-        });
+        setTimeout(function(){ 
+            if($('.inner-sortable').length){
+                $('.inner-sortable').sortable('disable'); 
+            }
+        }, 400); //Esperamos para que cargue
         
         $('body').on('mouseenter mousedown','.inner-questions-inside-left', function(){ 
             isInnerMoving = true;
@@ -117,17 +116,23 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', function ($sco
         });
         
         $('body').on('click','.inner-questions-inside-left', function(){
-            $(this).parent().addClass('selected');
+            $(this).parent().addClass('inner-selected');
         });
         
         
     // AMBOS SORTABLES
         // Quitar seleccionado
-        $('body').on('mouseup', function(e){
+        $('body').on('mousedown', function(e){
             var container = $('#questions-container>div');
             
             if (!container.is(e.target)){ // Si no es el bloque con las flechas de movimiento
                 container.removeClass('selected');
+            }
+            
+            var innerContainer = $('.inner-sortable>div');
+            
+            if (!innerContainer.is(e.target)){ // Si no es el bloque con las flechas de movimiento
+                innerContainer.removeClass('selected');
             }
         });
         
