@@ -133,8 +133,8 @@
                         </div>
                     </div>
                     
-                    <!-- Bloque de Single multiple choice  ui-sortable ng-model="pregunta.questionsList"-->
-                    <div class="row inner-sortable">
+                    <!-- Bloque de Single multiple choice  -->
+                    <div class="row inner-sortable" ui-sortable ng-model="pregunta.questionsList">
                         <div class="question-wrapper" ng-repeat="question in pregunta.questionsList track by $index">
                             <div class="inner-questions-inside-left">
                                 <span class="glyphicon glyphicon-move"></span>
@@ -176,6 +176,9 @@
 
         </div>
     </div>
+    
+    <pre>{{preguntas | json}}</pre>
+    
 </div>
 
 

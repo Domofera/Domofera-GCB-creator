@@ -57,8 +57,8 @@
 }
 
 
-// Choices
-.choice-animation.ng-enter, .choice-animation.ng-leave{ 
+// Choices ** NO LAS PONGO PORQUE AL REORDENAR SE APLICAN **
+/*.choice-animation.ng-enter, .choice-animation.ng-leave{ 
   position: relative;
   transition: 0.8s ease all;
 }
@@ -80,7 +80,7 @@
   left: -90%;
   opacity:0;
 }
-
+*/
 
 
 
@@ -398,6 +398,16 @@ main{
                 .multiple-choice-group-wrap{ 
                     .row{
                         margin: 0;
+                    }
+                    
+                    div.question-wrapper.selected{
+                        border: 2px solid @cl-question-selected;
+                        background: screen(@cl-question-selected,#eee);
+
+                        .inner-questions-inside-left{ background: @cl-question-selected; }
+                        .questions-inside-right{ 
+                            header{ background: @cl-question-selected; }
+                        }
                     }
                 }
             }

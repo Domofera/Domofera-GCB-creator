@@ -14,6 +14,7 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', function ($sco
     var lastFocused;
     var isHover = false;
     var isFixed = false;
+    var isInnerMoving = false;
 
 
     function boldIt(){
@@ -58,14 +59,18 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', function ($sco
     //****************** SORTABLE
         $('#questions-container').sortable({placeholder: 'sortable-placeholder'});
         
-        $('#questions-container').on('sortbeforestop', function( event, ui ) {
-            ui.item.removeClass('selected');
-            ui.helper.removeClass('selected');
+        $('#questions-container').on('sortbeforestop', function( event, ui ) { 
+            if(!isInnerMoving){
+                ui.item.removeClass('selected');
+                ui.helper.removeClass('selected');
+            }
         });
         
-        $('#questions-container').on('sortstart', function( event, ui ) {
-            ui.helper.addClass('selected');
-            ui.placeholder.height(ui.helper.outerHeight());
+        $('#questions-container').on('sortstart', function( event, ui ) { 
+            if(!isInnerMoving){
+                ui.helper.addClass('selected');
+                ui.placeholder.height(ui.helper.outerHeight());
+            }
         });
         
         // Codigo para que no interfiera el UI-Sortable con el ContentEditable
@@ -89,11 +94,25 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', function ($sco
     // INNER SORTABLE
         $('.inner-sortable').sortable({placeholder: 'sortable-placeholder'});
         
-        $('body').on('mouseenter mousedown','.inner-questions-inside-left', function(){
+        $('.inner-sortable').on('sortbeforestop', function( event, ui ) {
+            ui.item.removeClass('selected');
+            ui.helper.removeClass('selected');
+            isInnerMoving = false;
+        });
+        
+        $('.inner-sortable').on('sortstart', function( event, ui ) {
+            ui.helper.addClass('selected');
+            ui.placeholder.height(ui.helper.outerHeight());
+            isInnerMoving = true;
+        });
+        
+        $('body').on('mouseenter mousedown','.inner-questions-inside-left', function(){ 
+            isInnerMoving = true;
             $('#questions-container').sortable('disable');
             $('.inner-sortable').sortable('enable');
         });
-        $('body').on('mouseleave','.inner-questions-inside-left', function(){
+        $('body').on('mouseleave','.inner-questions-inside-left', function(){ 
+            isInnerMoving = false;
             $('.inner-sortable').sortable('disable');
         });
         
@@ -102,7 +121,8 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', function ($sco
         });
         
         
-    // Quitar
+    // AMBOS SORTABLES
+        // Quitar seleccionado
         $('body').on('mouseup', function(e){
             var container = $('#questions-container>div');
             
@@ -112,16 +132,11 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', function ($sco
         });
         
         
-        
-        
-        
-    // Controlar los disabled de los botones
-        $('body').on('focus','span[contenteditable=true]', function(){
-            lastFocused = $(this);
-        });
+    // Si se tiene el foco en un contenteditable, desactivar sortables
         $('body').on('mousedown','span[contenteditable=true]', function(){ 
             if(!$(this).is(':focus')){
                 $('#questions-container').sortable('disable');
+                $('.inner-sortable').sortable('disable');
                 $(this).focus();
             }
         });
@@ -192,6 +207,11 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', function ($sco
                 $('#editor-buttons>a').addClass('disabled');
                 $('#editor-buttons').removeClass('editor-glow');
             }
+        });
+        
+        // Controlar los disabled de los botones
+        $('body').on('focus','span[contenteditable=true]', function(){
+            lastFocused = $(this);
         });
 
 
