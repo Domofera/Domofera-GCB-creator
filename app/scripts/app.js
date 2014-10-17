@@ -42,6 +42,12 @@ mainModule.filter('unsafe',['$sce',  function($sce) {
     };
 }]);
 
+mainModule.filter('isUndefined', function() {
+    return function(val) {
+        return (val === undefined);
+    };
+});
+
 
 //*********************  ANIMACIONES
 // Animacion de las preguntas sd

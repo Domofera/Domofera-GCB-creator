@@ -56,6 +56,15 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', function ($sco
         });
 
         
+        $('body').on('click','.my-checkbox', function(){ 
+            var obj = $(this).find('input');
+            if(obj.prop('checked')){
+               obj.prop('checked', false);
+            }else{
+                obj.prop('checked', true);
+            }
+        });
+        
     //****************** SORTABLE
         $('#questions-container').sortable({placeholder: 'sortable-placeholder'});
         $('#questions-container').sortable({placeholder: 'sortable-placeholder'});

@@ -76,7 +76,7 @@
                     </div>
                     <div class="col-sm-4">
                         <div class="input-group">
-                           <textarea class="form-control" ng-bind-html="pregunta.correctAnswerOutput | unsafe" placeholder="Feedback OK..."></textarea>
+                           <textarea class="form-control" ng-model="pregunta.correctAnswerOutput" placeholder="Feedback OK..."></textarea>
                            <span class="input-group-btn">
                             <a class="btn editar" type="button"><span class="fa fa-edit"></span></a>
                           </span>
@@ -84,7 +84,7 @@
                     </div>
                     <div class="col-sm-4">
                        <div class="input-group">
-                           <textarea class="form-control" ng-bind-html="pregunta.incorrectAnswerOutput | unsafe" placeholder="Feedback Mal..."></textarea>
+                           <textarea class="form-control" ng-model="pregunta.incorrectAnswerOutput" placeholder="Feedback Mal..."></textarea>
                            <span class="input-group-btn">
                             <a class="btn editar" type="button"><span class="fa fa-edit"></span></a>
                           </span>
@@ -115,7 +115,7 @@
                                <li><input type="checkbox" ng-model="choice[1]"> Correcta <span class="close-choice fa fa-remove" ng-click="CloseChoice($parent.$index, $index)"></span></li>
                            </ul>
                        </li>
-                       <span class="add-question fa fa-plus" ng-click="AddQuestion($index)"></span>
+                       <span class="add-question fa fa-plus" ng-click="AddChoice($index)"></span>
                    </ol>
                 </div>
 
@@ -132,6 +132,30 @@
                           </span>
                         </div>
                     </div>
+                    
+                    <!-- Feedback and minCorrectAnswers -->
+                    <div class="container-fluid">
+                        <div class="col-sm-5">
+                            <div class="input-group">
+                               <textarea class="form-control" placeholder="Feedback OK..." ng-model="pregunta.allCorrectOutput"></textarea>
+                               <span class="input-group-btn">
+                                <a class="btn editar" type="button"><span class="fa fa-edit"></span></a>
+                              </span>
+                            </div>
+                        </div>
+                        <div class="col-sm-5">
+                            <div class="input-group">
+                               <textarea class="form-control" ng-model="pregunta.someIncorrectOutput" placeholder="Feedback Wrong..."></textarea>
+                               <span class="input-group-btn">
+                                <a class="btn editar" type="button"><span class="fa fa-edit"></span></a>
+                              </span>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <input type="number" min="1" max="{{pregunta.questionsList.length}}" step="1" class="form-control" ng-model="pregunta.allCorrectMinCount" placeholder="1"></input>
+                        </div>
+                    </div>
+                    
                     
                     <!-- Bloque de Single multiple choice  -->
                     <div class="row inner-sortable" ui-sortable ng-model="pregunta.questionsList">
@@ -153,7 +177,15 @@
                                 
                                 
                                 <div class="container-fluid multiple-choice-wrap">
-                                    <span class="span-label"><b>Respuestas: </b></span>
+                                    
+                                    <div class="span-label"><b>Respuestas: </b></div>
+                                    <div class="multiselect">
+                                        <b>Multi-seleccionable: </b>
+                                        <div class="my-checkbox">
+                                            <input type="checkbox" ng-checked="question.multiSelect | isUndefined">
+                                            <label></label>
+                                        </div>
+                                    </div>
                                    <ol>
                                        <li class="choice-animation" ng-repeat="qchoice in question.choices track by $index">
                                           <span class="num-list"></span>
@@ -161,10 +193,17 @@
                                                <li>
                                                    <textarea class="form-control" type="text" placeholder="Texto..." ng-model="qchoice"></textarea>
                                                </li>
-                                               <li><input type="checkbox" ng-click="Marcar($parent.$parent.$index, $parent.$index, $index)"> Correcta <span class="close-choice fa fa-remove" ng-click="CloseChoice($parent.$parent.$index, $parent.$index, $index)"></span></li>
+                                               <li>
+                                                    <div class="my-checkbox">
+                                                       <input type="checkbox" value="None" name="check" ng-checked="IsInArray($parent.$parent.$index, $parent.$index, $index)" ng-click="Marcar($parent.$parent.$index, $parent.$index, $index)"> 
+                                                       <label></label>
+                                                    </div>Correcta 
+                                                   
+                                                   <span class="close-choice fa fa-remove" ng-click="InnerCloseChoice($parent.$parent.$index, $parent.$index, $index)"></span>
+                                               </li>
                                            </ul>
                                        </li>
-                                       <span class="add-question fa fa-plus" ng-click="AddQuestion($parent.$parent.$index, $parent.$index, $index)"></span>
+                                       <span class="add-question fa fa-plus" ng-click="InnerAddChoice($parent.$index, $index)"></span>
                                    </ol>
                                 </div>
                             </div>

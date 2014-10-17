@@ -41,13 +41,12 @@ angular.module('gcbCreatorApp')
          questionsList: [
              {questionHTML: 'Pick all <i>odd</i> numbers:',
               choices: ['1', '5'], 
-              correctIndex: [0, 2, 4]
+              correctIndex: [0, 1]
              },
              {questionHTML: 'Pick one <i>even</i> number:',
-              choices: ['1', '2', '3'], correctIndex: [1, 3],
-              multiSelect: false},
+              choices: ['1', '2', '3'], correctIndex: [1, 2], multiSelect: false},
              {questionHTML: 'What color is the sky?',
-              choices: ['#00FF00', '#00FF00', '#0000FF'], correctIndex: 2}
+              choices: ['#00FF00', '#00FF00', '#0000FF'], correctIndex: [2]}
          ],
          allCorrectMinCount: 2,
          allCorrectOutput: 'Great job! You know the material well.',
@@ -64,6 +63,10 @@ angular.module('gcbCreatorApp')
     $scope.LimpiarScope = function(){
         $scope.preguntas = [];
     };
+                        
+    $scope.IsInArray = function($iGrandparent, $iParent, $i){ 
+        return ($scope.preguntas[$iGrandparent].questionsList[$iParent].correctIndex.indexOf($i) >= 0 || $scope.preguntas[$iGrandparent].questionsList[$iParent].correctIndex == $i);
+    };
 
 
     $scope.Close = function($index){
@@ -74,12 +77,22 @@ angular.module('gcbCreatorApp')
         $scope.preguntas[$pIndex].choices.splice($index,1);
     };
 
+    $scope.InnerCloseChoice = function($iGrandparent, $iParent, $i){
+        $scope.preguntas[$iGrandparent].questionsList[$iParent].choices.splice($i,1);
+    };
+
 
 //***** Factories
 
-    $scope.AddQuestion = function($index){ 
+    $scope.AddChoice = function($index){ 
         var arr = ['', false, ''];
         $scope.preguntas[$index].choices.push(arr);
+    };
+
+    $scope.InnerAddChoice = function($iGrandparent, $iParent){ 
+        console.log($iGrandparent + ' ' + $iParent);
+        var arr = [''];
+        $scope.preguntas[$iGrandparent].questionsList[$iParent].choices.push(arr);
     };
 
     $scope.CrearFreetext = function(){
