@@ -112,7 +112,13 @@
                                 </div>
                                    
                                </li>
-                               <li><input type="checkbox" ng-model="choice[1]"> Correcta <span class="close-choice fa fa-remove" ng-click="CloseChoice($parent.$index, $index)"></span></li>
+                               <li>
+                                   <div class="my-checkbox" ng-click="MarcarSingle($parent.$index, $index)">
+                                        <input type="checkbox" ng-model="choice[1]">
+                                        <label></label>
+                                    </div> Correcta
+                                   <span class="close-choice fa fa-remove" ng-click="CloseChoice($parent.$index, $index)"></span>
+                                </li>
                            </ul>
                        </li>
                        <span class="add-question fa fa-plus" ng-click="AddChoice($index)"></span>
@@ -181,8 +187,8 @@
                                     <div class="span-label"><b>Respuestas: </b></div>
                                     <div class="multiselect">
                                         <b>Multi-seleccionable: </b>
-                                        <div class="my-checkbox">
-                                            <input type="checkbox" ng-checked="question.multiSelect | isUndefined">
+                                        <div class="my-checkbox" ng-click="MarcarMultiselect($parent.$index, $index)">
+                                            <input type="checkbox" ng-model="question.multiSelect">
                                             <label></label>
                                         </div>
                                     </div>
@@ -195,8 +201,8 @@
                                                </li>
                                                <li>
                                                     <div class="my-checkbox">
-                                                       <input type="checkbox" value="None" name="check" ng-checked="IsInArray($parent.$parent.$index, $parent.$index, $index)" ng-click="Marcar($parent.$parent.$index, $parent.$index, $index)"> 
-                                                       <label></label>
+                                                       <input type="checkbox" ng-checked="IsInArray($parent.$parent.$index, $parent.$index, $index)"> 
+                                                       <label ng-click="Marcar($parent.$parent.$index, $parent.$index, $index)"></label>
                                                     </div>Correcta 
                                                    
                                                    <span class="close-choice fa fa-remove" ng-click="InnerCloseChoice($parent.$parent.$index, $parent.$index, $index)"></span>
