@@ -64,7 +64,7 @@
                     <div class="input-group">
                       <span class="form-control" contenteditable="true" ng-model="pregunta.questionHTML" ng-bind-html="pregunta.questionHTML | unsafe"></span>
                       <span class="input-group-btn">
-                        <a class="btn editar" ><span class="fa fa-edit"></span></a>
+                        <a class="btn editar" ng-click="Editar($event, 'questionHTML', $index)"><span class="fa fa-edit"></span></a>
                       </span>
                     </div>
                 </div>
@@ -107,7 +107,7 @@
                                   <div class="input-group">
                                    <textarea class="form-control" type="text" placeholder="Salida..." ng-model="choice[2]"></textarea>
                                    <span class="input-group-btn">
-                                      <a class="btn editar" type="button"><span class="fa fa-edit"></span></a>
+                                      <a class="btn editar" ng-click="Editar($event, 'choices[{{$index}}][2]', $parent.$index)"><span class="fa fa-edit"></span></a>
                                   </span>
                                 </div>
                                    
@@ -134,7 +134,7 @@
                         <div class="input-group">
                           <span class="form-control" contenteditable="true" ng-model="pregunta.questionHTML" ng-bind-html="pregunta.questionHTML | unsafe"></span>
                           <span class="input-group-btn">
-                            <a class="btn editar" type="button"><span class="fa fa-edit"></span></a>
+                            <a class="btn editar" ng-click="Editar($event, 'questionHTML', $index)"><span class="fa fa-edit"></span></a>
                           </span>
                         </div>
                     </div>
@@ -145,7 +145,7 @@
                             <div class="input-group">
                                <textarea class="form-control" placeholder="Feedback OK..." ng-model="pregunta.allCorrectOutput"></textarea>
                                <span class="input-group-btn">
-                                <a class="btn editar" type="button"><span class="fa fa-edit"></span></a>
+                                <a class="btn editar" ng-click="Editar($event, 'allCorrectOutput', $index)"><span class="fa fa-edit"></span></a>
                               </span>
                             </div>
                         </div>
@@ -153,7 +153,7 @@
                             <div class="input-group">
                                <textarea class="form-control" ng-model="pregunta.someIncorrectOutput" placeholder="Feedback Wrong..."></textarea>
                                <span class="input-group-btn">
-                                <a class="btn editar" type="button"><span class="fa fa-edit"></span></a>
+                                <a class="btn editar" ng-click="Editar($event, 'someIncorrectOutput', $index)"><span class="fa fa-edit"></span></a>
                               </span>
                             </div>
                         </div>
@@ -184,7 +184,7 @@
                                     <div class="input-group">
                                       <span class="form-control" contenteditable="true" ng-model="question.questionHTML" ng-bind-html="question.questionHTML | unsafe"></span>
                                       <span class="input-group-btn">
-                                        <a class="btn editar" type="button"><span class="fa fa-edit"></span></a>
+                                        <a class="btn editar" ng-click="Editar($event, 'questionsList[{{$index}}].questionHTML', $parent.$index)"><span class="fa fa-edit"></span></a>
                                       </span>
                                     </div>
                                 </div>

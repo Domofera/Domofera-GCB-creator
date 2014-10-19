@@ -9,7 +9,7 @@
  */
 
 angular.module('gcbCreatorApp')
-.controller('MainCtrl',['$scope',  function ($scope, $compile) {
+.controller('MainCtrl',['$scope', '$compile',  function ($scope, $compile) {
 
     //******** MODELOS
     
@@ -184,7 +184,81 @@ angular.module('gcbCreatorApp')
 
 
 
+//********************** MODAL EDITOR
+        $scope.Editar = function($event, str, i){       // Elementos de primer nivel
+            var objeto = $($event.currentTarget);
+            console.log(i + ' ' +str);
+            //console.log($scope.preguntas[3].choices[3][2]);
 
+            var ngModel = 'preguntas['+ i +'].'+ str;
+            
+            CrearModal(objeto, ngModel);
+        };
+
+
+        function CrearModal(target, model)
+        { 
+            $('.modal').remove(); //borramos los que hayan
+            $('.summernote').destroy();
+            
+            var string = '<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">';
+                string += '<div class="modal-dialog">';
+                 string += '<div class="modal-content">';
+                  string += '<div class="modal-header">';
+                   string += '<button type="button" class="btn btn-default" data-dismiss="modal"><span class="fa fa-remove" aria-hidden="true"></span><span class="sr-only">Cerrar</span></button>';
+                   string += '<h4 class="modal-title" id="myModalLabel">Editor </h4>';
+                  string += '</div>';
+                  string += '<div class="modal-body">';
+
+            var stringFinal = '</div>';
+                stringFinal += '<div class="modal-footer">';
+                 stringFinal += '<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>';
+                stringFinal += '</div></div></div></div>';
+
+
+            var container = target.parent().prev();
+            var modal = $(string+stringFinal);
+            var isTextarea = container.is('textarea');
+            
+            var aux = '';
+            var final = '';
+
+            //Si es textarea, cargamos el text area solamente
+            if(isTextarea){ 
+                aux = '<textarea class="form-control" ng-model="'+ model +'"></textarea>';
+            }
+            else{  //Sino, cargamos el plugin de Summernote
+                aux = '<div class="summernote"></div>';
+                //aux = '<span contenteditable="true" class="form-control" ng-bind-html="'+ model +' | unsafe" ng-model="'+ model +'"></sapn>';
+            }
+            
+            final = string + aux + stringFinal;
+            var objFinal = $($compile(final)($scope));
+            objFinal.modal();
+            
+            if(!isTextarea)
+            {
+                objFinal.find('.summernote').summernote({ 
+                    height: 230,
+                    minHeight: 200,
+                    maxHeight: 400,
+                    lang: 'es-ES',
+                    toolbar: [
+                        ['style', ['bold', 'italic', 'underline', 'clear']],
+                        ['font', ['strikethrough']],
+                        ['fontsize', ['fontsize']],
+                        ['color', ['color']],
+                        ['para', ['ul', 'ol', 'paragraph']],
+                        ['height', ['height']],
+                    ],
+                    oninit: function() {
+                        objFinal.find('.note-editable').attr('ng-bind-html', model +' | unsafe').attr('ng-model', model);
+                        $compile(objFinal.find('.note-editable'))($scope);
+                    }
+                });
+            }
+                
+        }
 
 }]);
 

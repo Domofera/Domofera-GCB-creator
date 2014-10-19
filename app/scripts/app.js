@@ -41,11 +41,20 @@ mainModule.directive('contenteditable', function() {
     require: 'ngModel',
     link: function(scope, element, attrs, ctrl) {
       // view -> model
+    if($(element).is('span')){
       element.bind('blur', function() {
         scope.$apply(function() {
           ctrl.$setViewValue(element.html());
         });
       });
+    }
+    else{ 
+       $('body').on('hide.bs.modal','.modal', function() { 
+            scope.$apply(function() {
+              ctrl.$setViewValue(element.html());
+            });
+        });
+    }
 
       // model -> view
       ctrl.$render = function() {
