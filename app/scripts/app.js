@@ -59,10 +59,10 @@ mainModule.animation('.question-wrapper', function() {
             jQuery(element).animate({'opacity': 1 }, 400, done);
         },
 
-        leave : function(element, done) {
+        /*leave : function(element, done) {
             jQuery(element).css({'opacity': 1 });
             jQuery(element).animate({'opacity': 0 }, 400, done);
-        }
+        }*/
     };
 });
 

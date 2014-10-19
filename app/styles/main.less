@@ -33,6 +33,40 @@
     }
 }
 
+.make-header-buttons(@pd-v: 4px; @pd-h: 10px; @fn: 17px){
+    float: right;
+    display: inline-block;
+
+    >a{
+        float: left;
+        display: inline-block;
+        border-left: 1px solid #ccc;
+        color: @cl-question-font;
+        transition: all @trans-buttons ease;
+        font-size: @fn;
+        cursor: pointer;
+
+
+        &.question-close{
+            background: @cl-red;
+            padding: @pd-v (@pd-h + 3);
+            &:hover,&:focus{
+                text-decoration: none;
+                background: screen(saturate(@cl-red,35%),#333);
+            }
+        }
+
+        &.question-collapse{
+            background: @cl-yellow-orange;
+            padding: @pd-v @pd-h;
+            &:hover,&:focus{
+                text-decoration: none;
+                background: screen(saturate(@cl-yellow-orange,35%),#333);
+            }
+        }
+    }
+}
+
 .make-checkbox(@tam: 24px; @mar: 6px; @cl: #fff; @bg-cl: #222)
 { 
    /* <div class="squaredTwo">
@@ -159,6 +193,13 @@
     .make-checkbox;
 }
 
+.clear{
+    width: 1px;
+    height: 1px;
+    float: none;
+    clear: both;
+}
+
 main{ 
     position: relative;
     min-height: 450px;
@@ -234,7 +275,7 @@ main{
                 &>span{
                     position: absolute;
                     top: 45%;
-                    left: 20%;
+                    left: 30%;
                     transition: all 1s ease;
                 }
             }
@@ -298,36 +339,7 @@ main{
                     }
                     
                     .question-header-buttons{ 
-                        float: right;
-                        display: inline-block;
-                        
-                        >a{
-                            float: left;
-                            display: inline-block;
-                            border-left: 1px solid #ccc;
-                            color: @cl-question-font;
-                            transition: all @trans-buttons ease;
-                            padding: 4px 10px;
-                            font-size: 17px;
-                            cursor: pointer;
-                            
-                            
-                            &.question-close{
-                                background: @cl-red;
-                                &:hover,&:focus{
-                                    text-decoration: none;
-                                    background: screen(saturate(@cl-red,35%),#333);
-                                }
-                            }
-                            
-                            &.question-collapse{
-                                background: @cl-yellow-orange;
-                                &:hover,&:focus{
-                                    text-decoration: none;
-                                    background: screen(saturate(@cl-yellow-orange,35%),#333);
-                                }
-                            }
-                        }
+                        .make-header-buttons;
                     }
                 }
                 
@@ -479,6 +491,63 @@ main{
                         box-shadow: 0 1px 3px rgba(0,0,0,0.5);
                     }
                     
+                    .questions-inside-right{
+                        .question-wrap{ 
+                            display: inline-block;
+                            float: left;
+                            width: 82%;
+                            margin-top: -6px;
+                            
+                            @media (min-width: 992px){
+                                width: 88%;
+                            }
+                        }
+                        .question-group-buttons{
+                            .make-header-buttons(@pd-v: 6px);
+                            padding: 2px;
+                            background: @cl-question;
+                            margin: -10px -18px 0 0;
+                        }
+                    }
+                    
+                    .inner-questions-header{
+                        background: #555;    //@cl-question;
+                        overflow: hidden;
+                        margin: 15px 0 5px 0;
+                        padding: 0 0px 0 18px;
+                        text-align: center;
+                        box-shadow: 0px 1px 3px rgba(0,0,0,0.5);
+                        border-radius: 4px;
+                        border: 3px solid white;
+
+                        h3{ 
+                            display: inline-block;
+                            padding: 6px 0;
+                            margin: 0;
+                            font-size: 17px;
+                            color: @cl-question-font;
+                        }
+
+                        a{ 
+                            display: inline-block;
+                            float: right;
+                            margin: 0;
+                            padding: 2px 10px;
+                            background: @cl-yellow-orange;
+                            color: @cl-question-font;
+                            transition: all @trans-buttons ease;
+                            font-size: 20px;
+                            cursor: pointer;
+                            
+                            &:hover,&:focus{
+                                text-decoration: none;
+                                background: screen(saturate(@cl-yellow-orange,35%),#333);
+                            }
+        
+                        }
+                    }
+                    
+                    
                     ul{
                         @media (min-width: 768px){
                             >li{
@@ -524,6 +593,10 @@ main{
         div.question-wrapper.colapsado{ 
             .questions-inside-left>span{
                 top: 30%;
+            }
+            
+            .inner-questions-inside-left>span{
+                top: 35%;
             }
         }
     }

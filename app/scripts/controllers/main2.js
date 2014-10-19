@@ -15,6 +15,7 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', function ($sco
     var isHover = false;
     var isFixed = false;
     var isInnerMoving = false;
+    var animColDur = 1000;
 
 
     function boldIt(){
@@ -34,7 +35,23 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', function ($sco
         document.execCommand('Createlink', false, url);
         edit.focus();
     }
-
+    
+    
+    function Colapsar(objeto, h){
+        if(objeto.hasClass('colapsado')){ 
+            var h = objeto.find('.questions-inside-right').outerHeight(true) + objeto.height();
+            objeto.animate({ height: h }, animColDur);
+            objeto.removeClass('colapsado');
+            objeto.find('.question-collapse').children().eq(0).removeClass('fa-chevron-down').addClass('fa-chevron-up');
+       }
+       else{ 
+            objeto.animate({ height: h }, animColDur);
+            objeto.addClass('colapsado');
+            objeto.find('.question-collapse').children().eq(0).removeClass('fa-chevron-up').addClass('fa-chevron-down');
+       }
+    }
+    
+    
 
     //***** jQuery
 
@@ -149,7 +166,7 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', function ($sco
         
     //******* ACORDEON
         $scope.colapsados = false;
-        var animColDur = 1000;
+        
         
       // Colapsar TODOS
         $('#boton-colapsado').on('click', function(e){
@@ -172,21 +189,40 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', function ($sco
             });
         });
         
+        
+        $scope.GroupCollapseAll = function($index){ 
+            var lista = $('#questions-container>div').eq($index).find('.question-wrapper');
+            var boton = $('#questions-container>div').eq($index).find('.inner-questions-header span');
+
+            lista.each(function(index){
+               if(boton.hasClass('fa-angle-double-down')){ 
+                    var h = $(this).find('.questions-inside-right').outerHeight(true) + $(this).height();
+                    $(this).animate({ height: h }, animColDur);
+                    $(this).removeClass('colapsado');
+                    $(this).find('.question-collapse').children().eq(0).removeClass('fa-chevron-down').addClass('fa-chevron-up');
+               }
+               else{ 
+                    $(this).animate({ height: 45 }, animColDur);
+                    $(this).addClass('colapsado');
+                    $(this).find('.question-collapse').children().eq(0).removeClass('fa-chevron-up').addClass('fa-chevron-down');
+               }
+            });
+            
+            boton.toggleClass('fa-angle-double-down').toggleClass('fa-angle-double-up');
+        };
+        
+        
       // Colapsar UNO
         $scope.Collapse = function($index){ 
-            var objeto = $($('#questions-container>div').get($index));
+            var objeto = $('#questions-container>div').eq($index);
 
-            if(objeto.hasClass('colapsado')){ 
-                var h = objeto.find('.questions-inside-right').outerHeight(true) + objeto.height();
-                objeto.animate({ height: h }, animColDur);
-                objeto.removeClass('colapsado');
-                objeto.find('.question-collapse').children().eq(0).removeClass('fa-chevron-down').addClass('fa-chevron-up');
-           }
-           else{ 
-                objeto.animate({ height: 36 }, animColDur);
-                objeto.addClass('colapsado');
-                objeto.find('.question-collapse').children().eq(0).removeClass('fa-chevron-up').addClass('fa-chevron-down');
-           }
+            Colapsar(objeto, 36);
+        };
+        
+        $scope.GroupCollapse = function($pIndex, $index){ 
+            var objeto = $('#questions-container>div').eq($pIndex).find('.question-wrapper').eq($index);
+
+            Colapsar(objeto, 45);
         };
         
         

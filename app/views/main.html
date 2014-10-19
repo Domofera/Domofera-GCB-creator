@@ -162,6 +162,14 @@
                         </div>
                     </div>
                     
+                    <!-- Bloque Preguntas -->
+                    <div class="inner-questions-header">
+                        <h3>Preguntas</h3>
+                        <a class="question-collapse" ng-click="GroupCollapseAll($index)">
+                          <span class="fa fa-angle-double-up"></span>
+                        </a>
+                    </div>
+                    
                     
                     <!-- Bloque de Single multiple choice  -->
                     <div class="row inner-sortable" ui-sortable ng-model="pregunta.questionsList">
@@ -180,7 +188,14 @@
                                       </span>
                                     </div>
                                 </div>
+                                <div class="question-group-buttons">
+                                    <a class="question-collapse" ng-click="GroupCollapse($parent.$index, $index)">
+                                      <span class="fa fa-chevron-up"></span>
+                                    </a>
+                                    <a class="question-close" ng-click="GroupClose($parent.$index, $index)"><span class="fa fa-remove"></span></a>
+                                </div>
                                 
+                                <div class="clear"></div>
                                 
                                 <div class="container-fluid multiple-choice-wrap">
                                     

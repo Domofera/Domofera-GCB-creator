@@ -74,8 +74,12 @@ angular.module('gcbCreatorApp')
 
 
     //****** Funciones de interfaz
-    $scope.Close = function($index){
+    $scope.Close = function($pIndex, $index){
         $scope.preguntas.splice($index,1);
+    };
+
+    $scope.GroupClose = function($pIndex, $index){
+        $scope.preguntas[$pIndex].questionsList.splice($index,1);
     };
 
     $scope.CloseChoice = function($pIndex, $index){
