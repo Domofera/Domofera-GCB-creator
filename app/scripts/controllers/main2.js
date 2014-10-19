@@ -195,13 +195,13 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', function ($sco
             var boton = $('#questions-container>div').eq($index).find('.inner-questions-header span');
 
             lista.each(function(index){
-               if(boton.hasClass('fa-angle-double-down')){ 
+               if(boton.hasClass('fa-angle-double-down') && $(this).hasClass('colapsado')){ 
                     var h = $(this).find('.questions-inside-right').outerHeight(true) + $(this).height();
                     $(this).animate({ height: h }, animColDur);
                     $(this).removeClass('colapsado');
                     $(this).find('.question-collapse').children().eq(0).removeClass('fa-chevron-down').addClass('fa-chevron-up');
                }
-               else{ 
+               else if (boton.hasClass('fa-angle-double-up') && !$(this).hasClass('colapsado')){ 
                     $(this).animate({ height: 45 }, animColDur);
                     $(this).addClass('colapsado');
                     $(this).find('.question-collapse').children().eq(0).removeClass('fa-chevron-up').addClass('fa-chevron-down');
@@ -229,7 +229,6 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', function ($sco
         
 
         //************* EDITOR DE TEXTO
-
 
         $('body').on('mouseenter','#editor-buttons>a, span[contenteditable=true]', function(){
             isHover = true;
