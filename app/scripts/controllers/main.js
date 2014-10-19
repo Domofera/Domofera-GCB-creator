@@ -9,10 +9,10 @@
  */
 
 angular.module('gcbCreatorApp')
-.controller('MainCtrl',['$scope',  function ($scope) {
+.controller('MainCtrl',['$scope',  function ($scope, $compile) {
 
     //******** MODELOS
-
+    
     $scope.preguntas = [
         { questionType: 'freetext',
          questionHTML: '<p style="color:red;">What or is the snow?</p>',
@@ -110,14 +110,9 @@ angular.module('gcbCreatorApp')
 
         // A todos los numeros mayores que el elemento borrado, restarles 1
         for (var i = 0; i < $scope.preguntas[$iGrandparent].questionsList[$iParent].correctIndex.length; i++) {
-            console.log('Be - it: '+i + ' , val: '+$scope.preguntas[$iGrandparent].questionsList[$iParent].correctIndex[i]);
             if($scope.preguntas[$iGrandparent].questionsList[$iParent].correctIndex[i] > $i){
-                console.log('BeCh: '+$scope.preguntas[$iGrandparent].questionsList[$iParent].correctIndex[i]);
                 $scope.preguntas[$iGrandparent].questionsList[$iParent].correctIndex[i]--;
-                console.log('AfCh: '+$scope.preguntas[$iGrandparent].questionsList[$iParent].correctIndex[i]);
             }
-            console.log('Af - it: '+i + ' , val: '+$scope.preguntas[$iGrandparent].questionsList[$iParent].correctIndex[i]);
-            console.log('-------------------------------');
         };
     };
 
@@ -187,5 +182,11 @@ angular.module('gcbCreatorApp')
         });
     };
 
+
+
+
+
 }]);
+
+
 

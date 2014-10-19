@@ -8,7 +8,7 @@
  * # Este controlador se encarga de realizar las cosas auxiliares, como jQuery, u otras funciones no propias de AngularJS
  */
 
-angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', function ($scope) {
+angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', function ($scope, $compile) {
     
 
     var lastFocused;
@@ -274,7 +274,54 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', function ($sco
                 lastFocused.focus();
             }
         });
+      
+        
+        
+    //********************** MODAL EDITOR
+        $scope.Editar = function($event, str, i){       // Elementos de primer nivel
+            var objeto = $($event.currentTarget);
+            console.log(i);
 
+            var ngModel = 'preguntas['+ i +'].'+ str;
+            CrearModal(objeto, ngModel);
+        };
+
+
+        function CrearModal(target, model)
+        {
+            var string = '<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">';
+                string += '<div class="modal-dialog">';
+                 string += '<div class="modal-content">';
+                  string += '<div class="modal-header">';
+                   string += '<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Cerrar</span></button>';
+                   string += '<h4 class="modal-title" id="myModalLabel">Modal title</h4>';
+                  string += '</div>';
+                  string += '<div class="modal-body">';
+
+            var stringFinal = '</div>';
+                stringFinal += '<div class="modal-footer">';
+                 stringFinal += '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>';
+                 stringFinal += '<button type="button" class="btn btn-primary">Save changes</button>';
+                stringFinal += '</div></div></div></div>';
+
+
+            var container = target.parent().prev();
+            var modal = $(string+stringFinal);
+            var isTextarea = container.is('textarea');
+            
+            var aux = '<textarea class="form-control" ng-model="'+ model +'"></textarea>';
+            var final = string + aux + stringFinal;
+
+            //Si es textarea, cargamos el text area solamente
+            if(isTextarea){ 
+                $($compile(final)($scope)).modal();
+            }
+            else  //Sino, cargamos el plugin de Summernote
+            {
+
+            }
+
+        }
     });
 }]);
 
