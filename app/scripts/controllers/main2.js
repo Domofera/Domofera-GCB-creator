@@ -15,7 +15,7 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', fu
     var isHover = false;
     var isFixed = false;
     var isInnerMoving = false;
-    var animColDur = 1000;
+    var animColDur = 500;
 
 
     function boldIt(){
