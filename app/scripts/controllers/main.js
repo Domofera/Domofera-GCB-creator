@@ -12,6 +12,7 @@ angular.module('gcbCreatorApp')
 .controller('MainCtrl',['$scope', '$compile',  function ($scope, $compile) {
 
     //******** MODELOS
+    $scope.titulo = '';
     
     $scope.preguntas = [
         { questionType: 'freetext',
@@ -154,10 +155,22 @@ angular.module('gcbCreatorApp')
         $scope.preguntas[$iGrandparent].questionsList[$iParent].choices.push(arr);
     };
 
+    $scope.InnerAddQuestion = function($index){
+        $scope.preguntas[$index].questionsList.push({ 
+            questionHTML: '', choices: [], correctIndex: []
+        });
+    };
+
+
+    $scope.CrearHTML = function(){
+        $scope.preguntas.push({
+            prevHTML:''
+        });
+    };
+
     $scope.CrearFreetext = function(){
         $scope.preguntas.push({
             questionType: 'freetext',
-            prevHTML:'',
             questionHTML: '',
             correctAnswerString: '',
             correctAnswerOutput: '',
@@ -169,7 +182,6 @@ angular.module('gcbCreatorApp')
     $scope.CrearMultiplechoice = function(){
         $scope.preguntas.push({
             questionType:'multiple choice',
-            prevHTML:'',
             questionHTML:'',
             choices: [
                 ['', false, '']
@@ -177,6 +189,16 @@ angular.module('gcbCreatorApp')
         });
     };
 
+    $scope.CrearMultiplechoiceGroup = function(){
+        $scope.preguntas.push({
+            questionType:'multiple choice group',
+            questionGroupHTML:'',
+            allCorrectMinCount: 1,
+            allCorrectOutput: '',
+            someIncorrectOutput: '',
+            questionsList: []
+        });
+    };
 
 
 //********************** MODAL EDITOR

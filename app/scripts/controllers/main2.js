@@ -51,26 +51,6 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', fu
        }
     }
     
-   /* function ResizeGroup(padre){ 
-        var totalHeight = 0;
-        var lista = padre.find('.question-wrapper');
-        
-        lista.each(function(){ 
-            if($(this).hasClass('colapsado'))
-               totalHeight += 36 + (lista.eq(0).outerHeight(true) - lista.eq(0).outerHeight());
-           else
-               totalHeight += ($(this).outerHeight(true) - $(this).height()) + $(this).find('.questions-inside-right').height(); 
-        });
-
-        // Sumamos los tres primeros bloques
-        var hijos = padre.find('.multiple-choice-group-wrap').children();
-        totalHeight += padre.find('.questions-inside-right>header').outerHeight(true) + hijos.eq(0).outerHeight(true) + hijos.eq(1).outerHeight(true) + hijos.eq(2).outerHeight(true);
-        totalHeight += padre.outerHeight() - padre.height();
-
-        // Seteamos y animamos
-        padre.animate({ height: totalHeight }, animColDur);
-    }*/
-    
     
 
     //***** jQuery
@@ -160,16 +140,10 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', fu
         // Quitar seleccionado
         $('body').on('mousedown', function(e){
             var container = $('#questions-container>div');
-            
-            if (!container.is(e.target)){ // Si no es el bloque con las flechas de movimiento
-                container.removeClass('selected');
-            }
+            container.removeClass('selected');
             
             var innerContainer = $('.inner-sortable>div');
-            
-            if (!innerContainer.is(e.target)){ // Si no es el bloque con las flechas de movimiento
-                innerContainer.removeClass('selected');
-            }
+            innerContainer.removeClass('inner-selected');
         });
         
         
@@ -237,8 +211,6 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', fu
 
                 // Cambiamos el botón de dirección
                 boton.toggleClass('fa-angle-double-down').toggleClass('fa-angle-double-up');
-                
-                //ResizeGroup(padre);
             
                 // Reseteamos la animación
                 inAnimation = true;
