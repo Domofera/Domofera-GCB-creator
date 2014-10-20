@@ -55,8 +55,14 @@
                 </header>
                 
 
-                <div class="question-wrap" ng-show="pregunta.questionType == undefined">
-                    <span class="form-control" contenteditable="true" ng-bind-html="pregunta.prevHTML | unsafe" ng-model="pregunta.prevHTML"></span>
+                <div class="question-wrap" ng-show="pregunta.questionType == undefined"> 
+                   <div class="input-group">
+                      <span class="form-control" contenteditable="true" ng-bind-html="pregunta.prevHTML | unsafe" ng-model="pregunta.prevHTML"></span>
+                      <span class="input-group-btn">
+                        <a class="btn editar" ng-click="Editar($event, 'prevHTML', $index)"><span class="fa fa-edit"></span></a>
+                      </span>
+                    </div>
+                    
                 </div>
 
                 <div class="question-wrap" ng-show="pregunta.questionType != undefined && pregunta.questionType != 'multiple choice group'">

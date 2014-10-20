@@ -54,11 +54,6 @@ angular.module('gcbCreatorApp')
          someIncorrectOutput: 'You must answer at least two questions correctly.'
         },
     ];
-        
-        
-    
-        
-        
 
     //***** Funciones auxiliares
     $scope.LimpiarScope = function(){
@@ -201,8 +196,8 @@ angular.module('gcbCreatorApp')
             $('.modal').remove(); //borramos los que hayan
             $('.summernote').destroy();
             
-            var string = '<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">';
-                string += '<div class="modal-dialog">';
+            var string = '<div class="modal fade editor" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">';
+                string += '<div class="modal-dialog modal-lg">';
                  string += '<div class="modal-content">';
                   string += '<div class="modal-header">';
                    string += '<button type="button" class="btn btn-default" data-dismiss="modal"><span class="fa fa-remove" aria-hidden="true"></span><span class="sr-only">Cerrar</span></button>';
@@ -245,11 +240,13 @@ angular.module('gcbCreatorApp')
                     lang: 'es-ES',
                     toolbar: [
                         ['style', ['bold', 'italic', 'underline', 'clear']],
-                        ['font', ['strikethrough']],
+                        //['font', ['strikethrough']],
                         ['fontsize', ['fontsize']],
                         ['color', ['color']],
                         ['para', ['ul', 'ol', 'paragraph']],
                         ['height', ['height']],
+                        ['insert', ['link', 'picture', 'video', 'table']], //'hr'
+                        ['misc', ['codeview', 'undo', 'redo']],
                     ],
                     oninit: function() {
                         objFinal.find('.note-editable').attr('ng-bind-html', model +' | unsafe').attr('ng-model', model);

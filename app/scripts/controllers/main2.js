@@ -15,8 +15,8 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', fu
     var isHover = false;
     var isFixed = false;
     var isInnerMoving = false;
-    var animColDur = 500;
-
+    var animColDur = 700;
+    var inAnimation = false;
 
     function boldIt(){
         var edit = $('span[contenteditable=true]:focus');
@@ -40,7 +40,7 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', fu
     function Colapsar(objeto, h){
         if(objeto.hasClass('colapsado')){ 
             var h = objeto.find('.questions-inside-right').outerHeight(true) + objeto.height();
-            objeto.animate({ height: h }, animColDur);
+            objeto.animate({ height: h-10 }, animColDur, function(){ objeto.css('height', 'auto'); });
             objeto.removeClass('colapsado');
             objeto.find('.question-collapse').children().eq(0).removeClass('fa-chevron-down').addClass('fa-chevron-up');
        }
@@ -50,6 +50,26 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', fu
             objeto.find('.question-collapse').children().eq(0).removeClass('fa-chevron-up').addClass('fa-chevron-down');
        }
     }
+    
+   /* function ResizeGroup(padre){ 
+        var totalHeight = 0;
+        var lista = padre.find('.question-wrapper');
+        
+        lista.each(function(){ 
+            if($(this).hasClass('colapsado'))
+               totalHeight += 36 + (lista.eq(0).outerHeight(true) - lista.eq(0).outerHeight());
+           else
+               totalHeight += ($(this).outerHeight(true) - $(this).height()) + $(this).find('.questions-inside-right').height(); 
+        });
+
+        // Sumamos los tres primeros bloques
+        var hijos = padre.find('.multiple-choice-group-wrap').children();
+        totalHeight += padre.find('.questions-inside-right>header').outerHeight(true) + hijos.eq(0).outerHeight(true) + hijos.eq(1).outerHeight(true) + hijos.eq(2).outerHeight(true);
+        totalHeight += padre.outerHeight() - padre.height();
+
+        // Seteamos y animamos
+        padre.animate({ height: totalHeight }, animColDur);
+    }*/
     
     
 
@@ -169,60 +189,82 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', fu
         
         
       // Colapsar TODOS
-        $('#boton-colapsado').on('click', function(e){
-            $('#questions-container>div').each(function(index){
-               if($scope.colapsados){ 
-                    var h = $(this).find('.questions-inside-right').outerHeight(true) + $(this).height();
-                    $(this).animate({ height: h }, animColDur);
-                    $(this).removeClass('colapsado');
-                    $(this).find('.question-collapse').children().eq(0).removeClass('fa-chevron-down').addClass('fa-chevron-up');
-               }
-               else{ 
-                    $(this).animate({ height: 36 }, animColDur);
-                    $(this).addClass('colapsado');
-                    $(this).find('.question-collapse').children().eq(0).removeClass('fa-chevron-up').addClass('fa-chevron-down');
-               }
-            });
-            
-            $scope.$apply(function(){
-                $scope.colapsados = !$scope.colapsados;
-            });
+        $('#boton-colapsado').on('click', function(e){ 
+            if(!inAnimation){
+                $('#questions-container>div').each(function(index){
+                   if($scope.colapsados){ 
+                        var h = $(this).find('.questions-inside-right').outerHeight(true) + $(this).height();
+                        $(this).animate({ height: h-10 }, animColDur, function(){ $(this).css('height', 'auto'); });
+                        $(this).removeClass('colapsado');
+                        $(this).find('.question-collapse').children().eq(0).removeClass('fa-chevron-down').addClass('fa-chevron-up');
+                   }
+                   else{ 
+                        $(this).animate({ height: 36 }, animColDur);
+                        $(this).addClass('colapsado');
+                        $(this).find('.question-collapse').children().eq(0).removeClass('fa-chevron-up').addClass('fa-chevron-down');
+                   }
+                });
+
+                $scope.$apply(function(){
+                    $scope.colapsados = !$scope.colapsados;
+                });
+                inAnimation = true;
+                setTimeout(function(){ inAnimation=false; }, animColDur);
+            }
         });
         
-        
+        // A los de Grupo, hay que recalcular el del padre
         $scope.GroupCollapseAll = function($index){ 
-            var lista = $('#questions-container>div').eq($index).find('.question-wrapper');
-            var boton = $('#questions-container>div').eq($index).find('.inner-questions-header span');
+            if(!inAnimation){ 
+                var padre = $('#questions-container>div').eq($index);
+                var lista = padre.find('.question-wrapper');
+                var boton = padre.find('.inner-questions-header span');
 
-            lista.each(function(index){
-               if(boton.hasClass('fa-angle-double-down') && $(this).hasClass('colapsado')){ 
-                    var h = $(this).find('.questions-inside-right').outerHeight(true) + $(this).height();
-                    $(this).animate({ height: h }, animColDur);
-                    $(this).removeClass('colapsado');
-                    $(this).find('.question-collapse').children().eq(0).removeClass('fa-chevron-down').addClass('fa-chevron-up');
-               }
-               else if (boton.hasClass('fa-angle-double-up') && !$(this).hasClass('colapsado')){ 
-                    $(this).animate({ height: 45 }, animColDur);
-                    $(this).addClass('colapsado');
-                    $(this).find('.question-collapse').children().eq(0).removeClass('fa-chevron-up').addClass('fa-chevron-down');
-               }
-            });
+                // Colapsamos / Expandimos los bloques de preguntas
+                lista.each(function(index){
+                   if(boton.hasClass('fa-angle-double-down') && $(this).hasClass('colapsado')){ // Expandimos
+                        var h = $(this).find('.questions-inside-right').outerHeight(true) + $(this).height();
+                        $(this).animate({ height: h-10 }, animColDur, function(){ $(this).css('height', 'auto'); });
+                        $(this).removeClass('colapsado');
+                        $(this).find('.question-collapse').children().eq(0).removeClass('fa-chevron-down').addClass('fa-chevron-up');
+                   }
+                   else if (boton.hasClass('fa-angle-double-up') && !$(this).hasClass('colapsado')){ // Colapsamos
+                        $(this).animate({ height: 45 }, animColDur);
+                        $(this).addClass('colapsado');
+                        $(this).find('.question-collapse').children().eq(0).removeClass('fa-chevron-up').addClass('fa-chevron-down');
+                   }
+                });
+
+                // Cambiamos el botón de dirección
+                boton.toggleClass('fa-angle-double-down').toggleClass('fa-angle-double-up');
+                
+                //ResizeGroup(padre);
             
-            boton.toggleClass('fa-angle-double-down').toggleClass('fa-angle-double-up');
+                // Reseteamos la animación
+                inAnimation = true;
+                setTimeout(function(){ inAnimation=false; }, animColDur);
+            }
         };
         
         
       // Colapsar UNO
         $scope.Collapse = function($index){ 
-            var objeto = $('#questions-container>div').eq($index);
-
-            Colapsar(objeto, 36);
+            if(!inAnimation){
+                var objeto = $('#questions-container>div').eq($index);
+                Colapsar(objeto, 36);                
+                inAnimation = true;
+                setTimeout(function(){ inAnimation=false; }, animColDur);
+            }
         };
         
         $scope.GroupCollapse = function($pIndex, $index){ 
-            var objeto = $('#questions-container>div').eq($pIndex).find('.question-wrapper').eq($index);
-
-            Colapsar(objeto, 45);
+            if(!inAnimation){
+                var objeto = $('#questions-container>div').eq($pIndex).find('.question-wrapper').eq($index);
+                Colapsar(objeto, 45);
+                
+                inAnimation = true;
+                setTimeout(function(){ inAnimation=false; }, animColDur);
+            }
         };
         
         

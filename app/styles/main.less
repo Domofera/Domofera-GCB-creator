@@ -604,46 +604,61 @@ main{
 }
 
 
+
 .modal{ 
     @cl-modal: #444;
     
-    .modal-content{
+    .modal-content
+    {
         overflow: hidden;
-    }
-    
-    .modal-header{
-        text-align: center;
-        background: @cl-modal;
-        color: @cl-question-font;
         
-        button.btn{
-            position: absolute;
-            top: 10px; right: 10px;
-            transition: all @trans-buttons ease;
-            font-size: 17px;
-            padding: 4px 11px;
+        >.modal-header{
+            text-align: center;
+            background: @cl-modal;
+            color: @cl-question-font;
+
+            button.btn{
+                position: absolute;
+                top: 10px; right: 10px;
+                transition: all @trans-buttons ease;
+                font-size: 17px;
+                padding: 4px 11px;
+            }
         }
-    }
-    
-    .modal-body{
-        >textarea, >span[contenteditable="true"]{
-            min-height: 200px;
-            max-height: 400px;
-            resize: vertical;
+
+        >.modal-body{
+            >textarea, >span[contenteditable="true"]{
+                min-height: 200px;
+                max-height: 400px;
+                resize: vertical;
+            }
         }
-    }
-    
-    .modal-footer{ 
-        text-align: center;
-        background: @cl-modal;
+
+        >.modal-footer{ 
+            text-align: center;
+            background: @cl-modal;
+
+            .btn-default{
+                transition: all @trans-buttons ease;
+                padding: 8px 16px;
+                font-size: 15px;
+                box-shadow: 0px 1px 3px rgba(0,0,0,0.5);
+            }
+        }
         
-        .btn-default{
-            transition: all @trans-buttons ease;
-            padding: 8px 16px;
-            font-size: 15px;
-            box-shadow: 0px 1px 3px rgba(0,0,0,0.5);
+        .note-dialog{
+            .modal-header{
+                color: #333;
+                background: #eee;
+            }
+            .modal-footer{
+                text-align: center;
+                background: #eee;
+            }
         }
     }
+    
+    
 }
 
 
