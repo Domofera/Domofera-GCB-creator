@@ -55,6 +55,7 @@ angular.module('gcbCreatorApp')
          someIncorrectOutput: 'You must answer at least two questions correctly.'
         },
     ];
+        
 
     //***** Funciones auxiliares
     $scope.LimpiarScope = function(){

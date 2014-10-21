@@ -1,6 +1,8 @@
 <div class="container" ng-controller="Main2Ctrl">
    
    <div id="bloque-msg"></div>
+ 
+  <form id="main_form" name="main_form" novalidate ng-submit="HacerPeticion()" ng-controller="FormCtrl">
    
     <div class="panel panel-default" style="background: #eee">
         <nav id="gcbc-toolbar" class="btn-toolbar">
@@ -8,14 +10,15 @@
                 <div class="col-sm-6">
                     <div class="btn-group">
                         <a class="btn btn-default" data-toggle="tooltip" title="Borrar todo" ng-click="LimpiarScope()"><i class="glyphicon glyphicon-remove-circle"></i></a>
-                        <a class="btn btn-default" data-toggle="tooltip" title="Descargar"><i class="glyphicon glyphicon-floppy-save"></i></a>
+                        <button class="btn btn-default" type="submit" data-toggle="tooltip" title="Descargar"><i class="glyphicon glyphicon-floppy-save"></i></button>
                         <a id="boton-colapsado" class="btn btn-default" data-toggle="tooltip" title="Collapsar / Expandir">
                             <i ng-show="!colapsados" class="fa fa-chevron-up"></i>
                             <i ng-show="colapsados" class="fa fa-chevron-down"></i>
-                        </a> 
+                        </a>
                     </div>
                 
                     <div class="btn-group pull-right">
+                       <a class="btn btn-default" data-toggle="tooltip" title="Nuevo HTML" ng-click="CrearHTML()"><i class="fa fa-header"></i></a>
                         <a class="btn btn-default" data-toggle="tooltip" title="Nuevo free-text" ng-click="CrearFreetext()"><i class="glyphicon glyphicon-pencil"></i></a>
                         <a class="btn btn-default" data-toggle="tooltip" title="Nuevo mult-choice" ng-click="CrearMultiplechoice()"><i class="glyphicon glyphicon-minus"></i></a>
                         <a class="btn btn-default" data-toggle="tooltip" title="Nuevo mult-choice-list" ng-click="CrearMultiplechoiceGroup()"><i class="glyphicon glyphicon-th-list"></i></a>
@@ -33,24 +36,32 @@
         </nav>
     </div>
 
-    <div id="bloque-titulo">
-        <input class="form-control" type="text" ng-model="titulo" placeholder="Titulo... (Debe ser activity-X.X)" required>
+  
+   <!-- TITULO -->
+    <div id="bloque-titulo" ng-class="{ 'has-error' : main_form.titulo.$invalid && watch_errors , 'has-success' : main_form.titulo.$valid && watch_errors }">
+        <input class="form-control" name="titulo" type="text" ng-model="titulo" placeholder="Titulo...(activity-X.X)" ng-pattern="/activity\-[0-9]+\.[0-9]+/" required> 
+        <div class="error-container" ng-if="watch_errors && main_form.titulo.$invalid">
+            <small class="help-block" ng-show="main_form.titulo.$error.required">Inserta un Título</small>
+            <small class="help-block" ng-show="main_form.titulo.$error.pattern">Formato incorrecto. Debe ser "activity-X.X" donde las X son "tema.actividad"</small>
+        </div>
     </div>
-
+  </form>
+   
    
     <!--  CONTENIDO de las Preguntas -->
 
     <div id="questions-container" class="panel panel-default" ui-sortable ng-model="preguntas">
-        <div class="question-wrapper" ng-repeat="pregunta in preguntas track by $index">
+        <div class="question-wrapper" ng-repeat="pregunta in preguntas track by $index" ng-form="preguntaForm">
 
             <div class="questions-inside-left">
                 <span class="glyphicon glyphicon-move"></span>
             </div>
 
-
+         
+          <!-- Pregunta -->
             <div class="questions-inside-right">
                 <header>
-                   <h3>Pregunta {{$index + 1}} <i>({{pregunta.questionType}}<span ng-show="pregunta.questionType == undefined">Sólo HTML</span>)</i></h3>
+                   <h3>Pregunta {{$index + 1}} <i>({{pregunta.questionType}}<span ng-if="pregunta.questionType == undefined">Sólo HTML</span>)</i></h3>
                     <div class="question-header-buttons">
                         <a class="question-collapse" ng-click="Collapse($index)">
                           <span class="fa fa-chevron-up"></span>
@@ -59,21 +70,22 @@
                     </div>
                 </header>
                 
-
-                <div class="question-wrap" ng-show="pregunta.questionType == undefined"> 
+                
+            <!-- Sólo HTML -->
+                <div class="question-wrap" ng-if="pregunta.questionType == undefined"> 
                    <div class="input-group">
-                      <span class="form-control" contenteditable="true" ng-bind-html="pregunta.prevHTML | unsafe" ng-model="pregunta.prevHTML" required></span>
+                      <span class="form-control" name="prevhtml" contenteditable="true" ng-bind-html="pregunta.prevHTML | unsafe" ng-model="pregunta.prevHTML" required></span>
                       <span class="input-group-btn">
                         <a class="btn editar" ng-click="Editar($event, 'prevHTML', $index)"><span class="fa fa-edit"></span></a>
                       </span>
                     </div>
-                    
                 </div>
 
-                <div class="question-wrap" ng-show="pregunta.questionType != undefined && pregunta.questionType != 'multiple choice group'">
+            <!-- PREGUNTA en general -->
+                <div class="question-wrap" ng-if="pregunta.questionType != undefined && pregunta.questionType != 'multiple choice group'">
                     <span class="span-label"><b>Pregunta: </b></span>
-                    <div class="input-group">
-                      <span class="form-control" contenteditable="true" ng-model="pregunta.questionHTML" ng-bind-html="pregunta.questionHTML | unsafe" required></span>
+                    <div class="input-group ">
+                      <span class="form-control" name="preg" contenteditable="true" ng-bind-html="pregunta.questionHTML | unsafe" ng-model="pregunta.questionHTML" required></span>
                       <span class="input-group-btn">
                         <a class="btn editar" ng-click="Editar($event, 'questionHTML', $index)"><span class="fa fa-edit"></span></a>
                       </span>
@@ -81,21 +93,21 @@
                 </div>
 
                 <!-- FreeText question -->
-                <div class="container-fluid" ng-show="pregunta.questionType == 'freetext'">
-                    <div class="col-sm-4">
-                        <textarea class="form-control" placeholder="Respuesta..." ng-model="pregunta.correctAnswerString" required></textarea>
+                <div class="container-fluid" ng-if="pregunta.questionType == 'freetext'">
+                    <div class="col-sm-4 ">
+                        <textarea class="form-control" name="ftcorrectanswer" placeholder="Respuesta..." ng-model="pregunta.correctAnswerString" required></textarea>
                     </div>
                     <div class="col-sm-4">
-                        <div class="input-group">
-                           <textarea class="form-control" ng-model="pregunta.correctAnswerOutput" placeholder="Feedback OK..." required></textarea>
+                        <div class="input-group ">
+                           <textarea class="form-control" name="ftfeedbackok" ng-model="pregunta.correctAnswerOutput" placeholder="Feedback OK..." required></textarea>
                            <span class="input-group-btn">
                             <a class="btn editar" ng-click="Editar($event, 'correctAnswerOutput', $index)"><span class="fa fa-edit"></span></a>
                           </span>
                         </div>
                     </div>
                     <div class="col-sm-4">
-                       <div class="input-group">
-                           <textarea class="form-control" ng-model="pregunta.incorrectAnswerOutput" placeholder="Feedback Mal..." required></textarea>
+                       <div class="input-group ">
+                           <textarea class="form-control" name="ftfeedbackwrong" ng-model="pregunta.incorrectAnswerOutput" placeholder="Feedback Mal..." required></textarea>
                            <span class="input-group-btn">
                             <a class="btn editar" ng-click="Editar($event, 'incorrectAnswerOutput', $index)"><span class="fa fa-edit"></span></a>
                           </span>
@@ -105,18 +117,18 @@
 
 
                 <!-- Multiple choice question -->
-                <div class="container-fluid multiple-choice-wrap" ng-show="pregunta.questionType == 'multiple choice'">
+                <div class="container-fluid multiple-choice-wrap" ng-if="pregunta.questionType == 'multiple choice'">
                     <span class="span-label"><b>Respuestas: </b></span>
                    <ol>
                        <li class="choice-animation" ng-repeat="choice in pregunta.choices track by $index">
                           <span class="num-list"></span>
                            <ul>
-                               <li>
-                                   <textarea class="form-control" type="text" placeholder="Texto..." ng-model="choice[0]" required></textarea>
+                               <li class="">
+                                   <textarea class="form-control" name="mcanswer" type="text" placeholder="Texto..." ng-model="choice[0]" required></textarea>
                                </li>
                                <li>
-                                  <div class="input-group">
-                                   <textarea class="form-control" type="text" placeholder="Salida..." ng-model="choice[2]" required></textarea>
+                                  <div class="input-group ">
+                                   <textarea class="form-control" name="mcfeedback" type="text" placeholder="Salida..." ng-model="choice[2]" required></textarea>
                                    <span class="input-group-btn">
                                       <a class="btn editar" ng-click="Editar($event, 'choices[{{$index}}][2]', $parent.$index)"><span class="fa fa-edit"></span></a>
                                   </span>
@@ -138,12 +150,12 @@
 
 
                 <!-- Group multiple choice question -->
-                <div class="container-fluid multiple-choice-group-wrap" ng-show="pregunta.questionType == 'multiple choice group'">
+                <div class="container-fluid multiple-choice-group-wrap" ng-if="pregunta.questionType == 'multiple choice group'">
                     <!-- Enunciado -->
                     <div class="question-wrap">
                         <span class="span-label"><b>Enunciado: </b></span>
-                        <div class="input-group">
-                          <span class="form-control" contenteditable="true" ng-model="pregunta.questionHTML" ng-bind-html="pregunta.questionHTML | unsafe" required></span>
+                        <div class="input-group ">
+                          <span class="form-control" name="mcgenunciado" contenteditable="true" ng-model="pregunta.questionHTML" ng-bind-html="pregunta.questionHTML | unsafe" required></span>
                           <span class="input-group-btn">
                             <a class="btn editar" ng-click="Editar($event, 'questionHTML', $index)"><span class="fa fa-edit"></span></a>
                           </span>
@@ -153,23 +165,23 @@
                     <!-- Feedback and minCorrectAnswers -->
                     <div class="container-fluid">
                         <div class="col-sm-5">
-                            <div class="input-group">
-                               <textarea class="form-control" placeholder="Feedback OK..." ng-model="pregunta.allCorrectOutput" required></textarea>
+                            <div class="input-group ">
+                               <textarea class="form-control" name="mcgfeedbackok" placeholder="Feedback OK..." ng-model="pregunta.allCorrectOutput" required></textarea>
                                <span class="input-group-btn">
                                 <a class="btn editar" ng-click="Editar($event, 'allCorrectOutput', $index)"><span class="fa fa-edit"></span></a>
                               </span>
                             </div>
                         </div>
                         <div class="col-sm-5">
-                            <div class="input-group">
-                               <textarea class="form-control" ng-model="pregunta.someIncorrectOutput" placeholder="Feedback Wrong..." required></textarea>
+                            <div class="input-group ">
+                               <textarea class="form-control" name="mcgfeedbackwrong" ng-model="pregunta.someIncorrectOutput" placeholder="Feedback Wrong..." required></textarea>
                                <span class="input-group-btn">
                                 <a class="btn editar" ng-click="Editar($event, 'someIncorrectOutput', $index)"><span class="fa fa-edit"></span></a>
                               </span>
                             </div>
                         </div>
-                        <div class="col-sm-2">
-                            <input type="number" min="1" max="{{pregunta.questionsList.length}}" step="1" class="form-control" ng-model="pregunta.allCorrectMinCount" placeholder="1" required></input>
+                        <div class="col-sm-2 ">
+                            <input name="mcgnumber" type="number" min="1" max="{{pregunta.questionsList.length}}" step="1" class="form-control" ng-model="pregunta.allCorrectMinCount" placeholder="1" required></input>
                         </div>
                     </div>
                     
@@ -252,7 +264,7 @@
 
         </div>
     </div>
-    
+
     <pre>{{preguntas | json}}</pre>
     
 </div>

@@ -288,9 +288,6 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', fu
                 lastFocused.focus();
             }
         });
-      
-        
-        
     
     });
 }]);

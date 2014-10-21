@@ -2,7 +2,7 @@
   "name": "Gcb-creator",
   "version": "0.0.0",
   "dependencies": {
-    "angular": "~1.2.0",
+    "angular":"~1.2.0",
     "angular-ui-sortable": "~0.12.11",
     "jquery-ui-touch-punch-improved": "0.3.1",
     "json3": "~3.3.1",
