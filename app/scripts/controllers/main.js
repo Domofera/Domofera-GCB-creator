@@ -12,7 +12,13 @@ angular.module('gcbCreatorApp')
 .controller('MainCtrl',['$scope', '$compile',  function ($scope, $compile) {
 
     //******** MODELOS
-    $scope.titulo = '';
+    $scope.titulo = {
+        text: 'sfdsda'
+    };
+    $scope.tituloState = {
+        error : false,
+        success: false
+    };
     
     $scope.preguntas = [
         { questionType: 'freetext',
@@ -53,9 +59,8 @@ angular.module('gcbCreatorApp')
          allCorrectMinCount: 2,
          allCorrectOutput: 'Great job! You know the material well.',
          someIncorrectOutput: 'You must answer at least two questions correctly.'
-        },
+        }
     ];
-        
 
     //***** Funciones auxiliares
     $scope.LimpiarScope = function(){
@@ -205,8 +210,6 @@ angular.module('gcbCreatorApp')
 //********************** MODAL EDITOR
         $scope.Editar = function($event, str, i){       // Elementos de primer nivel
             var objeto = $($event.currentTarget);
-            console.log(i + ' ' +str);
-            //console.log($scope.preguntas[3].choices[3][2]);
 
             var ngModel = 'preguntas['+ i +'].'+ str;
             
@@ -286,6 +289,22 @@ angular.module('gcbCreatorApp')
         $('[data-toggle="tooltip"]').tooltip({container: 'body'}); // Seteamos el tooltip
     });
 
+                        
+                        
+//************* ENVIAR / RECIBIR DATOS  
+    
+    $scope.HacerPeticion = function(){
+                        
+        var patt = new RegExp('^activity\-[0-9]+\.[0-9]+$');
+         console.log('Titulo: ' + $scope.titulo.text + ' --> ' + patt.test($scope.titulo.text));
+        console.log('--------');
+                        
+        // COMPROBAR QUE EL CAMPO ESTÁ CORRECTO
+                        
+        // SI TITULOSTATE.ERROR Y TITULOSTATE.SUCCESS son falsos, es que no se ha enviado aún
+  
+    }
+                        
 }]);
 
 

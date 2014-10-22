@@ -2,15 +2,13 @@
    
    <div id="bloque-msg"></div>
  
-  <form id="main_form" name="main_form" novalidate ng-submit="HacerPeticion()" ng-controller="FormCtrl">
-   
     <div class="panel panel-default" style="background: #eee">
         <nav id="gcbc-toolbar" class="btn-toolbar">
             <div class="container">
                 <div class="col-sm-6">
                     <div class="btn-group">
                         <a class="btn btn-default" data-toggle="tooltip" title="Borrar todo" ng-click="LimpiarScope()"><i class="glyphicon glyphicon-remove-circle"></i></a>
-                        <button class="btn btn-default" type="submit" data-toggle="tooltip" title="Descargar"><i class="glyphicon glyphicon-floppy-save"></i></button>
+                        <a class="btn btn-default" ng-click="HacerPeticion()" data-toggle="tooltip" title="Descargar"><i class="glyphicon glyphicon-floppy-save"></i></a>
                         <a id="boton-colapsado" class="btn btn-default" data-toggle="tooltip" title="Collapsar / Expandir">
                             <i ng-show="!colapsados" class="fa fa-chevron-up"></i>
                             <i ng-show="colapsados" class="fa fa-chevron-down"></i>
@@ -38,21 +36,18 @@
 
   
    <!-- TITULO -->
-    <div id="bloque-titulo" ng-class="{ 'has-error' : main_form.titulo.$invalid && watch_errors , 'has-success' : main_form.titulo.$valid && watch_errors }">
-        <input class="form-control" name="titulo" type="text" ng-model="titulo" placeholder="Titulo...(activity-X.X)" ng-pattern="/activity\-[0-9]+\.[0-9]+/" required> 
-        <div class="error-container" ng-if="watch_errors && main_form.titulo.$invalid">
-            <small class="help-block" ng-show="main_form.titulo.$error.required">Inserta un Título</small>
-            <small class="help-block" ng-show="main_form.titulo.$error.pattern">Formato incorrecto. Debe ser "activity-X.X" donde las X son "tema.actividad"</small>
+    <div id="bloque-titulo" ng-model="titulo">
+        <input type="text" class="form-control" ng-model="titulo.text" placeholder="Titulo... (activity-X.X)">
+        <div class="error-container" ng-if="tituloState.error">
+            <small class="help-block">Formato incorrecto. Debe ser "activity-X.X" donde las X son "tema.actividad"</small>
         </div>
     </div>
-  
-   
    
     <!--  CONTENIDO de las Preguntas -->
 
-    <div id="questions-container" class="panel panel-default" ui-sortable ng-model="preguntas">
-        <div class="question-wrapper" ng-repeat="pregunta in preguntas track by $index" ng-form="preguntaForm" on-finish-render>
-
+    <div id="questions-container" class="panel panel-default" ui-sortable ng-model="preguntas"> 
+       
+        <div class="question-wrapper" ng-repeat="pregunta in preguntas track by $index" on-finish-render>
             <div class="questions-inside-left">
                 <span class="glyphicon glyphicon-move"></span>
             </div>
@@ -266,8 +261,6 @@
 
         </div>
     </div>
-
-   </form>
    
     <pre>{{preguntas | json}}</pre>
     

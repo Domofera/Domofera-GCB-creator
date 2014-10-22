@@ -9,7 +9,6 @@
  */
 
 angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', function ($scope, $compile) {
-    
 
     var lastFocused;
     var isHover = false;
