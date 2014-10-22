@@ -201,6 +201,15 @@ angular.module('gcbCreatorApp')
         });
     };
 
+    $scope.ParsearPreguntas = function(){
+        var parsedScope = [];
+        $scope.preguntas.forEach(function(obj) {
+            if (Object.keys(obj)[0] === 'prevHTML') parsedScope.push(obj.prevHTML);
+            else parsedScope.push(JSON.stringify(obj));
+        });
+        return parsedScope;
+    }
+
 
 //********************** MODAL EDITOR
         $scope.Editar = function($event, str, i){       // Elementos de primer nivel
