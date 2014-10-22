@@ -45,13 +45,13 @@
             <small class="help-block" ng-show="main_form.titulo.$error.pattern">Formato incorrecto. Debe ser "activity-X.X" donde las X son "tema.actividad"</small>
         </div>
     </div>
-  </form>
+  
    
    
     <!--  CONTENIDO de las Preguntas -->
 
     <div id="questions-container" class="panel panel-default" ui-sortable ng-model="preguntas">
-        <div class="question-wrapper" ng-repeat="pregunta in preguntas track by $index" ng-form="preguntaForm">
+        <div class="question-wrapper" ng-repeat="pregunta in preguntas track by $index" ng-form="preguntaForm" on-finish-render>
 
             <div class="questions-inside-left">
                 <span class="glyphicon glyphicon-move"></span>
@@ -182,6 +182,8 @@
                         </div>
                         <div class="col-sm-2 ">
                             <input name="mcgnumber" type="number" min="1" max="{{pregunta.questionsList.length}}" step="1" class="form-control" ng-model="pregunta.allCorrectMinCount" placeholder="1" required></input>
+                            
+                            <a class="btn-ayuda" data-toggle="tooltip" title="Mínimo de preguntas correctas"><span class="fa fa-question"></span></a>    
                         </div>
                     </div>
                     
@@ -265,6 +267,8 @@
         </div>
     </div>
 
+   </form>
+   
     <pre>{{preguntas | json}}</pre>
     
 </div>

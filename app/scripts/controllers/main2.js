@@ -57,8 +57,9 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', fu
 
     $(document).ready(function () {
 
-        $('#gcbc-toolbar .btn').tooltip({container: 'body'}); // Seteamos el tooltip
-
+        
+        
+        
     // Cambiamos el valor de isFixed, para que ponga el toolbar fijo
         $(window).scroll(function(){
             if ($(this).scrollTop() > 105 && !isFixed) {
@@ -288,7 +289,6 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', fu
                 lastFocused.focus();
             }
         });
-    
     });
 }]);
 

@@ -30,6 +30,8 @@
 
     &:hover,&:focus{
         background: screen(saturate(@cl,@porc), @mult);
+        color: @cl-fn;
+        text-decoration: none;
     }
 }
 
@@ -128,6 +130,19 @@
 }
 
 
+.btn-ayuda{
+    .make-rounded-button(@cl: #444; @porc: 0%);
+    border: 3px solid #fff;
+    font-size: 18px;
+    padding:  2px 10px;
+    display: inline-block;
+    float: left;
+    margin-left: 8px;
+    
+    >span{ margin-left: -1px; }
+}
+
+
 
 //******************** ANIMACIONES
 
@@ -211,6 +226,9 @@
     color: #a94442;
     margin-bottom: 0;
 }
+
+
+
 
 
 .form-control::-webkit-input-placeholder { color: #aaa; } /* WebKit */
@@ -515,6 +533,26 @@ main{
                             font-size: 16px;
                             
                             i{ margin-right: 7px; }
+                        }
+                    }
+                    
+                    .container-fluid{ 
+                        .col-sm-2>input{
+                            max-width: 90px;
+                            display: inline-block;
+                            float: left;
+                        }
+                        
+                        @media (min-width: 768px){
+                            
+                            .col-sm-5{
+                                width: 38%;
+                            }
+                            
+                            .col-sm-2{
+                                width: 24%;
+                                padding-right: 0;
+                            }
                         }
                     }
                     

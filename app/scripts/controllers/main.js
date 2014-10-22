@@ -279,6 +279,12 @@ angular.module('gcbCreatorApp')
             }
                 
         }
+                  
+                        
+//************* VIEW LOADED
+    $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
+        $('[data-toggle="tooltip"]').tooltip({container: 'body'}); // Seteamos el tooltip
+    });
 
 }]);
 
