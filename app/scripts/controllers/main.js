@@ -18,6 +18,10 @@ angular.module('gcbCreatorApp')
         success: false
     };
     
+    $scope.config = {
+        isActivity: true,
+    }
+    
     $scope.preguntas = [
         { questionType: 'freetext',
          questionHTML: '<p style="color:red;">What or is the snow?</p>',
@@ -118,7 +122,7 @@ angular.module('gcbCreatorApp')
             if($scope.preguntas[$iGrandparent].questionsList[$iParent].correctIndex[i] > $i){
                 $scope.preguntas[$iGrandparent].questionsList[$iParent].correctIndex[i]--;
             }
-        };
+        }
     };
 
     
@@ -148,11 +152,16 @@ angular.module('gcbCreatorApp')
 
     $scope.MarcarSingle = function($iParent, $i){
         $scope.preguntas[$iParent].choices[$i][1] = !$scope.preguntas[$iParent].choices[$i][1];
-    }
+    };
 
     $scope.MarcarMultiselect = function($iParent, $i){
         $scope.preguntas[$iParent].questionsList[$i].multiSelect = !$scope.preguntas[$iParent].questionsList[$i].multiSelect;
-    }
+    };
+    
+    $scope.CheckNumber = function($i){ 
+        var num = Math.floor(parseFloat($scope.preguntas[$i].allCorrectMinCount));
+        $scope.preguntas[$i].allCorrectMinCount = (!isNaN(num) ? num : 1);
+    };
 
 
 //***** Factories
@@ -174,15 +183,17 @@ angular.module('gcbCreatorApp')
     };
 
 
-    $scope.CrearHTML = function(){
-        $scope.preguntas.push({
+    $scope.CrearHTML = function(i){ 
+        var obj = {
             prevHTML:'',
             colapsado: false
-        });
+        };
+        
+        (i < 0 ? $scope.preguntas.push(obj) : $scope.preguntas.splice(i,0,obj));
     };
 
-    $scope.CrearFreetext = function(){
-        $scope.preguntas.push({
+    $scope.CrearFreetext = function(i){
+        var obj = {
             questionType: 'freetext',
             questionHTML: '',
             correctAnswerString: '',
@@ -190,22 +201,26 @@ angular.module('gcbCreatorApp')
             incorrectAnswerOutput: '',
             showAnswerOutput: '',
             colapsado: false
-        });
+        };
+        
+        (i < 0 ? $scope.preguntas.push(obj) : $scope.preguntas.splice(i,0,obj));
     };
 
-    $scope.CrearMultiplechoice = function(){
-        $scope.preguntas.push({
+    $scope.CrearMultiplechoice = function(i){
+        var obj = {
             questionType:'multiple choice',
             questionHTML:'',
             choices: [
                 ['', false, '']
             ],
             colapsado: false
-        });
+        };
+        
+        (i < 0 ? $scope.preguntas.push(obj) : $scope.preguntas.splice(i,0,obj));
     };
 
-    $scope.CrearMultiplechoiceGroup = function(){
-        $scope.preguntas.push({
+    $scope.CrearMultiplechoiceGroup = function(i){
+        var obj = {
             questionType:'multiple choice group',
             questionGroupHTML:'',
             allCorrectMinCount: 1,
@@ -213,7 +228,9 @@ angular.module('gcbCreatorApp')
             someIncorrectOutput: '',
             questionsList: [],
             colapsado: false
-        });
+        };
+        
+        (i < 0 ? $scope.preguntas.push(obj) : $scope.preguntas.splice(i,0,obj));
     };
 
 
@@ -297,7 +314,13 @@ angular.module('gcbCreatorApp')
                         
 //************* VIEW LOADED
     $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
-        setTimeout(function(){ $('[data-toggle="tooltip"]').tooltip({container: 'body', trigger: 'hover click'})} , 150); // Seteamos el tooltip
+        setTimeout(function(){ $('[data-toggle="tooltip"]').tooltip({container: 'body', trigger: 'hover click'});} , 350); // Seteamos el tooltip
+        setTimeout(function(){ 
+            $('[data-toggle="popover"]').popover({
+                html: true, placement: 'top', container: 'body', trigger: 'click',
+                content: function () { return $compile($(this).next().html())($scope); }
+            });
+        } , 50); // Seteamos el popover
     });
 
                         

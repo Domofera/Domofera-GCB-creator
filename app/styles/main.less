@@ -13,7 +13,7 @@
 @tam-question-left: 40px;
 @tam-add-button: 30px;
 
-@anim-view-dur: 0.25s;
+@anim-view-dur: 0.2s;
 @trans-buttons: 0.2s;
 
 
@@ -157,12 +157,12 @@
 
 @keyframes view_enter{
     0% { opacity: 0; }
-    50% { opacity: 0; }
+    51% { opacity: 0; }
     100% { opacity: 1; }
 }
 @keyframes view_leave{
     0% { opacity: 1; }
-    100% { opacity: 0; }
+    100% { opacity: 0; height: 0;}
 }
 
 
@@ -281,6 +281,10 @@ main{
             border: 1px solid darken(@cl-nav-fixed, 5%);
             margin: 0 auto;
             border-radius: 5px;
+        } 
+        
+        .btn-group{
+            margin-right: 12px;
         }
         
         #editor-buttons{
@@ -296,6 +300,31 @@ main{
 //*** PREGUNTAS
     #questions-container{ 
         
+        .insert-question{
+            width: 100%;
+            text-align: center;
+            
+            a.open-popover{
+                margin: 5px auto;
+                background: #eee;
+                cursor: pointer;
+                color: #000;
+                width: 100%;
+                display: block;
+                transition: all 0.5s ease;
+                
+                &:hover, &:focus{
+                    background: #d3d3d3;
+                    outline: 0;
+                }
+                
+                &.selected, &.selected:hover, &.selected:focus{ 
+                    color: #fff;
+                    background: @cl-question;
+                }
+            }
+        }
+        
         .question-wrapper.colapsado{
             height: 36px !important;
         }
@@ -310,7 +339,6 @@ main{
             position: relative;
             border: 2px solid @cl-question;
             background: screen(@cl-question,#eee);
-            margin: 10px auto;
             border-radius: 6px;
             padding: 7px 15px; 
             overflow: hidden;
@@ -535,6 +563,10 @@ main{
                 .multiple-choice-group-wrap{ 
                     .row{
                         margin: 0;
+                    }
+                    
+                    .question-wrapper{
+                        margin: 10px auto;
                     }
                     
                     .row.centrado{

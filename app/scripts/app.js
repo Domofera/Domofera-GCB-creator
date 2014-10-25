@@ -29,6 +29,14 @@ mainModule.config(['$routeProvider', function ($routeProvider) {
         templateUrl: 'views/about.html',
         controller: 'AboutCtrl'
     })
+    .when('/instructions', {
+      templateUrl: 'views/instructions.html',
+      controller: 'InstructionsCtrl'
+    })
+    .when('/assesment', {
+      templateUrl: 'views/assesment.html',
+      controller: 'AssesmentCtrl'
+    })
     .otherwise({
         redirectTo: '/'
     });

@@ -37,7 +37,9 @@
               </div>
               <nav id="nav-list" class="collapse navbar-collapse" role="navigation"  ng-controller="HeaderController">
                   <ul class="nav navbar-nav">
-                      <li ng-class="{ active: isActive('/')}"><a ng-href="#/">Home</a></li>
+                      <li ng-class="{ active: isActive('/')}"><a ng-href="#/">Actividad</a></li>
+                      <li ng-class="{ active: isActive('/assesment')}"><a ng-href="#/assesment">Examen</a></li>
+                      <li ng-class="{ active: isActive('/instructions')}"><a ng-href="#/instructions">Instrucciones</a></li>
                       <li ng-class="{ active: isActive('/about')}"><a ng-href="#/about">Acerca de</a></li>
                   </ul>
               </nav>
@@ -95,6 +97,8 @@
         <script src="scripts/controllers/main.js"></script>
         <script src="scripts/controllers/main-jquery.js"></script>
         <script src="scripts/controllers/about.js"></script>
+        <script src="scripts/controllers/instructions.js"></script>
+        <script src="scripts/controllers/assesment.js"></script>
         <!-- endbuild -->
 </body>
 </html>

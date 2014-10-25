@@ -37,27 +37,23 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', fu
     
     function ColapsarInner(objeto, h, pIndex, index){
         if(objeto.hasClass('colapsado')){ 
-            var h = objeto.find('.questions-inside-right').outerHeight(true) + objeto.height(); 
+            h = objeto.find('.questions-inside-right').outerHeight(true) + objeto.height(); 
             
             objeto.css('height', h);
             $scope.preguntas[pIndex].questionsList[index].colapsado = false;
             objeto.animate({ height: h-10 }, animColDur, function(){ objeto.css('height', 'auto'); });
-            
-            objeto.find('.question-collapse').children().eq(0).removeClass('fa-chevron-down').addClass('fa-chevron-up');
        }
        else{ 
             objeto.animate({ height: h }, animColDur, function(){ 
                 $scope.$apply( function(){ $scope.preguntas[pIndex].questionsList[index].colapsado = true; });
                 objeto.css('height', 'auto'); 
             });
-           
-            objeto.find('.question-collapse').children().eq(0).removeClass('fa-chevron-up').addClass('fa-chevron-down');
        }
     }
     
     function Colapsar(objeto, h, index){
         if(objeto.hasClass('colapsado')){ 
-            var h = objeto.find('.questions-inside-right').outerHeight(true) + objeto.height(); 
+            h = objeto.find('.questions-inside-right').outerHeight(true) + objeto.height(); 
             
             objeto.css('height', h);
             $scope.preguntas[index].colapsado = false;
@@ -157,16 +153,46 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', fu
             $(this).parent().addClass('inner-selected');
         });
         
+        $('body').on('click','.popover-content>a', function(){
+            $('[data-toggle="popover"]').popover('hide');
+        });
         
     // AMBOS SORTABLES
         // Quitar seleccionado
         $('body').on('mousedown', function(e){
-            var container = $('#questions-container>div');
+            var container = $('#questions-container>div>div');
             container.removeClass('selected');
             
             var innerContainer = $('.inner-sortable>div');
             innerContainer.removeClass('inner-selected');
+            
+            $('[data-toggle="popover"]').each(function () {
+                if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+                    $(this).popover('hide');
+                }
+            });
         });
+        
+        
+ // **** POPOVER
+        $('body').on('show.bs.popover', '[data-toggle="popover"]', function(){
+            $(this).addClass('selected');
+        });
+        
+        $('body').on('shown.bs.popover', '[data-toggle="popover"]', function(){
+            $('[data-toggle="tooltip"]').tooltip({container: 'body', trigger: 'hover click'});
+        });
+        
+        $('body').on('hide.bs.popover', '[data-toggle="popover"]', function(){
+            $(this).removeClass('selected');
+        }); 
+        
+        $('body').on('hidden.bs.popover', '[data-toggle="popover"]', function(){
+            $('[data-toggle="popover"]').popover({
+                html: true, placement: 'top', container: 'body', trigger: 'click',
+                content: function () { return $compile($(this).next().html())($scope); }
+            });
+        }); 
         
         
     // Si se tiene el foco en un contenteditable, desactivar sortables
@@ -188,7 +214,7 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', fu
         $('#boton-colapsado').on('click', function(e){ 
             if(!inAnimation){ 
                 // Cambios en la vista
-                $('#questions-container>div').each(function(index){ 
+                $('#questions-container>div>div.question-wrapper').each(function(index){ 
                     // Si están colapsados, los expandimos
                    if($scope.colapsados){ 
                         var h = $(this).find('.questions-inside-right').outerHeight(true) + $(this).height(); 
@@ -197,16 +223,12 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', fu
                         $(this).css('height', 36);
                         $scope.$apply(function(){ $scope.preguntas[index].colapsado = false; });
                         $(this).animate({ height: h-10 }, animColDur, function(){ $(this).css('height', 'auto'); });
-                       
-                        $(this).find('.question-collapse').children().eq(0).removeClass('fa-chevron-down').addClass('fa-chevron-up');
                    }
                    else{ 
                         $(this).animate({ height: 36 }, animColDur, function(){ 
                             $scope.$apply(function(){ $scope.preguntas[index].colapsado = true; });
                             $(this).css('height', 'auto'); 
                         });
-                       
-                        $(this).find('.question-collapse').children().eq(0).removeClass('fa-chevron-up').addClass('fa-chevron-down');
                    }
                 });
 
@@ -221,7 +243,7 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', fu
         // A los de Grupo, hay que recalcular el del padre
         $scope.GroupCollapseAll = function($index){ 
             if(!inAnimation){ 
-                var padre = $('#questions-container>div').eq($index);
+                var padre = $('#questions-container>div>div.question-wrapper').eq($index);
                 var lista = padre.find('.question-wrapper');
                 var boton = padre.find('.inner-questions-header span');
 
@@ -260,7 +282,7 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', fu
       // Colapsar UNO
         $scope.Collapse = function($index){ 
             if(!inAnimation){
-                var objeto = $('#questions-container>div').eq($index);
+                var objeto = $('#questions-container>div>div.question-wrapper').eq($index);
                 Colapsar(objeto, 36, $index);                
                 inAnimation = true;
                 setTimeout(function(){ inAnimation=false; }, animColDur);
@@ -269,7 +291,7 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', fu
         
         $scope.GroupCollapse = function($pIndex, $index){ 
             if(!inAnimation){
-                var objeto = $('#questions-container>div').eq($pIndex).find('.question-wrapper').eq($index);
+                var objeto = $('#questions-container>div>div.question-wrapper').eq($pIndex).find('.question-wrapper').eq($index);
                 ColapsarInner(objeto, 45, $pIndex, $index);
                 
                 inAnimation = true;
