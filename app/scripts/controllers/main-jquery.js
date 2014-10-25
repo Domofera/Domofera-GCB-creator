@@ -72,6 +72,91 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', fu
     }
     
     
+    
+//********************** MODAL EDITOR
+    $scope.Editar = function($event, model, i){       // Elementos de primer nivel
+        var objeto = $($event.currentTarget);
+        CrearModal(objeto, model);
+    };
+    
+    function CrearModal(target, model)
+    { 
+        $('.modal').remove(); //borramos los que hayan
+        $('.summernote').destroy();
+
+        // Montamos el cuerpo de antes y el de despues (header y footer)
+        var string = '<div class="modal fade editor" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">';
+            string += '<div class="modal-dialog modal-lg">';
+             string += '<div class="modal-content">';
+              string += '<div class="modal-header">';
+               string += '<button type="button" class="btn btn-default" data-dismiss="modal"><span class="fa fa-remove" aria-hidden="true"></span><span class="sr-only">Cerrar</span></button>';
+               string += '<h4 class="modal-title" id="myModalLabel">Editor </h4>';
+              string += '</div>';
+              string += '<div class="modal-body">';
+
+        var stringFinal = '</div>';
+            stringFinal += '<div class="modal-footer">';
+             stringFinal += '<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>';
+            stringFinal += '</div></div></div></div>';
+
+
+        var container = target.parent().prev();
+        var modal = $(string+stringFinal);
+        var isTextarea = container.is('textarea');
+
+        var aux = '';
+        var final = '';
+
+        //Si es textarea, cargamos el text area solamente
+        if(isTextarea){ 
+            aux = '<textarea class="form-control" ng-model="'+ model +'"></textarea>';
+        }
+        else{  //Sino, cargamos el plugin de Summernote
+            aux = '<div class="summernote"></div>';
+        }
+
+        // Montamos modal, compilamos y lo ejecutamos
+        final = string + aux + stringFinal;
+        var objFinal = $($compile(final)($scope));
+        objFinal.modal();
+
+        // Si es un contenteditable, buscamos el campo editor y lo bindeamos
+        if(!isTextarea)
+        {
+            objFinal.find('.summernote').summernote({ 
+                height: 230,
+                minHeight: 200,
+                maxHeight: 400,
+                lang: 'es-ES',
+                toolbar: [
+                    ['style', ['bold', 'italic', 'underline', 'clear']],
+                    //['font', ['strikethrough']],
+                    ['fontsize', ['fontsize']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['height', ['height']],
+                    ['insert', ['link', 'picture', 'video', 'table']], //'hr'
+                    ['misc', ['codeview', 'undo', 'redo']],
+                ],
+                oninit: function() {
+                    objFinal.find('.note-editable').attr('ng-bind-html', model +' | unsafe').attr('ng-model', model);
+                    $compile(objFinal.find('.note-editable'))($scope);
+                }
+            });
+        }    
+    }
+    
+
+    $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
+        setTimeout( function(){
+            $('[data-toggle="tooltip"]').tooltip({container: 'body'}); // Seteamos el tooltip
+            $('[data-toggle="popover"]').popover({
+                html: true, placement: 'top', container: 'body', trigger: 'click',
+                content: function () { return $compile($(this).next().html())($scope); }
+            });
+        }, 300);
+    });
+    
 
 //***** jQuery
 
@@ -153,9 +238,6 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', fu
             $(this).parent().addClass('inner-selected');
         });
         
-        $('body').on('click','.popover-content>a', function(){
-            $('[data-toggle="popover"]').popover('hide');
-        });
         
     // AMBOS SORTABLES
         // Quitar seleccionado
@@ -187,11 +269,8 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', fu
             $(this).removeClass('selected');
         }); 
         
-        $('body').on('hidden.bs.popover', '[data-toggle="popover"]', function(){
-            $('[data-toggle="popover"]').popover({
-                html: true, placement: 'top', container: 'body', trigger: 'click',
-                content: function () { return $compile($(this).next().html())($scope); }
-            });
+        $('body').on('click', '.popover-content .btn', function(){
+            $('[data-toggle="popover"]').popover('hide');
         }); 
         
         
@@ -256,16 +335,12 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', fu
                         $(this).css('height', 45);
                          $scope.preguntas[$index].questionsList[index].colapsado = false;
                         $(this).animate({ height: h-10 }, animColDur, function(){ $(this).css('height', 'auto'); });
-                       
-                        $(this).find('.question-collapse').children().eq(0).removeClass('fa-chevron-down').addClass('fa-chevron-up');
                    }
                    else if (boton.hasClass('fa-angle-double-up') && !$(this).hasClass('colapsado')){ // Colapsamos
                         $(this).animate({ height: 45 }, animColDur, function(){ 
                             $scope.$apply(function(){ $scope.preguntas[$index].questionsList[index].colapsado = true; });
                             $(this).css('height', 'auto'); 
                         });
-                       
-                        $(this).find('.question-collapse').children().eq(0).removeClass('fa-chevron-up').addClass('fa-chevron-down');
                    }
                 });
 

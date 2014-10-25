@@ -52,7 +52,7 @@
               <div> 
                  <a class="open-popover" tabindex="0" data-toggle="popover"><span class="fa fa-plus"></span></a>
                  
-                  <div id="popover-{{$index}}" class="btn-group hide">
+                  <div class="btn-group hide">
                        <a class="btn btn-default" data-toggle="tooltip" title="Nuevo HTML" ng-click="CrearHTML({{$index}})"><i class="fa fa-header"></i></a>
                         <a class="btn btn-default" data-toggle="tooltip" title="Nuevo free-text" ng-click="CrearFreetext({{$index}})"><i class="glyphicon glyphicon-pencil"></i></a>
                         <a class="btn btn-default" data-toggle="tooltip" title="Nuevo mult-choice" ng-click="CrearMultiplechoice({{$index}})"><i class="glyphicon glyphicon-minus"></i></a>
@@ -86,7 +86,7 @@
                        <div class="input-group">
                           <span class="form-control" name="prevhtml" contenteditable="true" ng-bind-html="pregunta.prevHTML | unsafe" ng-model="pregunta.prevHTML" required></span>
                           <span class="input-group-btn">
-                            <a class="btn editar" ng-click="Editar($event, 'prevHTML', $index)"><span class="fa fa-edit"></span></a>
+                            <a class="btn editar" ng-click="Editar($event, 'preguntas[{{$index}}].prevHTML', $index)"><span class="fa fa-edit"></span></a>
                           </span>
                         </div>
                     </div>
@@ -97,7 +97,7 @@
                         <div class="input-group ">
                           <span class="form-control" name="preg" contenteditable="true" ng-bind-html="pregunta.questionHTML | unsafe" ng-model="pregunta.questionHTML" required></span>
                           <span class="input-group-btn">
-                            <a class="btn editar" ng-click="Editar($event, 'questionHTML', $index)"><span class="fa fa-edit"></span></a>
+                            <a class="btn editar" ng-click="Editar($event, 'preguntas[{{$index}}].questionHTML', $index)"><span class="fa fa-edit"></span></a>
                           </span>
                         </div>
                     </div>
@@ -111,7 +111,7 @@
                             <div class="input-group ">
                                <textarea class="form-control" name="ftfeedbackok" ng-model="pregunta.correctAnswerOutput" placeholder="Feedback OK..." required></textarea>
                                <span class="input-group-btn">
-                                <a class="btn editar" ng-click="Editar($event, 'correctAnswerOutput', $index)"><span class="fa fa-edit"></span></a>
+                                <a class="btn editar" ng-click="Editar($event, 'preguntas[{{$index}}].correctAnswerOutput', $index)"><span class="fa fa-edit"></span></a>
                               </span>
                             </div>
                         </div>
@@ -119,7 +119,7 @@
                            <div class="input-group ">
                                <textarea class="form-control" name="ftfeedbackwrong" ng-model="pregunta.incorrectAnswerOutput" placeholder="Feedback Mal..." required></textarea>
                                <span class="input-group-btn">
-                                <a class="btn editar" ng-click="Editar($event, 'incorrectAnswerOutput', $index)"><span class="fa fa-edit"></span></a>
+                                <a class="btn editar" ng-click="Editar($event, 'preguntas[{{$index}}].incorrectAnswerOutput', $index)"><span class="fa fa-edit"></span></a>
                               </span>
                             </div>
                         </div>
@@ -140,7 +140,7 @@
                                       <div class="input-group ">
                                        <textarea class="form-control" name="mcfeedback" type="text" placeholder="Salida..." ng-model="choice[2]" required></textarea>
                                        <span class="input-group-btn">
-                                          <a class="btn editar" ng-click="Editar($event, 'choices[{{$index}}][2]', $parent.$index)"><span class="fa fa-edit"></span></a>
+                                          <a class="btn editar" ng-click="Editar($event, 'preguntas[{{$index}}].choices[{{$index}}][2]', $parent.$index)"><span class="fa fa-edit"></span></a>
                                       </span>
                                     </div>
                                        
@@ -167,7 +167,7 @@
                             <div class="input-group ">
                               <span class="form-control" name="mcgenunciado" contenteditable="true" ng-model="pregunta.questionHTML" ng-bind-html="pregunta.questionHTML | unsafe" required></span>
                               <span class="input-group-btn">
-                                <a class="btn editar" ng-click="Editar($event, 'questionHTML', $index)"><span class="fa fa-edit"></span></a>
+                                <a class="btn editar" ng-click="Editar($event, 'preguntas[{{$index}}].questionHTML', $index)"><span class="fa fa-edit"></span></a>
                               </span>
                             </div>
                         </div>
@@ -178,7 +178,7 @@
                                 <div class="input-group ">
                                    <textarea class="form-control" name="mcgfeedbackok" placeholder="Feedback OK..." ng-model="pregunta.allCorrectOutput" required></textarea>
                                    <span class="input-group-btn">
-                                    <a class="btn editar" ng-click="Editar($event, 'allCorrectOutput', $index)"><span class="fa fa-edit"></span></a>
+                                    <a class="btn editar" ng-click="Editar($event, 'preguntas[{{$index}}].allCorrectOutput', $index)"><span class="fa fa-edit"></span></a>
                                   </span>
                                 </div>
                             </div>
@@ -186,7 +186,7 @@
                                 <div class="input-group ">
                                    <textarea class="form-control" name="mcgfeedbackwrong" ng-model="pregunta.someIncorrectOutput" placeholder="Feedback Wrong..." required></textarea>
                                    <span class="input-group-btn">
-                                    <a class="btn editar" ng-click="Editar($event, 'someIncorrectOutput', $index)"><span class="fa fa-edit"></span></a>
+                                    <a class="btn editar" ng-click="Editar($event, 'preguntas[{{$index}}].someIncorrectOutput', $index)"><span class="fa fa-edit"></span></a>
                                   </span>
                                 </div>
                             </div>
@@ -219,13 +219,13 @@
                                         <div class="input-group">
                                           <span class="form-control" contenteditable="true" ng-model="question.questionHTML" ng-bind-html="question.questionHTML | unsafe" required></span>
                                           <span class="input-group-btn">
-                                            <a class="btn editar" ng-click="Editar($event, 'questionsList[{{$index}}].questionHTML', $parent.$index)"><span class="fa fa-edit"></span></a>
+                                            <a class="btn editar" ng-click="Editar($event, 'preguntas[{{$index}}].questionsList[{{$index}}].questionHTML', $parent.$index)"><span class="fa fa-edit"></span></a>
                                           </span>
                                         </div>
                                     </div>
                                     <div class="question-group-buttons">
                                         <a class="question-collapse" ng-click="GroupCollapse($parent.$index, $index)">
-                                          <span class="fa fa-chevron-up"></span>
+                                          <span class="fa" ng-class="{'fa-chevron-down': question.colapsado , 'fa-chevron-up': !question.colapsado }"></span>
                                         </a>
                                         <a class="question-close" ng-click="GroupClose($parent.$index, $index)"><span class="fa fa-remove"></span></a>
                                     </div>
