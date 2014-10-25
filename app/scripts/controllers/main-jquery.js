@@ -52,11 +52,11 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', fu
     
     
 
-    //***** jQuery
+//***** jQuery
 
     $(document).ready(function () {
 
-        
+        console.log($scope.preguntas); // SI FUNCIONA
         
         
     // Cambiamos el valor de isFixed, para que ponga el toolbar fijo
@@ -73,7 +73,6 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', fu
         });
         
     //****************** SORTABLE
-        $('#questions-container').sortable({placeholder: 'sortable-placeholder'});
         $('#questions-container').sortable({placeholder: 'sortable-placeholder'});
         setTimeout(function(){ 
             if($('#questions-container').length){

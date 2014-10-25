@@ -36,9 +36,9 @@
 
   
    <!-- TITULO -->
-    <div id="bloque-titulo" ng-model="titulo">
-        <input type="text" class="form-control" ng-model="titulo.text" placeholder="Titulo... (activity-X.X)">
-        <div class="error-container" ng-if="tituloState.error">
+    <div id="bloque-titulo" ng-model="titulo" ng-class="{'has-success' : !titulo.error && titulo.success , 'has-error' : titulo.error && !titulo.success}">
+        <input type="text" class="form-control" ng-model="titulo.text" placeholder="Titulo... (activity-X.X)" ng-keyup="ComprobarTitulo()">
+        <div class="error-container" ng-if="titulo.error">
             <small class="help-block">Formato incorrecto. Debe ser "activity-X.X" donde las X son "tema.actividad"</small>
         </div>
     </div>
@@ -47,7 +47,7 @@
 
     <div id="questions-container" class="panel panel-default" ui-sortable ng-model="preguntas"> 
        
-        <div class="question-wrapper" ng-repeat="pregunta in preguntas track by $index" on-finish-render>
+        <div class="question-wrapper" ng-class="{ 'colapsado': pregunta.colapsado }" ng-repeat="pregunta in preguntas track by $index" on-finish-render>
             <div class="questions-inside-left">
                 <span class="glyphicon glyphicon-move"></span>
             </div>
@@ -193,7 +193,7 @@
                     
                     <!-- Bloque de Single multiple choice  -->
                     <div class="row inner-sortable" ui-sortable ng-model="pregunta.questionsList">
-                        <div class="question-wrapper" ng-repeat="question in pregunta.questionsList track by $index">
+                        <div class="question-wrapper" ng-class="{ 'colapsado': question.colapsado }" ng-repeat="question in pregunta.questionsList track by $index">
                             <div class="inner-questions-inside-left">
                                 <span class="glyphicon glyphicon-move"></span>
                             </div>

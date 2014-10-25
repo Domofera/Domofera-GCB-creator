@@ -13,10 +13,8 @@ angular.module('gcbCreatorApp')
 
     //******** MODELOS
     $scope.titulo = {
-        text: 'sfdsda'
-    };
-    $scope.tituloState = {
-        error : false,
+        text: 'sfdsda',
+        error: false,
         success: false
     };
     
@@ -26,11 +24,13 @@ angular.module('gcbCreatorApp')
          correctAnswerString: 'white',
          correctAnswerOutput: 'Correct!',
          incorrectAnswerOutput: 'Try again.',
-         showAnswerOutput: 'Our search expert says: white!'
+         showAnswerOutput: 'Our search expert says: white!',
+         colapsado: false
         },
 
         {
-            prevHTML:'<b>Letra <i>negrita</i></b> que introduce la pregunta'
+            prevHTML:'<b>Letra <i>negrita</i></b> que introduce la pregunta',
+            colapsado: false
         },
 
         { questionType:'multiple choice',
@@ -40,7 +40,8 @@ angular.module('gcbCreatorApp')
              ['Algo pero no mucho', true, '"B" is correct!'],
              ['Depende como lo veas', false, '"C" is wrong, try again.'],
              ['Por supuesto!', false, '"D" is wrong, try again.']
-         ]
+         ],
+         colapsado: false
         },
 
         { questionType: 'multiple choice group',
@@ -49,16 +50,18 @@ angular.module('gcbCreatorApp')
              {questionHTML: 'Pick all <i>odd</i> numbers:',
               choices: ['1', '5'], 
               correctIndex: [0, 1], 
-              multiSelect: true
+              multiSelect: true,
+              colapsado: false
              },
              {questionHTML: 'Pick one <i>even</i> number:',
-              choices: ['1', '2', '3'], correctIndex: [1, 2], multiSelect: false},
+              choices: ['1', '2', '3'], correctIndex: [1, 2], multiSelect: false, colapsado: false},
              {questionHTML: 'What color is the sky?',
-              choices: ['#00FF00', '#00FF00', '#0000FF'], correctIndex: 2}
+              choices: ['#00FF00', '#00FF00', '#0000FF'], correctIndex: 2, colapsado: false}
          ],
          allCorrectMinCount: 2,
          allCorrectOutput: 'Great job! You know the material well.',
-         someIncorrectOutput: 'You must answer at least two questions correctly.'
+         someIncorrectOutput: 'You must answer at least two questions correctly.',
+         colapsado: false
         }
     ];
 
@@ -75,7 +78,7 @@ angular.module('gcbCreatorApp')
     };
 
 
-    //****** Funciones de interfaz
+  //****** CLOSES
     $scope.Close = function($pIndex, $index){
         $scope.preguntas.splice($index,1);
     };
@@ -118,6 +121,9 @@ angular.module('gcbCreatorApp')
         };
     };
 
+    
+//*** MARCAR CHECKBOXES
+    
     // Añade/Quita del scope el indice marcado. Otra funcion de jQuery se encarga de Marcarlo/Desmarcarlo
     $scope.Marcar = function($iGrandparent, $iParent, $i){
 
@@ -163,14 +169,15 @@ angular.module('gcbCreatorApp')
 
     $scope.InnerAddQuestion = function($index){
         $scope.preguntas[$index].questionsList.push({ 
-            questionHTML: '', choices: [], correctIndex: []
+            questionHTML: '', choices: [], correctIndex: [], colapsado: false
         });
     };
 
 
     $scope.CrearHTML = function(){
         $scope.preguntas.push({
-            prevHTML:''
+            prevHTML:'',
+            colapsado: false
         });
     };
 
@@ -181,7 +188,8 @@ angular.module('gcbCreatorApp')
             correctAnswerString: '',
             correctAnswerOutput: '',
             incorrectAnswerOutput: '',
-            showAnswerOutput: ''
+            showAnswerOutput: '',
+            colapsado: false
         });
     };
 
@@ -191,7 +199,8 @@ angular.module('gcbCreatorApp')
             questionHTML:'',
             choices: [
                 ['', false, '']
-            ]
+            ],
+            colapsado: false
         });
     };
 
@@ -202,7 +211,8 @@ angular.module('gcbCreatorApp')
             allCorrectMinCount: 1,
             allCorrectOutput: '',
             someIncorrectOutput: '',
-            questionsList: []
+            questionsList: [],
+            colapsado: false
         });
     };
 
@@ -210,7 +220,6 @@ angular.module('gcbCreatorApp')
 //********************** MODAL EDITOR
         $scope.Editar = function($event, str, i){       // Elementos de primer nivel
             var objeto = $($event.currentTarget);
-
             var ngModel = 'preguntas['+ i +'].'+ str;
             
             CrearModal(objeto, ngModel);
@@ -222,6 +231,7 @@ angular.module('gcbCreatorApp')
             $('.modal').remove(); //borramos los que hayan
             $('.summernote').destroy();
             
+            // Montamos el cuerpo de antes y el de despues (header y footer)
             var string = '<div class="modal fade editor" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">';
                 string += '<div class="modal-dialog modal-lg">';
                  string += '<div class="modal-content">';
@@ -250,13 +260,14 @@ angular.module('gcbCreatorApp')
             }
             else{  //Sino, cargamos el plugin de Summernote
                 aux = '<div class="summernote"></div>';
-                //aux = '<span contenteditable="true" class="form-control" ng-bind-html="'+ model +' | unsafe" ng-model="'+ model +'"></sapn>';
             }
             
+            // Montamos modal, compilamos y lo ejecutamos
             final = string + aux + stringFinal;
             var objFinal = $($compile(final)($scope));
             objFinal.modal();
             
+            // Si es un contenteditable, buscamos el campo editor y lo bindeamos
             if(!isTextarea)
             {
                 objFinal.find('.summernote').summernote({ 
@@ -286,23 +297,36 @@ angular.module('gcbCreatorApp')
                         
 //************* VIEW LOADED
     $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
-        $('[data-toggle="tooltip"]').tooltip({container: 'body'}); // Seteamos el tooltip
+        setTimeout(function(){ $('[data-toggle="tooltip"]').tooltip({container: 'body', trigger: 'hover click'})} , 150); // Seteamos el tooltip
     });
 
                         
                         
 //************* ENVIAR / RECIBIR DATOS  
+    $scope.ComprobarTitulo = function(){
+        var patt = new RegExp('^activity\-[0-9]+\.[0-9]+$');
+                        
+        // Si todavía no se ha enviado un submit, no comprobamos
+        if($scope.titulo.error == false && $scope.titulo.success == false){
+            return;
+        }
+                        
+        if(patt.test($scope.titulo.text)){
+            $scope.titulo.error = false;
+            $scope.titulo.success = true;
+        }
+        else{
+            $scope.titulo.error = true;
+            $scope.titulo.success = false;           
+        }
+    }
     
     $scope.HacerPeticion = function(){
-                        
-        var patt = new RegExp('^activity\-[0-9]+\.[0-9]+$');
-         console.log('Titulo: ' + $scope.titulo.text + ' --> ' + patt.test($scope.titulo.text));
+        console.log('Titulo: ' + $scope.titulo.text);
         console.log('--------');
-                        
-        // COMPROBAR QUE EL CAMPO ESTÁ CORRECTO
-                        
-        // SI TITULOSTATE.ERROR Y TITULOSTATE.SUCCESS son falsos, es que no se ha enviado aún
-  
+                   
+        $scope.titulo.error = true; //Obligamos a que error sea true, así comprobara el título
+        $scope.ComprobarTitulo();
     }
                         
 }]);
