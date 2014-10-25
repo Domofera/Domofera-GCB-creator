@@ -8,7 +8,7 @@
  * # Este controlador se encarga de realizar las cosas auxiliares, como jQuery, u otras funciones no propias de AngularJS
  */
 
-angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', function ($scope, $compile) {
+angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', '$timeout', function ($scope, $compile, $timeout) {
 
     var lastFocused;
     var isHover = false;
@@ -147,14 +147,18 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', fu
     }
     
 
-    $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
-        setTimeout( function(){
+    $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) { 
+        
+        $('[data-toggle="popover"]').popover('destroy');  
+        $('[data-toggle="tooltip"]').tooltip('destroy');
+                    
+        $timeout( function(){
             $('[data-toggle="tooltip"]').tooltip({container: 'body'}); // Seteamos el tooltip
             $('[data-toggle="popover"]').popover({
                 html: true, placement: 'top', container: 'body', trigger: 'click',
                 content: function () { return $compile($(this).next().html())($scope); }
             });
-        }, 300);
+        }, 100);
     });
     
 
@@ -295,7 +299,7 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', fu
                 // Cambios en la vista
                 $('#questions-container>div>div.question-wrapper').each(function(index){ 
                     // Si están colapsados, los expandimos
-                   if($scope.colapsados){ 
+                   if($scope.colapsados && $(this).hasClass('colapsado')){ 
                         var h = $(this).find('.questions-inside-right').outerHeight(true) + $(this).height(); 
                        
                        // Definimos altura de inicio, actualizamos modelo, y ponemos la altura en su valor
@@ -303,7 +307,7 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', fu
                         $scope.$apply(function(){ $scope.preguntas[index].colapsado = false; });
                         $(this).animate({ height: h-10 }, animColDur, function(){ $(this).css('height', 'auto'); });
                    }
-                   else{ 
+                   else if (!$scope.colapsados && !$(this).hasClass('colapsado')){ 
                         $(this).animate({ height: 36 }, animColDur, function(){ 
                             $scope.$apply(function(){ $scope.preguntas[index].colapsado = true; });
                             $(this).css('height', 'auto'); 

@@ -190,6 +190,7 @@ angular.module('gcbCreatorApp')
         };
         
         (i < 0 ? $scope.preguntas.push(obj) : $scope.preguntas.splice(i,0,obj));
+        
     };
 
     $scope.CrearFreetext = function(i){
