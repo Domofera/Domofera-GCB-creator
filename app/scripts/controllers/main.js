@@ -13,7 +13,7 @@ angular.module('gcbCreatorApp')
 
     //******** MODELOS
     $scope.titulo = {
-        text: 'sfdsda',
+        text: '',
         error: false,
         success: false
     };
@@ -259,10 +259,8 @@ angular.module('gcbCreatorApp')
         }
     }
     
-    $scope.HacerPeticion = function(){
-        console.log('Titulo: ' + $scope.titulo.text);
-        console.log('--------');
-                   
+    $scope.HacerPeticion = function(){ 
+        
         $scope.titulo.error = true; //Obligamos a que error sea true, así comprobara el título
         $scope.ComprobarTitulo();
     }

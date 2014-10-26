@@ -165,6 +165,10 @@
     100% { opacity: 0; height: 0;}
 }
 
+@keyframes anim_insert{
+    //0% { height: 15px; opacity: 0; }
+    100% { height: 20px; opacity: 1; }
+}
 
 // Choices ** NO LAS PONGO PORQUE AL REORDENAR SE APLICAN **
 /*.choice-animation.ng-enter, .choice-animation.ng-leave{ 
@@ -191,6 +195,17 @@
 }
 */
 
+
+.bq-msg.ng-enter, .bq-msg.ng-leave {
+  transition:0.4s ease all;
+}
+
+.bq-msg.ng-enter, .bq-msg.ng-leave.ng-leave-active {
+  opacity:0;
+}
+.bq-msg.ng-leave, .bq-msg.ng-enter.ng-enter-active {
+  opacity:1;
+}
 
 
 //** SORTABLE
@@ -261,6 +276,16 @@ main{
             font-size: 20px;
         }
     }
+    
+    #bloque-msg{
+        margin: -20px 0 20px 0;
+        overflow: hidden;
+        
+        .alert{
+            padding: 7px 15px;
+        }
+    }
+    
 
  //*** TOOLBAR
     nav#gcbc-toolbar{
@@ -296,6 +321,48 @@ main{
         }
     }
     
+.form-control{
+    height: auto;
+}
+
+.container-fluid{
+    padding:0;
+}
+
+span[contenteditable="true"]{
+    position: relative;
+    overflow: scroll;
+    height: 34px;
+    max-height: 120px;
+    resize: vertical;
+
+    &:empty:before{
+        content: attr(placeholder);
+        color: #888;
+    }
+    p{margin: 0;}
+}
+
+textarea.form-control{
+    resize: vertical;
+    height: 34px;
+    max-height: 120px;
+}    
+    
+.input-group{  
+    .input-group-btn>a{
+        transition: all @trans-buttons ease;
+        background: desaturate(multiply(@cl-question, #eee), 5%);
+        color: white;
+        margin-left: 0;
+
+        &:hover, &:focus{
+            background: saturate(screen(@cl-question,#222),5%);
+            color:white;
+        }
+    }
+}
+
 
 //*** PREGUNTAS
     #questions-container{ 
@@ -305,23 +372,38 @@ main{
             text-align: center;
             
             a.open-popover{
-                margin: 5px auto;
+                margin: 1px auto;
                 background: #eee;
                 cursor: pointer;
                 color: #000;
                 width: 100%;
                 display: block;
                 transition: all 0.5s ease;
+                overflow: hidden;
+                height: 15px;
+                opacity: 0.2;
+                
+                .fa-plus:before{ position: relative; top: -2px; transition: all 0.2s ease; color: #000;}
                 
                 &:hover, &:focus{
-                    background: #d3d3d3;
                     outline: 0;
+                } 
+                
+                &.hovered{
+                    height: 20px;
+                    opacity: 1;
+                    .fa-plus:before{ position: relative; top: 0; }
                 }
                 
                 &.selected, &.selected:hover, &.selected:focus{ 
+                    height: 20px;
+                    opacity: 1;
                     color: #fff;
-                    background: @cl-question;
+                    background: @cl-question-selected;
+                    .fa-plus:before{ position: relative; top: 0; color: #fff; }
                 }
+                
+                
             }
         }
         
@@ -376,36 +458,11 @@ main{
                 padding-left: 40px;
                 
             // General
-                .form-control{
-                    //padding: 4px 10px;
-                    height: auto;
-                }
                 
                 .container-fluid{
                     padding:0;
                 }
 
-                span[contenteditable="true"]{
-                    position: relative;
-                    overflow: scroll;
-                    height: 34px;
-                    max-height: 120px;
-                    resize: vertical;
-
-                    &:empty:before{
-                        content: attr(placeholder);
-                        color: #888;
-                    }
-                    p{margin: 0;}
-                }
-                
-                textarea.form-control{
-                    resize: vertical;
-                    height: 34px;
-                    max-height: 120px;
-                }
-                
-                
                
             // Header
                 header{
@@ -427,22 +484,6 @@ main{
                     
                     .question-header-buttons{ 
                         .make-header-buttons;
-                    }
-                }
-                
-                
-                .input-group{
-                    
-                    .input-group-btn>a{
-                        transition: all @trans-buttons ease;
-                        background: desaturate(multiply(@cl-question, #eee), 5%);
-                        color: white;
-                        margin-left: 0;
-                        
-                        &:hover, &:focus{
-                            background: saturate(screen(@cl-question,#222),5%);
-                            color:white;
-                        }
                     }
                 }
                 

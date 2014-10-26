@@ -16,23 +16,24 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', '$
     var isInnerMoving = false;
     var animColDur = 700;
     var inAnimation = false;
+    var timer;
 
     function boldIt(){
         var edit = $('span[contenteditable=true]:focus');
         document.execCommand('bold', false, '');
-        edit.focus();
+        $('span[contenteditable=true]').blur();
     }
 
     function italicIt(){
         var edit = $('span[contenteditable=true]:focus');
         document.execCommand('italic', false, '');
-        edit.focus();
+        $('span[contenteditable=true]').blur();
     }
 
     function linkIt(url){
         var edit = $('span[contenteditable=true]:focus');
         document.execCommand('Createlink', false, url);
-        edit.focus();
+        $('span[contenteditable=true]').blur();
     }
     
     function ColapsarInner(objeto, h, pIndex, index){
@@ -178,6 +179,17 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', '$
                 $('#gcbc-toolbar .btn').tooltip({container: 'body'});
                 isFixed = !isFixed;
             }
+        });
+                    
+                    
+        $('body').on('mouseenter', '.open-popover', function(){
+            var obj = $(this);
+            timer = setTimeout( function(){ obj.addClass('hovered'); }, 400);   
+        });
+                    
+        $('body').on('mouseleave', '.open-popover', function(){
+            clearTimeout(timer); 
+            $(this).removeClass('hovered');
         });
         
     //****************** SORTABLE
@@ -410,22 +422,13 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', '$
         // Funciones bold, italic y link
         $('a[data-edit="bold"]').click(function(){
             boldIt();
-            if(lastFocused){
-                lastFocused.focus();
-            }
         });
         $('a[data-edit="italic"]').click(function(){
             italicIt();
-            if(lastFocused){
-                lastFocused.focus();
-            }
         });
         $('a[data-edit="link"]').click(function(){
             var urlp = prompt('Introduce el link:','http://');
             linkIt(urlp);
-            if(lastFocused){
-                lastFocused.focus();
-            }
         });
     });
 }]);

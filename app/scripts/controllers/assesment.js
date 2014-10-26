@@ -27,4 +27,14 @@ angular.module('gcbCreatorApp').controller('AssesmentCtrl',['$scope', function (
              lesson: '99.99'},
           ]
      };
-  }]);
+
+            
+    $scope.MarcarCheckAnswers = function(){
+        $scope.preguntasEx.checkAnswers = !$scope.preguntasEx.checkAnswers;
+    };
+            
+            
+            
+
+            
+}]);
