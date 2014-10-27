@@ -74,7 +74,10 @@ angular.module('gcbCreatorApp').controller('AssesmentCtrl',['$scope', '$http', f
     };
     
     $scope.CloseAll = function(){
-        $scope.preguntas.questionsList = [];
+        bootbox.confirm('<b>Se borrará todo, ¿Estás seguro?</b>', function(result) {
+            if(result)
+                $scope.$apply( function(){ $scope.preguntas.questionsList = []; });
+        });
     };
             
 

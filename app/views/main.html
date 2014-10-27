@@ -18,9 +18,9 @@
             <div class="container">
                 <div class="col-sm-12">
                     <div class="btn-group">
-                        <a class="btn btn-default" data-toggle="tooltip" title="Borrar todo" ng-click="CloseAll()"><i class="glyphicon glyphicon-remove-circle"></i></a>
-                        <a class="btn btn-default" ng-click="HacerPeticion()" data-toggle="tooltip" title="Descargar"><i class="glyphicon glyphicon-floppy-save"></i></a>
-                        <a id="boton-colapsado" ng-click="CollapseAll()" class="btn btn-default" data-toggle="tooltip" title="Collapsar / Expandir">
+                        <a class="btn btn-default" ng-class="{'disabled': preguntas.length==0}" data-toggle="tooltip" title="Borrar todo" ng-click="CloseAll()"><i class="glyphicon glyphicon-remove-circle"></i></a>
+                        <a class="btn btn-default" ng-class="{'disabled': preguntas.questionsList.length==0}" ng-click="HacerPeticion()" data-toggle="tooltip" title="Descargar"><i class="glyphicon glyphicon-floppy-save"></i></a>
+                        <a id="boton-colapsado" ng-class="{'disabled': preguntas.questionsList.length==0}" ng-click="CollapseAll()" class="btn btn-default" data-toggle="tooltip" title="Collapsar / Expandir">
                             <i ng-class="{'fa fa-chevron-up': !colapsados , 'fa fa-chevron-down': colapsados}"></i>
                         </a>
                     </div>

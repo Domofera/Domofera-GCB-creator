@@ -38,6 +38,7 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', '$
         $('span[contenteditable=true]').blur();
     }
     
+//*** COLAPSAR functions
     function SetColapsado(i, state){
         if($scope.isActivity){
             $scope.preguntas[i].colapsado = state;
@@ -46,8 +47,6 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', '$
             $scope.preguntas.questionsList[i].colapsado = state;
         }
     }
-    
-    
     
     function ColapsarInner(objeto, h, pIndex, index){
         if(objeto.hasClass('colapsado')){ 
@@ -180,6 +179,10 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', '$
 
     $(document).ready(function () {
 
+        bootbox.setDefaults({
+          locale: 'es',
+        });
+                    
         
     // Cambiamos el valor de isFixed, para que ponga el toolbar fijo
         $(window).scroll(function(){

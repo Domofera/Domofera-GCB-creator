@@ -85,8 +85,13 @@ angular.module('gcbCreatorApp')
         $scope.preguntas.splice($index,1);
     };
     
-    $scope.CloseAll = function(){
-        $scope.preguntas = [];
+    $scope.CloseAll = function(){ 
+        bootbox.confirm("Se borrará todo, ¿Estás seguro?", function(result) {
+            if(result)
+                $scope.$apply( function(){ $scope.preguntas = []; });
+            
+            console.log($scope.preguntas.length);
+        }); 
     };
 
     $scope.GroupClose = function($pIndex, $index){
