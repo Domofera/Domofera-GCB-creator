@@ -68,7 +68,7 @@
     }
 }
 
-.make-checkbox(@tam: 24px; @mar: 6px; @cl: #fff; @bg-cl: #222)
+.make-checkbox(@tam: 24px; @mar: 6px; @cl: #fff; @bg-cl: #222; @bd-r: 0px;)
 { 
    /* <div class="squaredTwo">
         <input type="checkbox" value="None" id="squaredTwo" name="check" />
@@ -83,6 +83,7 @@
         background: @cl;
         background: linear-gradient(top, @cl 0%, multiply(@cl, #333) 100%);
         box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0,0,0,0.5);
+        border-radius: @bd-r;
     
         input[type=checkbox] {
             visibility: hidden;
@@ -96,6 +97,7 @@
             left: (@mar / 2);
             top: (@mar / 2);
             box-shadow: inset 0px 1px 1px rgba(0,0,0,0.5), 0px 1px 0px rgba(255,255,255,1);
+            border-radius: @bd-r;
             
             background: @bg-cl;
             background: -webkit-linear-gradient(top, @bg-cl 0%, multiply(@bg-cl, #222) 100%);
@@ -138,8 +140,29 @@
     display: inline-block;
     float: left;
     margin-left: 8px;
+    overflow: hidden;
+    
+    &:hover:after{
+        border-right-color: screen(#444, #3c3c3c);
+    }
     
     >span{ margin-left: -1px; }
+    
+    &:after{
+        position: absolute;
+        display: block;
+        width: 0;
+        height: 0;
+        border-color: transparent;
+        border-style: solid;
+        border-width: 9px;
+        bottom: 8px;
+        margin-left: -15px;
+        content: " ";
+        border-right-color: #444;
+        border-left-width: 0;
+        transition: all @trans-buttons ease;
+    }
 }
 
 
@@ -222,6 +245,16 @@
     .make-checkbox;
 }
 
+.my-radiobutton{
+    .make-checkbox(@bd-r: 50px);
+    label:after{
+      width: 12px;
+      height: 7px;
+      top: 5px;
+      left: 3px;
+    }
+}
+
 .clear{
     width: 1px;
     height: 1px;
@@ -242,7 +275,14 @@
     margin-bottom: 0;
 }
 
-
+.disabled{
+    pointer-events: none;
+    cursor: not-allowed;
+    filter: alpha(opacity=65);
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    opacity: .65;
+}
 
 
 
@@ -360,6 +400,49 @@ textarea.form-control{
             background: saturate(screen(@cl-question,#222),5%);
             color:white;
         }
+    }
+}
+    
+span.span-label{
+    display: inline-block;
+    float: left;
+    width: 25%;
+    max-width: 110px;
+    line-height: 2;
+}
+
+span.span-label + span{
+    width: 80%;
+}
+
+#general-asses{
+    background: #eee;
+    padding: 1px 10px;
+    margin: 5px;
+    
+    >div{
+        margin: 10px 0;
+    }
+}
+    
+.asses-col-der{
+   >input{
+       width: 65%;
+       display: inline-block;
+       float: left;
+   }
+}
+    
+.row{ margin: 0; }
+    
+.asses-mc{ 
+    
+    >div{
+        padding: 0;
+    }
+    
+    >div.col-sm-7{
+        margin: 30px 0 10px 0;
     }
 }
 
@@ -493,18 +576,6 @@ textarea.form-control{
                     padding: 5px 0;
                     overflow: hidden;
 
-                    >span{
-                        display: inline-block;
-                        float: left;
-                    }
-                    >span.span-label{
-                        width: 25%;
-                        max-width: 110px;
-                        line-height: 2;
-                    }
-                    >span.span-label+span{
-                        width: 80%;
-                    }
                 }
 
          // Multiple choice
@@ -539,13 +610,18 @@ textarea.form-control{
 
                                 &:last-child{ width: 30%; }
                             }
+                            >li.bigger{
+                                width: 70%;
+                            }
                         }
                         
                         @media (min-width: 992px){
                             >li{ 
                                 width: 38%;
-
                                 &:last-child{ width: 24%; }
+                            }
+                            >li.bigger{
+                                width: 70%;
                             }
                         }
                     }
@@ -559,6 +635,7 @@ textarea.form-control{
 
                         span.add-question{ 
                             .make-rounded-button(#32cb2c; @mult: #222; @porc: 15%);
+                            margin-right: 8px;
                         }
 
                         span.num-list{
@@ -602,9 +679,6 @@ textarea.form-control{
                 
                 
                 .multiple-choice-group-wrap{ 
-                    .row{
-                        margin: 0;
-                    }
                     
                     .question-wrapper{
                         margin: 10px auto;

@@ -9,8 +9,10 @@
  */
 
 angular.module('gcbCreatorApp')
-.controller('MainCtrl',['$scope', '$compile',  function ($scope, $compile) {
-
+.controller('MainCtrl',['$scope', '$compile', '$http',  function ($scope, $compile, $http) {
+    
+    $scope.isActivity = true;
+    
     //******** MODELOS
     $scope.titulo = {
         text: '',
@@ -69,11 +71,7 @@ angular.module('gcbCreatorApp')
         }
     ];
 
-    //***** Funciones auxiliares
-    $scope.LimpiarScope = function(){
-        $scope.preguntas = [];
-    };
-                        
+    //***** Funciones auxiliares                    
     $scope.IsInArray = function($iGrandparent, $iParent, $i){ 
         if($.isArray($scope.preguntas[$iGrandparent].questionsList[$iParent].correctIndex))
             return $scope.preguntas[$iGrandparent].questionsList[$iParent].correctIndex.indexOf($i) >= 0;
@@ -85,6 +83,10 @@ angular.module('gcbCreatorApp')
   //****** CLOSES
     $scope.Close = function($pIndex, $index){
         $scope.preguntas.splice($index,1);
+    };
+    
+    $scope.CloseAll = function(){
+        $scope.preguntas = [];
     };
 
     $scope.GroupClose = function($pIndex, $index){
@@ -243,7 +245,8 @@ angular.module('gcbCreatorApp')
 //************* ENVIAR / RECIBIR DATOS  
     $scope.ComprobarTitulo = function(str){
         var patt = new RegExp('^activity\-[0-9]+\.[0-9]+$');
-                        
+        var ret = false;                
+        
         // Si todavía no se ha enviado un submit, no comprobamos
         if($scope.titulo.error == false && $scope.titulo.success == false){
             return;
@@ -252,18 +255,43 @@ angular.module('gcbCreatorApp')
         if(patt.test($scope.titulo.text)){
             $scope.titulo.error = false;
             $scope.titulo.success = true;
+            ret = true;
         }
         else{
             $scope.titulo.error = true;
             $scope.titulo.success = false;           
         }
-    }
+        
+        return ret;
+    };
     
     $scope.HacerPeticion = function(){ 
         
         $scope.titulo.error = true; //Obligamos a que error sea true, así comprobara el título
         $scope.ComprobarTitulo();
-    }
+        
+        // QUITAR TODOS LOS COLAPSADOS, DE AMBOS NIVELES
+        var jsonAux = angular.copy($scope.preguntas);
+        
+        for (var i in jsonAux){
+            delete jsonAux[i].colapsado;
+            
+            if(jsonAux[i].questionType === 'multiple choice group')
+                for(var j in jsonAux[i].questionsList)
+                    delete jsonAux[i].questionsList[j].colapsado;
+            
+        }
+        
+        jsonAux.titulo = $scope.titulo.text;
+        console.log(jsonAux);
+        
+        $http.post('#/crear_activity', jsonAux)
+		.success(function(data, status, headers, config) {
+			console.log('La peticion ha ido bien. ' + status);
+		}).error(function(data, status, headers, config) {
+			console.log('La peticion ha fallado ' + status);
+		});
+    };
                         
 }]);
 
