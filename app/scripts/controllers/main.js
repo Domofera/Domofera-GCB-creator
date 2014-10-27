@@ -241,6 +241,15 @@ angular.module('gcbCreatorApp')
         (i < 0 ? $scope.preguntas.push(obj) : $scope.preguntas.splice(i,0,obj));
     };
 
+    $scope.ParsearPreguntas = function(){
+        var parsedScope = [];
+        $scope.preguntas.forEach(function(obj) {
+            if (Object.keys(obj)[0] === 'prevHTML') parsedScope.push(obj.prevHTML);
+            else parsedScope.push(JSON.stringify(obj));
+        });
+        return parsedScope;
+    }
+
 
 
 
