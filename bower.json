@@ -16,7 +16,8 @@
     "angular-touch": "~1.2.0",
     "angular-route": "~1.2.0",
     "summernote": "~0.5.10",
-    "bootbox": "~4.3.0"
+    "bootbox": "~4.3.0",
+    "angular-strap": "~2.1.2"
   },
   "devDependencies": {
     "angular-mocks": "~1.2.0",

@@ -160,7 +160,7 @@ angular.module('gcbCreatorApp').controller('AssesmentCtrl',['$scope', '$http', f
         jsonAux.titulo = $scope.titulo.text;
         console.log(jsonAux);
         
-        $http.post('#/crear_assessment', jsonAux)
+        $http.post('/crear_assessment', jsonAux)
 		.success(function(data, status, headers, config) {
 			console.log('La peticion ha ido bien. ' + status);
 		}).error(function(data, status, headers, config) {

@@ -19,24 +19,6 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', '$
     var timer;
     
     $scope.maxRespuestas = 6;
-
-    function boldIt(){
-        var edit = $('span[contenteditable=true]:focus');
-        document.execCommand('bold', false, '');
-        $('span[contenteditable=true]').blur();
-    }
-
-    function italicIt(){
-        var edit = $('span[contenteditable=true]:focus');
-        document.execCommand('italic', false, '');
-        $('span[contenteditable=true]').blur();
-    }
-
-    function linkIt(url){
-        var edit = $('span[contenteditable=true]:focus');
-        document.execCommand('Createlink', false, url);
-        $('span[contenteditable=true]').blur();
-    }
     
 //*** COLAPSAR functions
     function SetColapsado(i, state){
@@ -432,18 +414,6 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', '$
             lastFocused = $(this);
         });
 
-
-        // Funciones bold, italic y link
-        $('a[data-edit="bold"]').click(function(){
-            boldIt();
-        });
-        $('a[data-edit="italic"]').click(function(){
-            italicIt();
-        });
-        $('a[data-edit="link"]').click(function(){
-            var urlp = prompt('Introduce el link:','http://');
-            linkIt(urlp);
-        });
     });
 }]);
 

@@ -282,7 +282,8 @@ angular.module('gcbCreatorApp')
     $scope.HacerPeticion = function(){ 
         
         $scope.titulo.error = true; //Obligamos a que error sea true, así comprobara el título
-        $scope.ComprobarTitulo();
+        if(!$scope.ComprobarTitulo())
+            return;
         
         // QUITAR TODOS LOS COLAPSADOS, DE AMBOS NIVELES
         var jsonAux = angular.copy($scope.preguntas);
@@ -299,9 +300,10 @@ angular.module('gcbCreatorApp')
         jsonAux.titulo = $scope.titulo.text;
         console.log(jsonAux);
         
-        $http.post('#/crear_activity', jsonAux)
+        $http.post('/crear_activity', jsonAux)
 		.success(function(data, status, headers, config) {
 			console.log('La peticion ha ido bien. ' + status);
+            console.log('Datos: ' + data);
 		}).error(function(data, status, headers, config) {
 			console.log('La peticion ha fallado ' + status);
 		});

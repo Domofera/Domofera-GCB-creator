@@ -4,6 +4,8 @@
 @cl-red: #d9534f;
 @cl-yellow-orange: #f5cc1e;
 
+@cl-tortoise: #249EA3;
+
 @cl-question-selected: #0bbc7f;
 
 @cl-editor-glow: #fa5f00;
@@ -170,13 +172,13 @@
 //******************** ANIMACIONES
 
 // Vistas
-.view.ng-enter{
+/*.view.ng-enter{
     animation: view_enter (@anim-view-dur * 2);
 }
 
 .view.ng-leave{
     animation: view_leave @anim-view-dur;
-}
+}*/
 
 @keyframes view_enter{
     0% { opacity: 0; }
@@ -964,17 +966,20 @@ span.span-label + span{
 { 
     >header{ 
         text-align: center;
+        margin-top: 15px;
         
-        h3{ display: inline-block;  color: #249EA3;  font-size: 25px; }
-        img{ width: 200px;  max-width: 100%;}
-    }
-    
-    >div>div{
-        margin: 32px auto;
+        h3{ display: inline-block;  color: @cl-tortoise;  font-size: 25px; }
+        img{ width: 200px;  max-width: 100%; margin-top: -10px;}
     }
     
     .member
-    {
+    { 
+        margin: 32px auto;
+        
+        >img{
+            width: 200px;
+        }
+        
         >b{ 
             display: block;
             margin: 15px 0 5px 0;
@@ -991,20 +996,128 @@ span.span-label + span{
         
         .brand-icons{ 
             
-            width: 70%;
+            width: 100%;
             text-align: center;
             font-size: 19px;
             
             a{ 
-                width: 28%;
+                margin: 0 5%;
                 &:hover{
                     text-decoration: none;
                 }
             }
         }
     }
-    
 }
+
+
+
+
+
+//************* INSTRUCCIONES
+
+#my-affix
+{ 
+    @cl-aff: @cl-tortoise;
+    @cl-aff-light: screen(@cl-tortoise, #ddd);
+        
+    >ul
+    { 
+        li{
+            >a{
+                color: #999;
+                padding: 6px 15px;
+                
+                &:hover, &:focus{
+                    background: @cl-aff-light;
+                    color: @cl-aff;
+                    border-left: 1px solid @cl-aff;
+                }
+            }
+            
+            ul{
+                padding-left: 15px;
+                display: none;
+            }
+        }
+        
+        li.active{
+            >a{ 
+                color: @cl-aff;
+                font-weight: bold;
+                border-left: 3px solid @cl-aff;
+            }
+            
+            ul{
+                display: block;
+            }
+        }
+    }
+}
+
+.instrucciones-container{
+    
+    img{
+        display: block;
+        margin: 0 auto;
+        max-width: 90%;
+        height: auto;
+    }
+    
+    h2{
+        margin-top: 50px;
+        color: @cl-tortoise;
+    }
+    
+    h3{
+        margin-top: 30px;
+        color: #888;
+    }
+}
+
+
+
+//*********** TEMPLATE
+
+.navbar-inverse{
+    .navbar-nav > li > a , .navbar-brand{
+        color: #999;
+    }
+    
+    .navbar-brand.active{
+        color: #fff;
+    }
+}
+
+
+footer.footer{
+    display: block;
+    background: #444;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+    
+    p{
+        margin-bottom: 0;
+    }
+    
+    a{
+        color: #6EB7F7;
+        
+        &.fa:hover, &.fa:focus{
+            text-decoration: none;
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
 
 
 

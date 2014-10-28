@@ -7,11 +7,11 @@
  * # InstructionsCtrl
  * Controller of the gcbCreatorApp
  */
-angular.module('gcbCreatorApp')
-  .controller('InstructionsCtrl', function ($scope) {
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
-  });
+angular.module('gcbCreatorApp').controller('InstructionsCtrl', ['$scope','$location','$anchorScroll', function ($scope, $location, $anchorScroll) {
+     
+    $scope.scrollTo= function (id){ 
+        $location.hash(id);
+        $anchorScroll();
+    };
+    
+}]);

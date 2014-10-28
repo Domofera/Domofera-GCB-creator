@@ -16,24 +16,27 @@ var mainModule = angular.module('gcbCreatorApp', [
     'ngRoute',
     'ngSanitize',
     'ngTouch',
-    'ui.sortable'
+    'ui.sortable',
+    'mgcrea.ngStrap.helpers.dimensions',
+    'mgcrea.ngStrap.scrollspy',
+    'mgcrea.ngStrap.affix'
 ]);
 
 mainModule.config(['$routeProvider', function ($routeProvider) {
     $routeProvider
     .when('/', {
-        templateUrl: 'views/main.html',
-        controller: 'MainCtrl'
-    })
-    .when('/about', {
         templateUrl: 'views/about.html',
         controller: 'AboutCtrl'
     })
-    .when('/instructions', {
+    .when('/instrucciones', {
       templateUrl: 'views/instructions.html',
       controller: 'InstructionsCtrl'
     })
-    .when('/assesment', {
+    .when('/actividad', {
+        templateUrl: 'views/main.html',
+        controller: 'MainCtrl'
+    })
+    .when('/examen', {
       templateUrl: 'views/assesment.html',
       controller: 'AssesmentCtrl'
     })

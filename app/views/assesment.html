@@ -19,6 +19,7 @@
                     <div class="btn-group">
                         <a class="btn btn-default" ng-class="{'disabled': preguntas.questionsList.length==0}" data-toggle="tooltip" title="Borrar todo" ng-click="CloseAll()"><i class="glyphicon glyphicon-remove-circle"></i></a>
                         <a class="btn btn-default" ng-class="{'disabled': preguntas.questionsList.length==0}" ng-click="HacerPeticion()" data-toggle="tooltip" title="Descargar"><i class="glyphicon glyphicon-floppy-save"></i></a>
+                        <a class="btn btn-default" ng-click="SubirFichero()" data-toggle="tooltip" title="Abrir fichero"><i class="glyphicon glyphicon-floppy-open"></i></a>
                         <a id="boton-colapsado" ng-class="{'disabled': preguntas.questionsList.length==0}" ng-click="CollapseAll()" class="btn btn-default" data-toggle="tooltip" title="Collapsar / Expandir">
                             <i ng-class="{'fa fa-chevron-up': !colapsados , 'fa fa-chevron-down': colapsados}"></i>
                         </a>
@@ -30,11 +31,6 @@
                         <a class="btn btn-default" data-toggle="tooltip" title="Nueva multi-choice" ng-click="CrearMultiplechoice(-1)"><i class="glyphicon glyphicon-th-list"></i></a>
                     </div>
                     
-                    <div id="editor-buttons" class="btn-group">
-                        <a class="btn btn-default disabled" data-edit="bold" title="" data-original-title="Negrita"><i class="fa fa-bold"></i></a>
-                        <a class="btn btn-default disabled" data-edit="italic" title="" data-original-title="Cursiva"><i class="fa fa-italic"></i></a>
-                        <a class="btn btn-default disabled" data-edit="link" title="" data-original-title="Link"><i class="fa fa-chain"></i></a>
-                    </div>
                 </div>
             </div>
         </nav>
