@@ -45,6 +45,15 @@ mainModule.config(['$routeProvider', function ($routeProvider) {
     });
 }]);
 
+//Add this to have access to a global variable
+mainModule.run(function ($rootScope) {
+    $rootScope.vista = { state: true }; //global variable
+    
+    $rootScope.ChangeVista = function(st){
+        $rootScope.vista.state = st;
+    }
+});
+
 
 
 mainModule.directive('contenteditable', function() {

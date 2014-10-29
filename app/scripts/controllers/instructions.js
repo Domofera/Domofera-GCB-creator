@@ -7,9 +7,10 @@
  * # InstructionsCtrl
  * Controller of the gcbCreatorApp
  */
-angular.module('gcbCreatorApp').controller('InstructionsCtrl', ['$scope','$location','$anchorScroll', function ($scope, $location, $anchorScroll) {
-     
+angular.module('gcbCreatorApp').controller('InstructionsCtrl', ['$scope','$location','$anchorScroll','$rootScope', function ($scope, $location, $anchorScroll, $rootScope) {
+    
     $scope.scrollTo= function (id){ 
+        $rootScope.ChangeVista(false);
         $location.hash(id);
         $anchorScroll();
     };

@@ -34,20 +34,20 @@
                       <span class="icon-bar"></span>
                       <span class="icon-bar"></span>
                   </button>
-                  <a href="#/" ng-class="{ active: isActive('/')}" class="navbar-brand">GCB creator</a>
+                  <a href="#/" ng-class="{ active: isActive('/')}" class="navbar-brand" ng-click="ChangeVista(true)">GCB creator</a>
               </div>
               <nav id="nav-list" class="collapse navbar-collapse" role="navigation">
                   <ul class="nav navbar-nav">
-                      <li ng-class="{ active: isActive('/actividad')}"><a ng-href="#/actividad">Actividad</a></li>
-                      <li ng-class="{ active: isActive('/examen')}"><a ng-href="#/examen">Examen</a></li>
-                      <li ng-class="{ active: isActive('/instrucciones')}"><a ng-href="#/instrucciones">Instrucciones</a></li>
+                      <li ng-class="{ active: isActive('/actividad')}"><a ng-href="#/actividad" ng-click="ChangeVista(true)">Actividad</a></li>
+                      <li ng-class="{ active: isActive('/examen')}"><a ng-href="#/examen" ng-click="ChangeVista(true)">Examen</a></li>
+                      <li ng-class="{ active: isActive('/instrucciones')}"><a ng-href="#/instrucciones" ng-click="ChangeVista(true)">Instrucciones</a></li>
                       <!--<li ng-class="{ active: isActive('/about')}"><a ng-href="#/about">Acerca de</a></li>-->
                   </ul>
               </nav>
           </div>
       </header>
 
-      <main><div class="view" ng-view=""></div></main>
+      <main><div ng-class="{'view': vista.state }" ng-view=""></div></main>
 
       <footer class="footer">
         <div class="container">
