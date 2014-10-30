@@ -297,17 +297,47 @@ angular.module('gcbCreatorApp')
             
         }
         
-        jsonAux.titulo = $scope.titulo.text;
+        jsonAux.push({titulo : $scope.titulo.text});
+        
         console.log(jsonAux);
         
-        $http.post('/crear_activity', jsonAux)
-		.success(function(data, status, headers, config) {
-			console.log('La peticion ha ido bien. ' + status);
-            console.log('Datos: ' + data);
-		}).error(function(data, status, headers, config) {
-			console.log('La peticion ha fallado ' + status);
-		});
+        $.post("/crear-activity.php", {preguntas: JSON.stringify(jsonAux)} ,
+          function(data,status){
+            console.log("Data: " + data + "\nStatus: " + status);
+            window.location='/download.php?filename=' + data;
+          });
     };
+    
+    $scope.SubirFichero = function(){ 
+        
+        $('#fichero').click();
+        
+    };
+    
+    $(document).ready(function(){
+        $('#fichero').change(function () { 
+            
+            console.log($(this).val());
+            
+            $.post("/upload.php", $(this).val() ,function(data,status){
+                console.log("Data: " + data + "\nStatus: " + status);
+                
+                var jsonAux = data;
+                for (var i in jsonAux){
+                    delete jsonAux[i].colapsado;
+
+                    if(jsonAux[i].questionType === 'multiple choice group')
+                        for(var j in jsonAux[i].questionsList)
+                            delete jsonAux[i].questionsList[j].colapsado;
+
+                }
+                
+                $scope.$apply(function() { $scope.preguntas = JSON.stringify(jsonAux); });
+            });
+        });
+    });
+    
+    
                         
 }]);
 

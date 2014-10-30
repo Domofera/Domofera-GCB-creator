@@ -13,6 +13,10 @@
        </div>
    </div>
  
+   <form action="">
+       <input id="fichero" type="file" name="fichero" style="display: none;" />
+   </form>
+   
     <div class="panel panel-default" style="background: #eee">
         <nav id="gcbc-toolbar" class="btn-toolbar">
             <div class="container">
@@ -171,7 +175,7 @@
                         <div class="question-wrap">
                             <span class="span-label"><b>Enunciado: </b></span>
                             <div class="input-group ">
-                              <span class="form-control" name="mcgenunciado" contenteditable="true" ng-model="pregunta.questionHTML" ng-bind-html="pregunta.questionHTML | unsafe" ></span>
+                              <span class="form-control" name="mcgenunciado" contenteditable="true" ng-model="pregunta.questionGroupHTML" ng-bind-html="pregunta.questionGroupHTML | unsafe" ></span>
                               <span class="input-group-btn">
                                 <a class="btn editar" ng-click="Editar($event, 'preguntas[{{$index}}].questionHTML', $index)"><span class="fa fa-edit"></span></a>
                               </span>
