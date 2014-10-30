@@ -315,24 +315,48 @@ angular.module('gcbCreatorApp')
     };
     
     $(document).ready(function(){
-        $('#fichero').change(function () { 
+        $('#fichero').on('change', function () { 
             
-            console.log($(this).val());
-            
-            $.post("/upload.php", $(this).val() ,function(data,status){
-                console.log("Data: " + data + "\nStatus: " + status);
-                
-                var jsonAux = data;
-                for (var i in jsonAux){
-                    delete jsonAux[i].colapsado;
+            var file_data = $(this).prop('files')[0];   
+            var form_data = new FormData();                  
+            form_data.append('file', file_data);
+                        
+            $.ajax({
+                url: '/upload.php',
+                dataType: 'text',  // que esperar en el servidor
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: form_data,                         
+                type: 'post',
+                success: function(data){ 
+                    console.log(data);
+                    
+                    // Quitamos comentarios, trimeamos y quitamos "var activity ="
+                    var strAux = $.trim(stripJsonComments(data)).replace(/var[ ]+activity[ ]*=[ ]*/g,''); 
+                    
+                    // Convertimos a array
+                    var arrAux = eval(strAux);
+                    
+                    // Los HTML sueltos, los convertimos a objeto.
+                    for(var i in arrAux){
+                        if(!$.isPlainObject(arrAux[i]))
+                            arrAux[i] = { 'prevHTML': arrAux[i] }
+                                
+                    }
+                    
+                    // Añadimos colapsados
+                    for (var i in arrAux){
+                        arrAux[i].colapsado = false;
 
-                    if(jsonAux[i].questionType === 'multiple choice group')
-                        for(var j in jsonAux[i].questionsList)
-                            delete jsonAux[i].questionsList[j].colapsado;
+                        if(arrAux[i].questionType === 'multiple choice group')
+                            for(var j in arrAux[i].questionsList)
+                                arrAux[i].questionsList[j].colapsado = false;;
 
+                    }
+
+                    $scope.$apply(function() { $scope.preguntas = arrAux; });
                 }
-                
-                $scope.$apply(function() { $scope.preguntas = JSON.stringify(jsonAux); });
             });
         });
     });
