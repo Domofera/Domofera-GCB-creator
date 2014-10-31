@@ -7,17 +7,13 @@
  * # AssesmentCtrl
  * Controller of the gcbCreatorApp
  */
-angular.module('gcbCreatorApp').controller('AssesmentCtrl',['$scope', '$http','localStorageService', function ($scope,$http, localStorageService) { 
+angular.module('gcbCreatorApp').controller('AssesmentCtrl',['$scope', '$http','localStorageService', function ($scope,$http, localStorageService) {   
+    //**************** MODELOS ***************
     
-    $scope.CrearAssessment = function(){
-        $scope.preguntas = { 
-            preamble: '',
-            questionsList: [],
-            checkAnswers: false
-        };
-    };
-    
-    $scope.isActivity = false;
+    // config lo usaremos para cosas generales
+    $scope.config = {
+        isActivity: false,
+    }
     
     $scope.titulo = {
         text: '',
@@ -25,24 +21,35 @@ angular.module('gcbCreatorApp').controller('AssesmentCtrl',['$scope', '$http','l
         success: false
     };
     
-//********* LOCAL STORAGE
-    var pregArr = localStorageService.get('preguntasAss');
+    $scope.preguntas = { 
+        preamble: '',
+        questionsList: [],
+        checkAnswers: false
+    };
 
-    if(pregArr !== null && pregArr !== undefined && (pregArr.preamble !== '' || pregArr.checkAnswers !== false || pregArr.questionsList.length > 0)){
+    // Comprobamos si existe una sesión
+    var pregArr = localStorageService.get('preguntasAss');
+    var pregTit = $.trim(localStorageService.get('tituloAss'));
+    
+    // Si existe, preguntamos al usuario si quiere recuperarla
+    if(pregArr !== null && pregArr !== undefined && pregArr.length > 0 && pregTit !== ''){
         bootbox.confirm('Se ha encontrado una sesión abierta, ¿Deseas recuperarla?', function(result) {
             if(result)
-                $scope.$apply(function(){ $scope.preguntas = pregArr; });
-            else
-                $scope.$apply(function(){ $scope.CrearAssessment(); });
+                $scope.$apply(function(){  // Recuperamos sesión
+                    $scope.preguntas = pregArr; 
+                    $scope.titulo.text = pregTit;
+                });
         }); 
     }
-    else
-        $scope.CrearAssessment();
 
-    // Seteamos el watch para estar pendiente de cambios
+    // Seteamos el watch para estar pendiente de cambios en Preguntas y Titulo
     $scope.$watch('preguntas', function () {
         localStorageService.add('preguntasAss', $scope.preguntas);
     }, true);
+    $scope.$watch('titulo', function () {
+        localStorageService.add('tituloAss', $.trim($scope.titulo.text));
+    }, true);
+    
             
     
 //****** MARCAR
@@ -145,7 +152,7 @@ angular.module('gcbCreatorApp').controller('AssesmentCtrl',['$scope', '$http','l
         if(!$scope.ComprobarTitulo())
             return;
         
-        // QUITAR TODOS LOS COLAPSADOS Y APLICAR PARSEFLOAT A correctAnswerNumeric
+        // Quitamos colapsados, y aplicamos ParseFloat al numeric
         var jsonAux = angular.copy($scope.preguntas);
         
         for (var i in jsonAux.questionsList){
@@ -157,16 +164,13 @@ angular.module('gcbCreatorApp').controller('AssesmentCtrl',['$scope', '$http','l
             }
         }
         
-        jsonAux.titulo = $scope.titulo.text;
-        console.log(jsonAux);
+        jsonAux.titulo = $.trim($scope.titulo.text);
         
-        $http.post('/download/activity/'+jsonAux.titulo+'/'+jsonAux, jsonAux)
-		.success(function(data, status, headers, config) {
-			console.log('La peticion ha ido bien. ' + status);
-		}).error(function(data, status, headers, config) {
-			console.log('La peticion ha fallado ' + status);
-		});
-        
+        // Enviamos y pedimos al servidor que cree la actividad, y una vez creada la descargue
+        $.post("/crear-assessment.php", {preguntas: JSON.stringify(jsonAux)} ,
+          function(data,status){
+            window.location='/download.php?filename=' + data;
+        });
     };
             
 }]);

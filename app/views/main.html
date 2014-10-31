@@ -270,7 +270,7 @@
                                                </ul>
                                            </li>
                                            <span class="add-question fa fa-plus" ng-class="{'disabled': question.choices.length >= maxRespuestas}" ng-click="InnerAddChoice($parent.$index, $index)"></span>
-                                            <i class="text-danger" ng-if="question.choices.length >= maxRespuestas"> No puedes insertar más de {{question.choices.length}} respuestas</i>
+                                            <i class="text-danger" ng-if="question.choices.length >= maxPreguntasMCG"> No puedes insertar más de {{question.choices.length}} respuestas</i>
                                        </ol>
                                     </div>
                                 </div>

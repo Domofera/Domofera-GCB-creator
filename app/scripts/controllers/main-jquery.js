@@ -10,19 +10,21 @@
 
 angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', '$timeout', function ($scope, $compile, $timeout) {
 
-    var lastFocused;
-    var isHover = false;
     var isFixed = false;
     var isInnerMoving = false;
     var animColDur = 700;
     var inAnimation = false;
     var timer;
     
-    $scope.maxRespuestas = 6;
+    $scope.maxRespuestas = 6;     // Max respuestas en preguntas
+    $scope.maxPreguntasMCG = 12;  // Max preguntas en Multi-choice group
     
-//*** COLAPSAR functions
+    
+    
+//**************** COLAPSAR *****************
+    
     function SetColapsado(i, state){
-        if($scope.isActivity){
+        if($scope.config.isActivity){
             $scope.preguntas[i].colapsado = state;
         }
         else{
@@ -30,10 +32,11 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', '$
         }
     }
     
+    // ColapsarInner y Colapsar calculan la altura y aplican el cambio en $scope...colapsado para que surja efecto
     function ColapsarInner(objeto, h, pIndex, index){
-        if(objeto.hasClass('colapsado')){ 
+        if(objeto.hasClass('colapsado')) // Si está colapsado, expandimos
+        { 
             h = objeto.find('.questions-inside-right').outerHeight(true) + objeto.height(); 
-            
             objeto.css('height', h);
             $scope.preguntas[pIndex].questionsList[index].colapsado = false;
             objeto.animate({ height: h-10 }, animColDur, function(){ objeto.css('height', 'auto'); });
@@ -51,7 +54,6 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', '$
             h = objeto.find('.questions-inside-right').outerHeight(true) + objeto.height(); 
             
             objeto.css('height', h);
-            
             objeto.animate({ height: h-10 }, animColDur, function(){ objeto.css('height', 'auto'); });
             SetColapsado(index, false);
             objeto.find('.question-collapse').children().eq(0).removeClass('fa-chevron-down').addClass('fa-chevron-up');
@@ -68,8 +70,11 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', '$
     
     
     
-//********************** MODAL EDITOR
-    $scope.Editar = function($event, model, i){       // Elementos de primer nivel
+    
+//*************** MODAL EDITOR *************
+    
+    // Llamada que abre el modal para editar
+    $scope.Editar = function($event, model, i){
         var objeto = $($event.currentTarget);
         CrearModal(objeto, model);
     };
@@ -142,12 +147,16 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', '$
     }
     
 
+                    
+//**************  ON NG-REPEAT FINISHED *******************
+                    
     $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) { 
         
+        // Reseteamos los tooltip y popover
         $('[data-toggle="popover"]').popover('destroy');  
         $('[data-toggle="tooltip"]').tooltip('destroy');
                     
-        $timeout( function(){
+        $timeout( function(){ 
             $('[data-toggle="tooltip"]').tooltip({container: 'body'}); // Seteamos el tooltip
             $('[data-toggle="popover"]').popover({
                 html: true, placement: 'top', container: 'body', trigger: 'click',
@@ -156,17 +165,28 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', '$
         }, 100);
     });
     
+                    
+                    
 
-//***** jQuery
+//******************* jQuery *******************
 
     $(document).ready(function () {
 
-        bootbox.setDefaults({
-          locale: 'es',
-        });
+    //********** Configuraciones Iniciales ***********
                     
+        // Configuramos toolbox
+        bootbox.setDefaults({ locale: 'es', });
+                    
+        // Iniciamos Tooltips y Popovers
+        $timeout( function(){ 
+            $('[data-toggle="tooltip"]').tooltip({container: 'body'}); // Seteamos el tooltip
+            $('[data-toggle="popover"]').popover({
+                html: true, placement: 'top', container: 'body', trigger: 'click',
+                content: function () { return $compile($(this).next().html())($scope); }
+            });
+        }, 100);    
         
-    // Cambiamos el valor de isFixed, para que ponga el toolbar fijo
+        // Controlamos el Scroll para cambiar el Toolbar cuando sea necesario
         $(window).scroll(function(){
             if ($(this).scrollTop() > 105 && !isFixed) {
                 $('#gcbc-toolbar').hide().fadeIn(300).addClass('fixed');
@@ -180,17 +200,8 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', '$
         });
                     
                     
-        $('body').on('mouseenter', '.open-popover', function(){
-            var obj = $(this);
-            timer = setTimeout( function(){ obj.addClass('hovered'); }, 400);   
-        });
-                    
-        $('body').on('mouseleave', '.open-popover', function(){
-            clearTimeout(timer); 
-            $(this).removeClass('hovered');
-        });
         
-    //****************** SORTABLE
+    //************ SORTABLE ***********
         $('#questions-container').sortable({placeholder: 'sortable-placeholder'});
         setTimeout(function(){ 
             if($('#questions-container').length){
@@ -268,9 +279,33 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', '$
                 }
             });
         });
+                
+        // Si se tiene el foco en un contenteditable, desactivar sortables
+        $('body').on('mousedown','span[contenteditable=true]', function(){ 
+            if(!$(this).is(':focus')){
+                $('#questions-container').sortable('disable');
+                $('.inner-sortable').sortable('disable');
+                $(this).focus();
+            }
+        });
         
         
- // **** POPOVER
+                   
+                    
+    //************* POPOVER **************
+           
+        // Controlamos la clase hovered, con cierto retardo
+        $('body').on('mouseenter', '.open-popover', function(){
+            var obj = $(this);
+            timer = setTimeout( function(){ obj.addClass('hovered'); }, 400);   
+        });
+                    
+        $('body').on('mouseleave', '.open-popover', function(){
+            clearTimeout(timer); 
+            $(this).removeClass('hovered');
+        });
+                
+        // Cuando se abre, añadimos clase seleccionada y seteamos el tooltip;
         $('body').on('show.bs.popover', '[data-toggle="popover"]', function(){
             $(this).addClass('selected');
         });
@@ -288,20 +323,11 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', '$
         }); 
         
         
-    // Si se tiene el foco en un contenteditable, desactivar sortables
-        $('body').on('mousedown','span[contenteditable=true]', function(){ 
-            if(!$(this).is(':focus')){
-                $('#questions-container').sortable('disable');
-                $('.inner-sortable').sortable('disable');
-                $(this).focus();
-            }
-        });
-
+                    
+                    
         
-        
-    //******* ACORDEON
+    //*********** COLAPSADOS **************
         $scope.colapsados = false;
-        
         
       // Colapsar TODOS
         $scope.CollapseAll = function(){  
@@ -376,6 +402,7 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', '$
             }
         };
         
+        // Colapsar Grupo en Multichoice Group
         $scope.GroupCollapse = function($pIndex, $index){ 
             if(!inAnimation){
                 var objeto = $('#questions-container>div>div.question-wrapper').eq($pIndex).find('.question-wrapper').eq($index);
@@ -386,33 +413,6 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', '$
             }
         };
         
-        
-        
-
-        //************* EDITOR DE TEXTO
-
-        $('body').on('mouseenter','#editor-buttons>a, span[contenteditable=true]', function(){
-            isHover = true;
-        });
-
-        $('body').on('mouseleave','#editor-buttons>a, span[contenteditable=true]', function(){
-            isHover = false;
-        });
-
-        $('body').on('click', function(){
-            if(isHover){
-                $('#editor-buttons>a').removeClass('disabled');
-                $('#editor-buttons').addClass('editor-glow');
-            }else{
-                $('#editor-buttons>a').addClass('disabled');
-                $('#editor-buttons').removeClass('editor-glow');
-            }
-        });
-        
-        // Controlar los disabled de los botones
-        $('body').on('focus','span[contenteditable=true]', function(){
-            lastFocused = $(this);
-        });
 
     });
 }]);

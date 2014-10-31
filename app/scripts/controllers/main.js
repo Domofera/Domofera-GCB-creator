@@ -11,36 +11,46 @@
 angular.module('gcbCreatorApp')
 .controller('MainCtrl',['$scope', '$compile', '$http','localStorageService',  function ($scope, $compile, $http, localStorageService) {
     
-    $scope.isActivity = true;
     
-    //******** MODELOS
+//**************** MODELOS ***************
+    
+    // config lo usaremos para cosas generales
+    $scope.config = {
+        isActivity: true,
+    }
+    
+    // titulo
     $scope.titulo = {
         text: '',
         error: false,
         success: false
     };
     
-    $scope.config = {
-        isActivity: true,
-    }
+    // preguntas
+    $scope.preguntas = [];
     
-//****** Recuperar sesiónSeteamos localStorage para recuperar sesión
+    
+    // Comprobamos si existe una sesión
     var pregArr = localStorageService.get('preguntasAct');
+    var pregTit = $.trim(localStorageService.get('tituloAct'));
     
-    if(pregArr !== null && pregArr !== undefined && pregArr.length > 0){
+    // Si existe, preguntamos al usuario si quiere recuperarla
+    if(pregArr !== null && pregArr !== undefined && pregArr.length > 0 && pregTit !== ''){
         bootbox.confirm('Se ha encontrado una sesión abierta, ¿Deseas recuperarla?', function(result) {
             if(result)
-                $scope.$apply(function(){ $scope.preguntas = pregArr; });
-            else
-                $scope.$apply(function(){ $scope.preguntas = []; });
+                $scope.$apply(function(){  // Recuperamos sesión
+                    $scope.preguntas = pregArr; 
+                    $scope.titulo.text = pregTit;
+                });
         }); 
     }
-    else
-        $scope.preguntas = [];
 
-    // Seteamos el watch para estar pendiente de cambios
+    // Seteamos el watch para estar pendiente de cambios en Preguntas y Titulo
     $scope.$watch('preguntas', function () {
         localStorageService.add('preguntasAct', $scope.preguntas);
+    }, true);
+    $scope.$watch('titulo', function () {
+        localStorageService.add('tituloAct', $.trim($scope.titulo.text));
     }, true);
 
     
@@ -230,7 +240,8 @@ angular.module('gcbCreatorApp')
 
                             
                         
-//************* ENVIAR / RECIBIR DATOS  
+//************* ENVIAR / RECIBIR DATOS *************  
+    
     $scope.ComprobarTitulo = function(str){
         var patt = new RegExp('^activity\-[0-9]+\.[0-9]+$');
         var ret = false;                
@@ -253,45 +264,51 @@ angular.module('gcbCreatorApp')
         return ret;
     };
     
+    // Generar y descargar el fichero
     $scope.HacerPeticion = function(){ 
         
         $scope.titulo.error = true; //Obligamos a que error sea true, así comprobara el título
         if(!$scope.ComprobarTitulo())
             return;
         
-        // QUITAR TODOS LOS COLAPSADOS, DE AMBOS NIVELES
         var jsonAux = angular.copy($scope.preguntas);
         
+        // Limpiamos el Json de variables adicionales
         for (var i in jsonAux){
             delete jsonAux[i].colapsado;
             
             if(jsonAux[i].questionType === 'multiple choice group')
                 for(var j in jsonAux[i].questionsList)
-                    delete jsonAux[i].questionsList[j].colapsado;
-            
+                    delete jsonAux[i].questionsList[j].colapsado;   
         }
         
-        jsonAux.push({titulo : $scope.titulo.text});
+        jsonAux.push({titulo : $.trim($scope.titulo.text)}); //Añadimos titulo al final
         
+        // Enviamos y pedimos al servidor que cree la actividad, y una vez creada la descargue
         $.post("/crear-activity.php", {preguntas: JSON.stringify(jsonAux)} ,
           function(data,status){
             window.location='/download.php?filename=' + data;
-          });
+        });
     };
     
+    
+    //************* SUBIR **************
+    
+    // Acciona el input[type=file] para subir el archivo
     $scope.SubirFichero = function(){ 
-        
         $('#fichero').click();
-        
     };
     
+    // Cuando cambie el campo, subir el archivo
     $(document).ready(function(){
         $('#fichero').on('change', function () { 
             
+            // Montamos un FormData
             var file_data = $(this).prop('files')[0];   
             var form_data = new FormData();                  
             form_data.append('file', file_data);
                         
+            // realizamos petición ajax
             $.ajax({
                 url: '/upload.php',
                 dataType: 'text',  // que esperar en el servidor
@@ -301,20 +318,17 @@ angular.module('gcbCreatorApp')
                 data: form_data,                         
                 type: 'post',
                 success: function(data){ 
-                    console.log(data);
                     
+                    // Si hubieran errores de sintaxis, lo indicamos al usuario y cerramos
                     try{
                        var json = JSON.parse(data);
                     }
                     catch(e){
-                       console.log('Error: ' + e);
+                        bootbox.alert('Hay algún error de sintaxis en el fichero que has subido. Por favor, revisalo y vuelve a subirlo');
                         return;
                     }
-    
                     
-                    
-                    console.log(json);
-                    
+                    // Si hubieran warnings o errores, también 
                     if(json.status === 'warn')
                         bootbox.alert('No se puede insertar código javascript en una actividad, esos datos se han omitido');
                     else if(json.status === 'error'){
@@ -331,7 +345,6 @@ angular.module('gcbCreatorApp')
                     for(var i in arrAux){
                         if(!$.isPlainObject(arrAux[i]))
                             arrAux[i] = { 'prevHTML': arrAux[i] }
-                                
                     }
                     
                     // Añadimos colapsados
@@ -344,6 +357,7 @@ angular.module('gcbCreatorApp')
 
                     }
 
+                    // Insertamos en el scope
                     $scope.$apply(function() { $scope.preguntas = arrAux; });
                 }
             });
