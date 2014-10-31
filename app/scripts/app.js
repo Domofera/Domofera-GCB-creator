@@ -19,8 +19,14 @@ var mainModule = angular.module('gcbCreatorApp', [
     'ui.sortable',
     'mgcrea.ngStrap.helpers.dimensions',
     'mgcrea.ngStrap.scrollspy',
-    'mgcrea.ngStrap.affix'
+    'mgcrea.ngStrap.affix',
+    'LocalStorageModule'
 ]);
+
+// Configuramos namespace del localstorage
+mainModule.config(function(localStorageServiceProvider){
+    localStorageServiceProvider.setPrefix('gcbls');
+});
 
 mainModule.config(['$routeProvider', function ($routeProvider) {
     $routeProvider

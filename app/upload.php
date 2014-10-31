@@ -51,41 +51,21 @@ function json_minify($json) {
 
 
 
-	// Cogemos el fichero
+
+
+
+
 	$target_dir = '';
 	$target_dir = $target_dir . basename( $_FILES['file']['name']);
 	
 	$fichero = basename($_FILES['file']['name']);
 
-	if (move_uploaded_file($_FILES['file']['tmp_name'], $target_dir)) // Si se ha subido bien
-	{
-		// Creamos y leemos fichero
+	if (move_uploaded_file($_FILES['file']['tmp_name'], $target_dir)) {
 		$myfile = fopen($fichero, 'r') or die('Unable to open file!');
-		$string = fread($myfile,filesize($fichero));
-		
-		// Buscaremos si encuentra la clausula "// <gcb-no-verify>" y guardamos la posición
-		preg_match('/^\/\/( )*<gcb-no-verify>( )*$/m', $string, $matches, PREG_OFFSET_CAPTURE); 
-		$pos_ini = $matches[0][1];
-		$status = 'ok';
-		
-		if($pos_ini !== false)
-		{
-			// Buscaremos si encuentra la clausula "// </gcb-no-verify>" y guardamos la posición
-			preg_match('/^\/\/( )*<\/gcb-no-verify>( )*$/m', $string, $matches, PREG_OFFSET_CAPTURE); 
-			$pos_fin = $matches[0][1];
-			$string = substr_replace($string, '', $pos_ini, ($pos_fin+strlen($matches[0][0])-$pos_ini)); // cortamos ese trozo
-			$status = 'warn';
-		}
-		
-		$response = array("status" => $status, "data" => json_minify($string)); // Seteamos la respuesta "limpia"
+		echo json_minify(fread($myfile,filesize($fichero)));
 		fclose($myfile);
-		unlink($fichero); // borramos fichero, para no acumular
-		
 	} else {
-		$response = array("status" => "error");
+		echo 'fail';
 	}
-	
-	echo json_encode($response);
-	
 ?>
 

@@ -7,7 +7,15 @@
  * # AssesmentCtrl
  * Controller of the gcbCreatorApp
  */
-angular.module('gcbCreatorApp').controller('AssesmentCtrl',['$scope', '$http', function ($scope,$http) { 
+angular.module('gcbCreatorApp').controller('AssesmentCtrl',['$scope', '$http','localStorageService', function ($scope,$http, localStorageService) { 
+    
+    $scope.CrearAssessment = function(){
+        $scope.preguntas = { 
+            preamble: '',
+            questionsList: [],
+            checkAnswers: false
+        };
+    };
     
     $scope.isActivity = false;
     
@@ -17,32 +25,24 @@ angular.module('gcbCreatorApp').controller('AssesmentCtrl',['$scope', '$http', f
         success: false
     };
     
-    $scope.preguntas = {
-          preamble: '<b>This assessment addresses content in units 1-6. You can try it as many times as you like. When you click "Check Answers," we will give you your score and give you a list of lessons to review. Please note that some of the assessment questions address functionality that does not work well on tablet computers.</b>',
-        
-        checkAnswers: true,
+//********* LOCAL STORAGE
+    var pregArr = localStorageService.get('preguntasAss');
 
-        questionsList: [
-            {questionHTML: 'Where will the Summer Olympics of 2016 be held?',
-             choices: ['Chicago', 'Tokyo', 'Rio de Janeiro', 'Madrid', 'I don\'t know'],
-             correct: 2,
-             lesson: '1.4',
-             colapsado: false
-            },
+    if(pregArr !== null && pregArr !== undefined && (pregArr.preamble !== '' || pregArr.checkAnswers !== false || pregArr.questionsList.length > 0)){
+        bootbox.confirm('Se ha encontrado una sesión abierta, ¿Deseas recuperarla?', function(result) {
+            if(result)
+                $scope.$apply(function(){ $scope.preguntas = pregArr; });
+            else
+                $scope.$apply(function(){ $scope.CrearAssessment(); });
+        }); 
+    }
+    else
+        $scope.CrearAssessment();
 
-            {questionHTML: 'You decide to attend the Summer Olympics and find yourself surrounded by Portuguese speakers. How would you say, "Is there a cheap restaurant around here?" in Portuguese?"<br/>[this version of the question uses a case-insensitive string match]',
-             correctAnswerString: 'existe um rest?',
-             lesson: '4.5',
-             colapsado: false
-            },
-
-            {questionHTML: 'This is an example of a numeric freetext question. What is 3.2 + 4.7?',
-             correctAnswerNumeric: 7.9,
-             lesson: '99.99',
-             colapsado: false
-            }
-          ]
-     };
+    // Seteamos el watch para estar pendiente de cambios
+    $scope.$watch('preguntas', function () {
+        localStorageService.add('preguntasAss', $scope.preguntas);
+    }, true);
             
     
 //****** MARCAR

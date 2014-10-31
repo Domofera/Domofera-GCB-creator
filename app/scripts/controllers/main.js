@@ -9,7 +9,7 @@
  */
 
 angular.module('gcbCreatorApp')
-.controller('MainCtrl',['$scope', '$compile', '$http',  function ($scope, $compile, $http) {
+.controller('MainCtrl',['$scope', '$compile', '$http','localStorageService',  function ($scope, $compile, $http, localStorageService) {
     
     $scope.isActivity = true;
     
@@ -24,53 +24,29 @@ angular.module('gcbCreatorApp')
         isActivity: true,
     }
     
-    $scope.preguntas = [
-        { questionType: 'freetext',
-         questionHTML: '<p style="color:red;">What or is the snow?</p>',
-         correctAnswerString: 'white',
-         correctAnswerOutput: 'Correct!',
-         incorrectAnswerOutput: 'Try again.',
-         showAnswerOutput: 'Our search expert says: white!',
-         colapsado: false
-        },
+//****** Recuperar sesiónSeteamos localStorage para recuperar sesión
+    var pregArr = localStorageService.get('preguntasAct');
+    
+    if(pregArr !== null && pregArr !== undefined && pregArr.length > 0){
+        bootbox.confirm('Se ha encontrado una sesión abierta, ¿Deseas recuperarla?', function(result) {
+            if(result)
+                $scope.$apply(function(){ $scope.preguntas = pregArr; });
+            else
+                $scope.$apply(function(){ $scope.preguntas = []; });
+        }); 
+    }
+    else
+        $scope.preguntas = [];
 
-        {
-            prevHTML:'<b>Letra <i>negrita</i></b> que introduce la pregunta',
-            colapsado: false
-        },
+    // Seteamos el watch para estar pendiente de cambios
+    $scope.$watch('preguntas', function () {
+        localStorageService.add('preguntasAct', $scope.preguntas);
+    }, true);
 
-        { questionType:'multiple choice',
-         questionHTML:'<b>Tienes mucho feeling?</b>',
-         choices: [
-             ['Puede', false, '"A" is wrong, try again.'],
-             ['Algo pero no mucho', true, '"B" is correct!'],
-             ['Depende como lo veas', false, '"C" is wrong, try again.'],
-             ['Por supuesto!', false, '"D" is wrong, try again.']
-         ],
-         colapsado: false
-        },
-
-        { questionType: 'multiple choice group',
-         questionGroupHTML: '<p>This section will test you on colors and numbers.</p>',
-         questionsList: [
-             {questionHTML: 'Pick all <i>odd</i> numbers:',
-              choices: ['1', '5'], 
-              correctIndex: [0, 1], 
-              multiSelect: true,
-              colapsado: false
-             },
-             {questionHTML: 'Pick one <i>even</i> number:',
-              choices: ['1', '2', '3'], correctIndex: [1, 2], multiSelect: false, colapsado: false},
-             {questionHTML: 'What color is the sky?',
-              choices: ['#00FF00', '#00FF00', '#0000FF'], correctIndex: 2, colapsado: false}
-         ],
-         allCorrectMinCount: 2,
-         allCorrectOutput: 'Great job! You know the material well.',
-         someIncorrectOutput: 'You must answer at least two questions correctly.',
-         colapsado: false
-        }
-    ];
-
+    
+    
+    
+    
     //***** Funciones auxiliares                    
     $scope.IsInArray = function($iGrandparent, $iParent, $i){ 
         if($.isArray($scope.preguntas[$iGrandparent].questionsList[$iParent].correctIndex))
@@ -89,8 +65,6 @@ angular.module('gcbCreatorApp')
         bootbox.confirm("Se borrará todo, ¿Estás seguro?", function(result) {
             if(result)
                 $scope.$apply( function(){ $scope.preguntas = []; });
-            
-            console.log($scope.preguntas.length);
         }); 
     };
 
@@ -299,11 +273,8 @@ angular.module('gcbCreatorApp')
         
         jsonAux.push({titulo : $scope.titulo.text});
         
-        console.log(jsonAux);
-        
         $.post("/crear-activity.php", {preguntas: JSON.stringify(jsonAux)} ,
           function(data,status){
-            console.log("Data: " + data + "\nStatus: " + status);
             window.location='/download.php?filename=' + data;
           });
     };
@@ -332,8 +303,26 @@ angular.module('gcbCreatorApp')
                 success: function(data){ 
                     console.log(data);
                     
-                    // Quitamos comentarios, trimeamos y quitamos "var activity ="
-                    var strAux = $.trim(stripJsonComments(data)).replace(/var[ ]+activity[ ]*=[ ]*/g,''); 
+                    try{
+                       var json = JSON.parse(data);
+                    }
+                    catch(e){
+                       console.log('Error: ' + e);
+                        return;
+                    }
+    
+                    
+                    
+                    console.log(json);
+                    
+                    if(json.status === 'warn')
+                        bootbox.alert('No se puede insertar código javascript en una actividad, esos datos se han omitido');
+                    else if(json.status === 'error'){
+                        bootbox.alert('Ha ocurrido algún error subiendo el fichero. Prueba de nuevo');
+                        return;
+                    }
+                    
+                    var strAux = json.data.replace(/var[ ]+activity[ ]*=[ ]*/g,''); 
                     
                     // Convertimos a array
                     var arrAux = eval(strAux);
