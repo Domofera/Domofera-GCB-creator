@@ -126,7 +126,7 @@ angular.module('gcbCreatorApp').controller('AssesmentCtrl',['$scope', '$http','l
 //******** ENVIAR / RECIBIR DATOS *************
     
     $scope.ComprobarTitulo = function(){
-        var patt = new RegExp('^assessment\-[a-zA-Z0-9]+$');
+        var patt = new RegExp(/^assessment\-[\w]+$/);
         var ret = false;                
         
         // Si todavía no se ha enviado un submit, no comprobamos
@@ -170,9 +170,22 @@ angular.module('gcbCreatorApp').controller('AssesmentCtrl',['$scope', '$http','l
         // Enviamos y pedimos al servidor que cree la actividad, y una vez creada la descargue
         $.post('/crear-assessment.php', {preguntas: JSON.stringify(jsonAux)} ,
           function(data,status){ 
+            data = $.trim(data);
             console.log(status + '\n');
             console.log(data);
-            window.location='/download.php?filename=' + data;
+            // Si ocurriera algún error, hacer logs
+            if(status != 'success')
+                EnviarLogs('assessment / crear-assessment.php', 'Status: ' + status + '  --- Data: ' + data + '  \n-- JSON: ' + JSON.stringify(jsonAux));
+            
+            // Comprobamos correcto nombre de fichero
+            var patt = new RegExp(/^[\w\s\.\-]+\.js$/);
+            console.log(patt + '--' + data + '--' + patt.test(data) + '--' + typeof data);
+            if(patt.test(data))    
+                window.location='/download.php?filename=' + data;
+            else{
+                bootbox.alert('No es un fichero javascript, o el nombre del fichero es incorrecto. Recuerda usar nombres de ficheros sin acentos ni simbolos poco comunes');
+                EnviarLogs('assessment / crear-assessment.php (invalid filename)', ' Data: ' + data + '  \n-- JSON: ' + JSON.stringify(jsonAux));
+            }
         });
     };
     
@@ -184,6 +197,19 @@ angular.module('gcbCreatorApp').controller('AssesmentCtrl',['$scope', '$http','l
     $scope.SubirFichero = function(){ 
         $('#fichero-ass').click();
     };
+    
+    function EnviarLogs(from, data){
+        var date = new Date();
+        var date_str = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " +  date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+        
+        var json = {
+            fecha: date_str,
+            from: from,
+            datos: data
+        }
+        
+        $.post('/append-log.php', {logs: JSON.stringify(json, null, 4)});
+    }
     
     // Cuando cambie el campo, subir el archivo
     $('#fichero-ass').on('change', function () { 
@@ -214,6 +240,7 @@ angular.module('gcbCreatorApp').controller('AssesmentCtrl',['$scope', '$http','l
                 catch(e){
                     bootbox.alert('Ha habido un error en el servidor. Por favor, informa de esto mediante un email a la dirección <a href="mailto:domoferaapp@gmail.com?Subject=Error server" target="_top">domoferaapp@gmail.com</a>');
                     console.log(e);
+                    EnviarLogs('assessment / upload-assessment.php (server error)', data);
                     return;
                 }
 
@@ -221,19 +248,23 @@ angular.module('gcbCreatorApp').controller('AssesmentCtrl',['$scope', '$http','l
                     bootbox.alert('Este fichero no es un examen!!');
                     return;
                 }
-                else if(json.status === 'error'){
+                else if(json.status === 'error'){ // upload error
                     bootbox.alert('Ha ocurrido algún error subiendo el fichero. Prueba de nuevo');
+                    EnviarLogs('assessment / upload-assessment.php (upload error)', data);
                     return;
                 }
                 
+                
+                
                 // Convertimos a Json
                 try{
-                   json = JSON.parse(toJSON(json.data));
+                   var json_data = JSON.parse(toJSON(json.data));
                 }
                 catch(e){ 
                     if (e instanceof SyntaxError) {
                         bootbox.alert('Hay algún error de sintaxis en el fichero que has subido. Por favor, revisalo y vuelve a subirlo');
                         console.log(e);
+                        EnviarLogs('assessment / upload-assessment.php (syntax error)', data);
                         return;
                     }
                 }
@@ -246,29 +277,29 @@ angular.module('gcbCreatorApp').controller('AssesmentCtrl',['$scope', '$http','l
                 }
 
                 // Quitar los correct(...) de las multiple choice
-                for(var i in json.questionsList){
-                    if(json.questionsList[i].choices != undefined){
-                        for(var j in json.questionsList[i].choices){ 
-                            var str = json.questionsList[i].choices[j];
+                for(var i in json_data.questionsList){
+                    if(json_data.questionsList[i].choices != undefined){
+                        for(var j in json_data.questionsList[i].choices){ 
+                            var str = json_data.questionsList[i].choices[j];
                             var pos = str.indexOf('correct(');
                             if(pos == 0){ // Si encontramos un correct al principio
-                                json.questionsList[i].choices[j] = str.substring(8,str.length-1);
-                                json.questionsList[i].correct = parseInt(j);
+                                json_data.questionsList[i].choices[j] = str.substring(8,str.length-1);
+                                json_data.questionsList[i].correct = parseInt(j);
                             }
                         }
                     }
                 }
 
                 // Añadimos colapsados
-                for (var i in json.questionsList){
-                    json.questionsList[i].colapsado = false;
+                for (var i in json_data.questionsList){
+                    json_data.questionsList[i].colapsado = false;
                 }
                 
                 if(json.assessmentName != undefined)
-                    delete json.assessmentName;
+                    delete json_data.assessmentName;
 
                 // Insertamos en el scope
-                $scope.$apply(function() { $scope.preguntas = json; });
+                $scope.$apply(function() { $scope.preguntas = json_data; $scope.titulo.text = json.filename;});
             }
         });
     });

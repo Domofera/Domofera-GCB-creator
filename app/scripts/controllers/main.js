@@ -243,7 +243,7 @@ angular.module('gcbCreatorApp')
 //************* ENVIAR / RECIBIR DATOS *************  
     
     $scope.ComprobarTitulo = function(str){
-        var patt = new RegExp('^activity\-[0-9]+\.[0-9]+$');
+        var patt = new RegExp(/^activity\-\d+\.\d+$/);
         var ret = false;                
         
         // Si todavía no se ha enviado un submit, no comprobamos
@@ -286,8 +286,24 @@ angular.module('gcbCreatorApp')
         
         // Enviamos y pedimos al servidor que cree la actividad, y una vez creada la descargue
         $.post("/crear-activity.php", {preguntas: JSON.stringify(jsonAux)} ,
-          function(data,status){
-            window.location='/download.php?filename=' + data;
+          function(data,status){ 
+            
+            data = $.trim(data);
+            
+            console.log(status + '\n');
+            console.log(data);
+            // Si ocurriera algún error, hacer logs
+            if(status != 'success')
+                EnviarLogs('activity / crear-activity.php', 'Status: ' + status + '  --- Data: ' + data + '  \n-- JSON: ' + JSON.stringify(jsonAux));
+            
+            // Comprobamos correcto nombre de fichero
+            var patt = new RegExp(/^[\w\s\.\-]+\.js$/);
+            if(patt.test(data))    
+                window.location='/download.php?filename=' + data;
+            else{
+                bootbox.alert('No es un fichero javascript, o el nombre del fichero es incorrecto. Recuerda usar nombres de ficheros sin acentos ni simbolos poco comunes');
+                EnviarLogs('activity / crear-activity.php (invalid filename)', ' Data: ' + data + '  \n-- JSON: ' + JSON.stringify(jsonAux));
+            }
         });
     };
     
@@ -298,6 +314,19 @@ angular.module('gcbCreatorApp')
     $scope.SubirFichero = function(){ 
         $('#fichero-act').click();
     };
+    
+    function EnviarLogs(from, data){
+        var date = new Date();
+        var date_str = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " +  date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+        
+        var json = {
+            fecha: date_str,
+            from: from,
+            datos: data
+        }
+        
+        $.post('/append-log.php', {logs: JSON.stringify(json, null, 4)});
+    }
     
     // Cuando cambie el campo, subir el archivo
     $('#fichero-act').on('change', function () { 
@@ -326,6 +355,7 @@ angular.module('gcbCreatorApp')
                 }
                 catch(e){
                     bootbox.alert('Ha habido un error en el servidor. Por favor, informa de esto mediante un email a la dirección <a href="mailto:domoferaapp@gmail.com?Subject=Error server" target="_top">domoferaapp@gmail.com</a>');
+                    EnviarLogs('activity / upload-activity.php (server error)', data);
                     return;
                 }
 
@@ -336,6 +366,7 @@ angular.module('gcbCreatorApp')
                 }
                 else if(json.status === 'error'){
                     bootbox.alert('Ha ocurrido algún error subiendo el fichero. Prueba de nuevo');
+                    EnviarLogs('activity / upload-activity.php (upload error)', data);
                     return;
                 }
 
@@ -348,6 +379,7 @@ angular.module('gcbCreatorApp')
                 catch(e){
                     if (e instanceof SyntaxError) {
                         bootbox.alert('Hay algún error de sintaxis en el fichero que has subido. Por favor, revisalo y vuelve a subirlo');
+                        EnviarLogs('activity / upload-activity.php (syntax error)', data);
                         return;
                     }
                 }
@@ -372,7 +404,7 @@ angular.module('gcbCreatorApp')
                 }
 
                 // Insertamos en el scope
-                $scope.$apply(function() { $scope.preguntas = arrAux; });
+                $scope.$apply(function() { $scope.preguntas = arrAux;  $scope.titulo.text = json.filename;});
             }
         });
     });

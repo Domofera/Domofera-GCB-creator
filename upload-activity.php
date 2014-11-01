@@ -91,7 +91,12 @@ function json_minify($json) {
 			$status = "no-is";
 		}
 		
-		$response = array("status" => $status, "data" => json_minify($string)); // Seteamos la respuesta "limpia"
+		// Quitamos extensión a nombre de fichero
+		$arr_aux = explode('.', basename( $_FILES['file']['name']));
+		array_pop($arr_aux);
+		$file_name = implode('.', $arr_aux);
+		
+		$response = array("status" => $status, "filename" => $file_name, "data" => json_minify($string)); // Seteamos la respuesta "limpia"
 		fclose($myfile);
 		unlink($fichero); // borramos fichero, para no acumular
 		

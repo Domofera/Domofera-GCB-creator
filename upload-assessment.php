@@ -62,7 +62,7 @@ function json_minify($json) {
 
 
 	// Cogemos el fichero
-	$target_dir = '';
+	$target_dir = ''; // carpeta
 	$target_dir = $target_dir . basename( $_FILES['file']['name']);
 	
 	$fichero = basename($_FILES['file']['name']);
@@ -107,8 +107,13 @@ function json_minify($json) {
 		// Comprobamos que sea un fichero de assessment, mirando por la variable "var assessment"
 		if(!preg_match('/var( )+assessment/', $string))
 			$status = "no-is";
+			
+		// Quitamos extensión a nombre de fichero
+		$arr_aux = explode('.', basename( $_FILES['file']['name']));
+		array_pop($arr_aux);
+		$file_name = implode('.', $arr_aux); 
 		
-		$response = array("status" => $status, "data" => $string); // Seteamos la respuesta "limpia"
+		$response = array("status" => $status, "filename" => $file_name , "data" => $string); // Seteamos la respuesta "limpia"
 		fclose($myfile);
 		unlink($fichero); // borramos fichero, para no acumular
 		
