@@ -13,9 +13,7 @@
        </div>
    </div>
  
-   <form action="">
-       <input id="fichero" type="file" name="fichero" style="display: none;" />
-   </form>
+   <input id="fichero-act" type="file" name="fichero" style="display: none;" />
    
     <div class="panel panel-default" style="background: #eee">
         <nav id="gcbc-toolbar" class="btn-toolbar">
@@ -52,7 +50,7 @@
    
     <!--  CONTENIDO de las Preguntas -->
 
-    <div id="questions-container" class="panel panel-default" ui-sortable ng-model="preguntas"> 
+    <div id="questions-container" class="panel panel-default" ui-sortable ng-model="preguntas" ng-show="preguntas.length > 0"> 
        
         <div ng-repeat="pregunta in preguntas track by $index" on-finish-render>
            
@@ -257,7 +255,7 @@
                                               <span class="num-list"></span>
                                                <ul>
                                                    <li>
-                                                       <textarea class="form-control" type="text" placeholder="Texto..." ng-model="qchoice" ></textarea>
+                                                       <textarea class="form-control" type="text" placeholder="Texto..." ng-model="question.choices[$index]" ></textarea>
                                                    </li>
                                                    <li>
                                                         <div class="my-checkbox">

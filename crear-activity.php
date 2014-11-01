@@ -1,9 +1,5 @@
 
 <?php
-    $PARAMS = (count($_GET)<1)? $_POST:$_GET;
-    
-    //$str = 'var activity = ' . $_POST['preguntas'] . ';';
-    
     $json = json_decode($_POST['preguntas']);
     $titulo = $json[count($json)-1]->titulo.'.js';
     
@@ -14,10 +10,11 @@
     // Recorremos el array para quitar el prevHTML
     for($i=0 ; $i < count($json); $i++)
     {
+    	// JSON PRETTY PRINT requiere php >= 5.4
     	if(isset($json[$i]->prevHTML))
-    		$str .= json_encode($json[$i]->prevHTML) . ',';
+    		$str .= json_encode($json[$i]->prevHTML, JSON_PRETTY_PRINT) . ',';
     	else
-    		$str .= json_encode($json[$i]) . ',';
+    		$str .= json_encode($json[$i], JSON_PRETTY_PRINT) . ',';
     }
     
     $str .= '];';

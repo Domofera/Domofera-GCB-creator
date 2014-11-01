@@ -11,6 +11,8 @@
             <span>de la barra de herramientas.</span> 
        </div>
    </div>
+   
+   <input id="fichero-ass" type="file" name="fichero" style="display: none;" />
  
     <div class="panel panel-default" style="background: #eee">
         <nav id="gcbc-toolbar" class="btn-toolbar">
@@ -158,7 +160,7 @@
                                   <span class="num-list"></span>
                                    <ul>
                                        <li class="bigger">
-                                           <textarea class="form-control" type="text" placeholder="Texto..." ng-model="choice" ></textarea>
+                                           <textarea class="form-control" type="text" placeholder="Respuesta..." ng-model="pregunta.choices[$index]" ></textarea>
                                        </li>
                                        <li>
                                            <div class="my-radiobutton" ng-click="MarcarCorrecta($parent.$index, $index)">

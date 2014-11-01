@@ -35,7 +35,7 @@ angular.module('gcbCreatorApp')
     var pregTit = $.trim(localStorageService.get('tituloAct'));
     
     // Si existe, preguntamos al usuario si quiere recuperarla
-    if(pregArr !== null && pregArr !== undefined && pregArr.length > 0 && pregTit !== ''){
+    if(pregArr !== null && pregArr !== undefined && pregArr.length > 0 || pregTit !== ''){
         bootbox.confirm('Se ha encontrado una sesión abierta, ¿Deseas recuperarla?', function(result) {
             if(result)
                 $scope.$apply(function(){  // Recuperamos sesión
@@ -296,71 +296,84 @@ angular.module('gcbCreatorApp')
     
     // Acciona el input[type=file] para subir el archivo
     $scope.SubirFichero = function(){ 
-        $('#fichero').click();
+        $('#fichero-act').click();
     };
     
     // Cuando cambie el campo, subir el archivo
-    $(document).ready(function(){
-        $('#fichero').on('change', function () { 
-            
-            // Montamos un FormData
-            var file_data = $(this).prop('files')[0];   
-            var form_data = new FormData();                  
-            form_data.append('file', file_data);
-                        
-            // realizamos petición ajax
-            $.ajax({
-                url: '/upload.php',
-                dataType: 'text',  // que esperar en el servidor
-                cache: false,
-                contentType: false,
-                processData: false,
-                data: form_data,                         
-                type: 'post',
-                success: function(data){ 
-                    
-                    // Si hubieran errores de sintaxis, lo indicamos al usuario y cerramos
-                    try{
-                       var json = JSON.parse(data);
-                    }
-                    catch(e){
+    $('#fichero-act').on('change', function () { 
+
+        // Montamos un FormData
+        var file_data = $(this).prop('files')[0];   
+        var form_data = new FormData();                  
+        form_data.append('file', file_data);
+
+        // realizamos petición ajax
+        $.ajax({
+            url: '/upload-activity.php',
+            dataType: 'text',  // que esperar en el servidor
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,                         
+            type: 'post',
+            success: function(data){ 
+
+                console.log(data);
+
+                // Si hubieran errores de servidor, lo indicamos al usuario y cerramos
+                try{
+                   var json = JSON.parse(toJSON(data));
+                }
+                catch(e){
+                    bootbox.alert('Ha habido un error en el servidor. Por favor, informa de esto mediante un email a la dirección <a href="mailto:domoferaapp@gmail.com?Subject=Error server" target="_top">domoferaapp@gmail.com</a>');
+                    return;
+                }
+
+                // Si hubieran warnings o errores, también 
+                if(json.status === 'no-is'){
+                    bootbox.alert('Este fichero no es una actividad!!');
+                    return;
+                }
+                else if(json.status === 'error'){
+                    bootbox.alert('Ha ocurrido algún error subiendo el fichero. Prueba de nuevo');
+                    return;
+                }
+
+                var strAux = json.data.replace(/var[ ]+activity[ ]*=[ ]*/g,''); 
+
+                // Convertimos a array
+                try{
+                   var arrAux = eval(strAux);
+                }
+                catch(e){
+                    if (e instanceof SyntaxError) {
                         bootbox.alert('Hay algún error de sintaxis en el fichero que has subido. Por favor, revisalo y vuelve a subirlo');
                         return;
                     }
-                    
-                    // Si hubieran warnings o errores, también 
-                    if(json.status === 'warn')
-                        bootbox.alert('No se puede insertar código javascript en una actividad, esos datos se han omitido');
-                    else if(json.status === 'error'){
-                        bootbox.alert('Ha ocurrido algún error subiendo el fichero. Prueba de nuevo');
-                        return;
-                    }
-                    
-                    var strAux = json.data.replace(/var[ ]+activity[ ]*=[ ]*/g,''); 
-                    
-                    // Convertimos a array
-                    var arrAux = eval(strAux);
-                    
-                    // Los HTML sueltos, los convertimos a objeto.
-                    for(var i in arrAux){
-                        if(!$.isPlainObject(arrAux[i]))
-                            arrAux[i] = { 'prevHTML': arrAux[i] }
-                    }
-                    
-                    // Añadimos colapsados
-                    for (var i in arrAux){
-                        arrAux[i].colapsado = false;
-
-                        if(arrAux[i].questionType === 'multiple choice group')
-                            for(var j in arrAux[i].questionsList)
-                                arrAux[i].questionsList[j].colapsado = false;;
-
-                    }
-
-                    // Insertamos en el scope
-                    $scope.$apply(function() { $scope.preguntas = arrAux; });
                 }
-            });
+                
+                if(json.status === 'warn')
+                    bootbox.alert('No se puede insertar código javascript en una actividad, esos datos se han omitido');
+
+                // Los HTML sueltos, los convertimos a objeto.
+                for(var i in arrAux){
+                    if(!$.isPlainObject(arrAux[i]))
+                        arrAux[i] = { 'prevHTML': arrAux[i] };
+                }
+
+                // Añadimos colapsados
+                for (var i in arrAux){
+                    arrAux[i].colapsado = false;
+
+                    if(arrAux[i].questionType === 'multiple choice group')
+                        for(var j in arrAux[i].questionsList)
+                            arrAux[i].questionsList[j].colapsado = false;
+
+                }
+
+                // Insertamos en el scope
+                $scope.$apply(function() { $scope.preguntas = arrAux; });
+            }
         });
     });
     

@@ -32,7 +32,7 @@ angular.module('gcbCreatorApp').controller('AssesmentCtrl',['$scope', '$http','l
     var pregTit = $.trim(localStorageService.get('tituloAss'));
     
     // Si existe, preguntamos al usuario si quiere recuperarla
-    if(pregArr !== null && pregArr !== undefined && pregArr.length > 0 && pregTit !== ''){
+    if(pregArr !== null && pregArr !== undefined && (pregArr.preamble !== '' || pregArr.checkAnswers !== false || pregArr.questionsList.length > 0) || pregTit !== ''){
         bootbox.confirm('Se ha encontrado una sesión abierta, ¿Deseas recuperarla?', function(result) {
             if(result)
                 $scope.$apply(function(){  // Recuperamos sesión
@@ -64,7 +64,7 @@ angular.module('gcbCreatorApp').controller('AssesmentCtrl',['$scope', '$http','l
     
 //****** ADDERS & REMOVERS
     $scope.AddChoice = function(i){
-        $scope.preguntas.questionsList[i].choices.push(['']);
+        $scope.preguntas.questionsList[i].choices.push('');
     };
     
     $scope.CloseChoice = function(pI, i){
@@ -123,7 +123,8 @@ angular.module('gcbCreatorApp').controller('AssesmentCtrl',['$scope', '$http','l
     };
 
     
-//******** ENVIAR / RECIBIR DATOS  
+//******** ENVIAR / RECIBIR DATOS *************
+    
     $scope.ComprobarTitulo = function(){
         var patt = new RegExp('^assessment\-[a-zA-Z0-9]+$');
         var ret = false;                
@@ -167,10 +168,109 @@ angular.module('gcbCreatorApp').controller('AssesmentCtrl',['$scope', '$http','l
         jsonAux.titulo = $.trim($scope.titulo.text);
         
         // Enviamos y pedimos al servidor que cree la actividad, y una vez creada la descargue
-        $.post("/crear-assessment.php", {preguntas: JSON.stringify(jsonAux)} ,
-          function(data,status){
+        $.post('/crear-assessment.php', {preguntas: JSON.stringify(jsonAux)} ,
+          function(data,status){ 
+            console.log(status + '\n');
+            console.log(data);
             window.location='/download.php?filename=' + data;
         });
     };
+    
+    
+    
+    //************* SUBIR **************
+    
+    // Acciona el input[type=file] para subir el archivo
+    $scope.SubirFichero = function(){ 
+        $('#fichero-ass').click();
+    };
+    
+    // Cuando cambie el campo, subir el archivo
+    $('#fichero-ass').on('change', function () { 
+
+        // Montamos un FormData
+        var file_data = $(this).prop('files')[0];   
+        var form_data = new FormData();                  
+        form_data.append('file', file_data);
+
+        // realizamos petición ajax
+        $.ajax({
+            url: '/upload-assessment.php',
+            dataType: 'text',  // que esperar en el servidor
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,                         
+            type: 'post',
+            success: function(data){ 
+                console.log(data);
+                
+                data = data.replace(/var[ ]+assessment[ ]*=[ ]*/g,'');
+                
+                // Si hubieran errores de servidor, lo indicamos al usuario y cerramos
+                try{
+                   var json = JSON.parse(data);
+                }
+                catch(e){
+                    bootbox.alert('Ha habido un error en el servidor. Por favor, informa de esto mediante un email a la dirección <a href="mailto:domoferaapp@gmail.com?Subject=Error server" target="_top">domoferaapp@gmail.com</a>');
+                    console.log(e);
+                    return;
+                }
+
+                if(json.status === 'no-is'){
+                    bootbox.alert('Este fichero no es un examen!!');
+                    return;
+                }
+                else if(json.status === 'error'){
+                    bootbox.alert('Ha ocurrido algún error subiendo el fichero. Prueba de nuevo');
+                    return;
+                }
+                
+                // Convertimos a Json
+                try{
+                   json = JSON.parse(toJSON(json.data));
+                }
+                catch(e){ 
+                    if (e instanceof SyntaxError) {
+                        bootbox.alert('Hay algún error de sintaxis en el fichero que has subido. Por favor, revisalo y vuelve a subirlo');
+                        console.log(e);
+                        return;
+                    }
+                }
+                
+                // Si hubieran warnings o errores, también 
+                if(json.status === 'warn')
+                    bootbox.alert('No se puede insertar código javascript en una actividad o examen, esos datos se han omitido');
+                else if(json.status === 'regex-found'){
+                    bootbox.alert('No se admite el campo correctAnswerRegex. Se ha cambiado por un correctAnswerString vacío');
+                }
+
+                // Quitar los correct(...) de las multiple choice
+                for(var i in json.questionsList){
+                    if(json.questionsList[i].choices != undefined){
+                        for(var j in json.questionsList[i].choices){ 
+                            var str = json.questionsList[i].choices[j];
+                            var pos = str.indexOf('correct(');
+                            if(pos == 0){ // Si encontramos un correct al principio
+                                json.questionsList[i].choices[j] = str.substring(8,str.length-1);
+                                json.questionsList[i].correct = parseInt(j);
+                            }
+                        }
+                    }
+                }
+
+                // Añadimos colapsados
+                for (var i in json.questionsList){
+                    json.questionsList[i].colapsado = false;
+                }
+                
+                if(json.assessmentName != undefined)
+                    delete json.assessmentName;
+
+                // Insertamos en el scope
+                $scope.$apply(function() { $scope.preguntas = json; });
+            }
+        });
+    });
             
 }]);
