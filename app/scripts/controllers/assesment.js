@@ -205,6 +205,7 @@ angular.module('gcbCreatorApp').controller('AssesmentCtrl',['$scope', '$http','l
         var json = {
             fecha: date_str,
             from: from,
+            browser: BrowserInfo(),
             datos: data
         }
         

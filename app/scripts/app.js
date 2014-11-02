@@ -36,7 +36,8 @@ mainModule.config(['$routeProvider', function ($routeProvider) {
     })
     .when('/instrucciones', {
       templateUrl: 'views/instructions.html',
-      controller: 'InstructionsCtrl'
+      controller: 'InstructionsCtrl',
+      reloadOnSearch: false
     })
     .when('/actividad', {
         templateUrl: 'views/main.html',
