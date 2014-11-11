@@ -285,7 +285,7 @@ angular.module('gcbCreatorApp')
         jsonAux.push({titulo : $.trim($scope.titulo.text)}); //Añadimos titulo al final
         
         // Enviamos y pedimos al servidor que cree la actividad, y una vez creada la descargue
-        $.post("/crear-activity.php", {preguntas: JSON.stringify(jsonAux)} ,
+        $.post("/crear-activity.php", { preguntas: JSON.stringify(jsonAux) } ,
           function(data,status){ 
             
             data = $.trim(data);

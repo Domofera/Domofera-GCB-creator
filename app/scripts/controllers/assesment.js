@@ -207,7 +207,7 @@ angular.module('gcbCreatorApp').controller('AssesmentCtrl',['$scope', '$http','l
             from: from,
             browser: BrowserInfo(),
             datos: data
-        }
+        };
         
         $.post('/append-log.php', {logs: JSON.stringify(json, null, 4)});
     }

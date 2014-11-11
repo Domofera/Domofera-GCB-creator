@@ -63,33 +63,39 @@ mainModule.run(function ($rootScope) {
 
 
 
-mainModule.directive('contenteditable', function() {
-  return {
-    require: 'ngModel',
-    link: function(scope, element, attrs, ctrl) {
-      // view -> model
-    if($(element).is('span')){
-      element.bind('blur', function() {
-        scope.$apply(function() {
-          ctrl.$setViewValue(element.html());
-        });
-      });
-    }
-    else{ 
-       $('body').on('hide.bs.modal','.modal', function() { 
-            scope.$apply(function() {
-              ctrl.$setViewValue(element.html());
-            });
-        });
-    }
+mainModule.directive('contenteditable', ['$sce', function($sce) {
+    return {
+      restrict: 'A', // only activate on element attribute
+      require: '?ngModel', // get a hold of NgModelController
+      link: function(scope, element, attrs, ngModel) {
+        if (!ngModel) return; // do nothing if no ng-model
 
-      // model -> view
-      ctrl.$render = function() {
-        element.html(ctrl.$viewValue);
-      };
-    }
-  };
-});
+        // Specify how UI should be updated
+        ngModel.$render = function() {
+          //element.html($sce.getTrustedHtml(ngModel.$viewValue)); // NO SE DEBE HACER ESTO, PIERDE EL FORMATO
+            element.html(ngModel.$viewValue);
+        };
+
+        // Listen for change events to enable binding
+        element.on('blur', function() {
+          scope.$apply(read);
+        });
+            
+        //read(); // NO SE DEBE INICIALIZAR
+
+        // Write data to the model
+        function read() {
+          var html = element.html();
+          // When we clear the content editable the browser leaves a <br> behind
+          // If strip-br attribute is provided then we strip this out
+          if ( attrs.stripBr && html == '<br>' ) {
+            html = '';
+          }
+          ngModel.$setViewValue(html);
+        }
+      }
+    };
+  }]);
 
 
 mainModule.directive('onFinishRender', function ($timeout) {

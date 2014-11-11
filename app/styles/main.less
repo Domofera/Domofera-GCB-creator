@@ -121,6 +121,8 @@
               background: transparent;
               opacity: 0;
               transform: rotate(-45deg);
+                
+                
             }
             
             &:hover::after{
@@ -130,6 +132,7 @@
     
         input[type=checkbox]:checked + label:after{
             opacity: 1;
+            width: 100%;
         }
 }
 
@@ -387,9 +390,10 @@ main{
 
 span[contenteditable="true"]{
     position: relative;
-    overflow: scroll;
+    overflow-x: hidden;
+    overflow-y: auto;
     height: 34px;
-    max-height: 120px;
+    max-height: 120px; 
     resize: vertical;
 
     &:empty:before{
@@ -547,9 +551,7 @@ span.span-label + span{
                 }
             }
             
-            .inner-questions-inside-left{
-                .questions-inside-left;
-            }
+            
 
       // Panel derecho, donde van las preguntas
             .questions-inside-right
@@ -829,7 +831,7 @@ span.span-label + span{
                         background: screen(@cl,#eee);
                         box-shadow: 0px 1px 6px rgba(70,70,70,0.5);
 
-                        .inner-questions-inside-left{ background: @cl; }
+                        .questions-inside-left{ background: @cl; }
                         .questions-inside-right{ 
                             .question-group-buttons{ background: @cl; }
                         }
@@ -841,11 +843,11 @@ span.span-label + span{
                         }
                     }
                     
-                    div.question-wrapper.inner-selected{
+                    /*div.question-wrapper.inner-selected{
                         border: 2px solid @cl-question-selected;
                         background: screen(@cl-question-selected,#eee);
 
-                        .inner-questions-inside-left{ background: @cl-question-selected; }
+                        .inner-questions-left{ background: @cl-question-selected; }
                         .questions-inside-right{ 
                             .question-group-buttons{ background: @cl-question-selected; }
                         }
@@ -855,11 +857,11 @@ span.span-label + span{
                                 background: multiply(@cl-question-selected , #ddd) !important;
                             }
                         }
-                    }
+                    }*/
                 }
             }
             
-            &.selected{
+           /* &.selected{
                 border: 2px solid @cl-question-selected;
                 background: screen(@cl-question-selected,#eee);
                 
@@ -873,7 +875,7 @@ span.span-label + span{
                         background: multiply(@cl-question-selected , #ddd) !important;
                     }
                 }
-            }
+            } */
         }
         
         div.question-wrapper.colapsado{ 
@@ -1016,7 +1018,15 @@ span.span-label + span{
 
 //************* INSTRUCCIONES
 
-#my-affix
+#my-affix{ 
+    display: none;
+    
+    @media (min-width: 768px){
+        display: block;
+    }
+}
+
+#my-affix>div
 { 
     @cl-aff: @cl-tortoise;
     @cl-aff-light: screen(@cl-tortoise, #ddd);
@@ -1108,6 +1118,10 @@ footer.footer{
             text-decoration: none;
         }
     }
+}
+
+.some-pad{
+    padding: 20px 3% 5px 0;
 }
 
 

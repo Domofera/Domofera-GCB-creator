@@ -75,7 +75,7 @@
         
         
         <!--  CONTENIDO de las Preguntas -->
-        <div id="questions-container" ui-sortable ng-model="preguntas.questionsList"> 
+        <div id="questions-container" ui-sortable="sortOptions" ng-model="preguntas.questionsList"> 
            
             <div ng-repeat="pregunta in preguntas.questionsList track by $index" on-finish-render>
                

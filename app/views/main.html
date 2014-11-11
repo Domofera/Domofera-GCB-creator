@@ -53,7 +53,7 @@
    
     <!--  CONTENIDO de las Preguntas -->
 
-    <div id="questions-container" class="panel panel-default" ui-sortable ng-model="preguntas" ng-show="preguntas.length > 0"> 
+    <div id="questions-container" class="panel panel-default" ui-sortable="sortOptions" ng-model="preguntas" ng-show="preguntas.length > 0"> 
        
         <div ng-repeat="pregunta in preguntas track by $index" on-finish-render>
            
@@ -218,9 +218,9 @@
                         
                         
                         <!-- Bloque de Single multiple choice  -->
-                        <div class="row inner-sortable" ui-sortable ng-model="pregunta.questionsList">
+                        <div class="row inner-sortable" ui-sortable="sortOptions" ng-model="pregunta.questionsList">
                             <div class="question-wrapper" ng-class="{ 'colapsado': question.colapsado }" ng-repeat="question in pregunta.questionsList track by $index">
-                                <div class="inner-questions-inside-left">
+                                <div class="questions-inside-left inner-handle">
                                     <span class="glyphicon glyphicon-move"></span>
                                 </div>
                                 
@@ -290,7 +290,7 @@
         </div>
     </div>
    
-    <!--<pre>{{preguntas | json}}</pre>-->
+    <pre>{{preguntas | json}}</pre>
     
 </div>
 

@@ -220,91 +220,46 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', '$
                     
         
     //************ SORTABLE ***********
-        $('#questions-container').sortable({placeholder: 'sortable-placeholder'});
-        setTimeout(function(){ 
-            if($('#questions-container').length){
-                $('#questions-container').sortable('disable'); 
-            }
-        }, 400); //Esperamos para que cargue
-        
-        $('#questions-container').on('sortbeforestop', function( event, ui ) { 
+        $scope.sortOptions = {
+            placeholder: 'sortable-placeholder',
+            axis: 'y',
+            handle: '.questions-inside-left',
+            start: function(event, ui){ $scope.onSortStart(event, ui); },
+            stop: function(event, ui){ $scope.onSortStop(event, ui); }
+        };
+                    
+        $scope.innerSortOptions = {
+            placeholder: 'sortable-placeholder',
+            axis: 'y',
+            handle: '.inner-handle',
+            start: function(event, ui){ $scope.onSortStart(event, ui); },
+            stop: function(event, ui){ $scope.onSortStop(event, ui); }
+        };
+                    
+        $scope.onSortStart = function(event, ui){ 
+            ui.helper.css('opacity', 0.6);
+            ui.placeholder.height(ui.helper.outerHeight());       
+        };
+                    
+        $scope.onSortStop = function(event, ui){
             if(isInnerMoving){
                 ui.item.removeClass('inner-selected');
-                ui.helper.removeClass('inner-selected');
             }else{
                 ui.item.removeClass('selected');
-                ui.helper.removeClass('selected');
             }
-            ui.helper.css('opacity', 1);
-            ui.item.css('opacity', 1);
-        });
-        
-        $('#questions-container').on('sortstart', function( event, ui ) { 
-            ui.helper.css('opacity', 0.6);
-            ui.placeholder.height(ui.helper.outerHeight());
-        });
-        
-        // Codigo para que no interfiera el UI-Sortable con el ContentEditable
-        $('body').on('mouseenter mousedown','.questions-inside-left', function(){
-            $('#questions-container').sortable('enable');
-            $('.inner-sortable').sortable('disable');
-        });
-        $('body').on('mouseleave','.questions-inside-left', function(){
-            $('#questions-container').sortable('disable');
-        });
-        
-        // Seleccionar el bloque de la pregunta
-        $('body').on('click','.questions-inside-left', function(){
-            $(this).parent().addClass('selected');
-        });
-        
-        
-    // INNER SORTABLE
-        $('.inner-sortable').sortable({placeholder: 'sortable-placeholder'});
-        setTimeout(function(){ 
-            if($('.inner-sortable').length){
-                $('.inner-sortable').sortable('disable'); 
-            }
-        }, 400); //Esperamos para que cargue
-        
-        $('body').on('mouseenter mousedown','.inner-questions-inside-left', function(){ 
-            isInnerMoving = true;
-            $('#questions-container').sortable('disable');
-            $('.inner-sortable').sortable('enable');
-        });
-        $('body').on('mouseleave','.inner-questions-inside-left', function(){ 
-            isInnerMoving = false;
-            $('.inner-sortable').sortable('disable');
-        });
-        
-        $('body').on('click','.inner-questions-inside-left', function(){
-            $(this).parent().addClass('inner-selected');
-        });
-        
-        
-    // AMBOS SORTABLES
-        // Quitar seleccionado
-        $('body').on('mousedown', function(e){
-            var container = $('#questions-container>div>div');
-            container.removeClass('selected');
-            
-            var innerContainer = $('.inner-sortable>div');
-            innerContainer.removeClass('inner-selected');
-            
+            ui.item.css('opacity', 1);   
+        };
+
+                    
+        $('body').on('mousedown', function(e){ 
+                    
+            $('span[contenteditable]').blur();
+                    
             $('[data-toggle="popover"]').each(function () {
-                if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+                if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0){
                     $(this).popover('hide');
                 }
             });
-        });
-                
-        // Si se tiene el foco en un contenteditable, desactivar sortables
-        $('body').on('mousedown','span[contenteditable=true]', function(){ 
-            if(!$(this).is(':focus')){
-                $('#questions-container').sortable('disable');
-                $('.inner-sortable').sortable('disable');
-                $(this).focus();
-            }
         });
         
         
