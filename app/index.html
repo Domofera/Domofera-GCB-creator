@@ -38,11 +38,12 @@
               </div>
               <nav id="nav-list" class="collapse navbar-collapse" role="navigation">
                   <ul class="nav navbar-nav">
-                      <li ng-class="{ active: isActive('/actividad')}"><a ng-href="#/actividad" ng-click="ChangeVista(true)">Actividad</a></li>
-                      <li ng-class="{ active: isActive('/examen')}"><a ng-href="#/examen" ng-click="ChangeVista(true)">Examen</a></li>
-                      <li ng-class="{ active: isActive('/instrucciones')}"><a ng-href="#/instrucciones" ng-click="ChangeVista(true)">Instrucciones</a></li>
-                      <!--<li ng-class="{ active: isActive('/about')}"><a ng-href="#/about">Acerca de</a></li>-->
+                      <li ng-class="{ active: isActive('/actividad')}"><a ng-href="#/actividad" ng-click="ChangeVista(true)" translate="ACTIVITY">Activity</a></li>
+                      <li ng-class="{ active: isActive('/examen')}"><a ng-href="#/examen" ng-click="ChangeVista(true)" translate="ASSESSMENT">Assessment</a></li>
+                      <li ng-class="{ active: isActive('/instrucciones')}"><a ng-href="#/instrucciones" ng-click="ChangeVista(true)" translate="INSTRUCTIONS">Instructions</a></li>
                   </ul>
+                  
+                  <a class="btn btn-default navbar-right" ng-click="ChangeLanguage()" translate="LANGUAGE">Spanish</a>
               </nav>
           </div>
       </header>
@@ -51,7 +52,7 @@
 
       <footer class="footer">
         <div class="container">
-            <p>Página web creada por <a class="fa fa-copyright"></a> <a href="http://domofera.herokuapp.com/">Equipo domofera</a></p>
+            <p translate="CREATED-BY">Website created by <a class='fa fa-copyright'></a> <a href='http://domofera.com/'>Domofera Team</a></p>
         </div>
       </div>
     </footer  >
@@ -94,6 +95,8 @@
     <script src="bower_components/angular-strap/dist/angular-strap.js"></script>
     <script src="bower_components/angular-strap/dist/angular-strap.tpl.js"></script>
     <script src="bower_components/angular-local-storage/dist/angular-local-storage.js"></script>
+    <script src="bower_components/angular-translate/angular-translate.js"></script>
+    <script src="bower_components/angular-translate-loader-partial/angular-translate-loader-partial.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 

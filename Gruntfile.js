@@ -40,6 +40,46 @@ module.exports = function (grunt) {
               }
           }
       },
+      
+      i18nextract: {
+		  index: {
+			prefix:   '',
+			suffix:   '.json',
+			src:      [ 'app/index.html' ],
+			lang:     ['es', 'en'],
+			dest:     'app/i18n_aux/index/'
+		  },
+		  main: {
+			prefix:   '',
+			suffix:   '.json',
+			src:      [ 'app/views/main.html', 'app/js/controllers/main.js' ],
+			lang:     ['es', 'en'],
+			dest:     'app/i18n_aux/main/'
+        
+		  },
+		  assessment: {
+			prefix:   '',
+			suffix:   '.json',
+			src:      [ 'app/views/assesment.html', 'app/js/controllers/assesment.js' ],
+			lang:     ['es', 'en'],
+			dest:     'app/i18n_aux/assessment/'
+		  },
+		  about: {
+			prefix:   '',
+			suffix:   '.json',
+			src:      [ 'app/views/about.html'],
+			lang:     ['es', 'en'],
+			dest:     'app/i18n_aux/about/'
+		  },
+		  instructions: {
+			prefix:   '',
+			suffix:   '.json',
+			src:      [ 'app/views/instructions.html'],
+			lang:     ['es', 'en'],
+			dest:     'app/i18n_aux/instructions/'
+		  },
+		  
+	  },
 
     // Watches files for changes and runs tasks based on the changed files
     watch: {
@@ -373,6 +413,7 @@ module.exports = function (grunt) {
     }
   });
 
+  grunt.loadNpmTasks('grunt-angular-translate');
 
 
   grunt.registerTask('serve', 'Compile then start a connect web server', function (target) {
@@ -422,8 +463,12 @@ module.exports = function (grunt) {
     'usemin',
     'htmlmin'
   ]);
+  
+  grunt.registerTask('translate', [
+    'i18nextract'
+  ]);
 
-  grunt.registerTask('default', [
+  grunt.registerTask('default', [ 
     'newer:jshint',
     'test',
     'build'

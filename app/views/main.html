@@ -2,18 +2,16 @@
    
    <div id="bloque-msg">
        <div ng-if="preguntas.length == 0" class="bq-msg alert alert-info">
-           <span>Inserta preguntas mediante los botones </span> 
+           <span>{{'ALERT-INSERT-1' | translate}} </span> 
             <div class="btn-group" style="margin: 0 15px;">
                <a class="btn btn-default"><i class="fa fa-header"></i></a>
                 <a class="btn btn-default"><i class="glyphicon glyphicon-pencil"></i></a>
                 <a class="btn btn-default"><i class="glyphicon glyphicon-minus"></i></a>
                 <a class="btn btn-default"><i class="glyphicon glyphicon-th-list"></i></a>
             </div>
-            <span>de la barra de herramientas.</span> 
+            <span>{{'ALERT-INSERT-2' | translate}}</span> 
        </div>
-       <div class="bq-msg alert alert-danger">
-           Esta versión la beta 1.0. Si notas algún error, sientete libre de informar a <a href="mailto:domoferaapp@gmail.com?Subject=Error user" target="_top">domoferaapp@gmail.com</a> indicando el error lo más específicamente posible. Gracias por tu colaboración.
-       </div>
+       <div class="bq-msg alert alert-danger" translate="ALERT-BETA"></div>
    </div>
  
    <input id="fichero-act" type="file" name="fichero" accept=".js" style="display: none;" />
@@ -23,19 +21,19 @@
             <div class="container">
                 <div class="col-sm-12">
                     <div class="btn-group">
-                        <a class="btn btn-default" ng-class="{'disabled': preguntas.length==0}" data-toggle="tooltip" title="Borrar todo" ng-click="CloseAll()"><i class="glyphicon glyphicon-remove-circle"></i></a>
-                        <a class="btn btn-default" ng-class="{'disabled': preguntas.length==0}" ng-click="HacerPeticion()" data-toggle="tooltip" title="Descargar"><i class="glyphicon glyphicon-floppy-save"></i></a>
-                        <a class="btn btn-default" ng-click="SubirFichero()" data-toggle="tooltip" title="Abrir fichero"><i class="glyphicon glyphicon-floppy-open"></i></a>
-                        <a id="boton-colapsado" ng-class="{'disabled': preguntas.length==0}" ng-click="CollapseAll()" class="btn btn-default" data-toggle="tooltip" title="Collapsar / Expandir">
+                        <a class="btn btn-default" ng-class="{'disabled': preguntas.length==0}" data-toggle="tooltip" title="{{'TOOLBAR-CLEANALL' | translate}}" ng-click="CloseAll()"><i class="glyphicon glyphicon-remove-circle"></i></a>
+                        <a class="btn btn-default" ng-class="{'disabled': preguntas.length==0}" ng-click="HacerPeticion()" data-toggle="tooltip" title="{{'TOOLBAR-DOWNLOAD' | translate}}"><i class="glyphicon glyphicon-floppy-save"></i></a>
+                        <a class="btn btn-default" ng-click="SubirFichero()" data-toggle="tooltip" title="{{'TOOLBAR-OPEN-FILE' | translate}}"><i class="glyphicon glyphicon-floppy-open"></i></a>
+                        <a id="boton-colapsado" ng-class="{'disabled': preguntas.length==0}" ng-click="CollapseAll()" class="btn btn-default" data-toggle="tooltip" title="{{'TOOLBAR-COLLAPSE' | translate}}">
                             <i ng-class="{'fa fa-chevron-up': !colapsados , 'fa fa-chevron-down': colapsados}"></i>
                         </a>
                     </div>
                     
                     <div class="btn-group">
-                       <a class="btn btn-default" data-toggle="tooltip" title="Nueva HTML" ng-click="CrearHTML(-1)"><i class="fa fa-header"></i></a>
-                        <a class="btn btn-default" data-toggle="tooltip" title="Nueva free-text" ng-click="CrearFreetext(-1)"><i class="glyphicon glyphicon-pencil"></i></a>
-                        <a class="btn btn-default" data-toggle="tooltip" title="Nueva mult-choice" ng-click="CrearMultiplechoice(-1)"><i class="glyphicon glyphicon-minus"></i></a>
-                        <a class="btn btn-default" data-toggle="tooltip" title="Nueva mult-choice-list" ng-click="CrearMultiplechoiceGroup(-1)"><i class="glyphicon glyphicon-th-list"></i></a>
+                       <a class="btn btn-default" data-toggle="tooltip" title="{{'NEW-HTML' | translate}}" ng-click="CrearHTML(-1)"><i class="fa fa-header"></i></a>
+                        <a class="btn btn-default" data-toggle="tooltip" title="{{'NEW-FREETEXT' | translate}}" ng-click="CrearFreetext(-1)"><i class="glyphicon glyphicon-pencil"></i></a>
+                        <a class="btn btn-default" data-toggle="tooltip" title="{{'NEW-MULTICHOICE' | translate}}" ng-click="CrearMultiplechoice(-1)"><i class="glyphicon glyphicon-minus"></i></a>
+                        <a class="btn btn-default" data-toggle="tooltip" title="{{'NEW-GMULTICHOICE' | translate}}" ng-click="CrearMultiplechoiceGroup(-1)"><i class="glyphicon glyphicon-th-list"></i></a>
                     </div>
                 </div>
             </div>
@@ -45,9 +43,9 @@
   
    <!-- TITULO -->
     <div id="bloque-titulo" ng-model="titulo" ng-class="{'has-success' : !titulo.error && titulo.success , 'has-error' : titulo.error && !titulo.success}">
-        <input type="text" class="form-control" ng-model="titulo.text" placeholder="Titulo... (activity-X.X)" ng-keyup="ComprobarTitulo()">
+        <input type="text" class="form-control" ng-model="titulo.text" placeholder="{{'TITLE' | translate}}Titulo... (activity-X.X)" ng-keyup="ComprobarTitulo()">
         <div class="error-container" ng-if="titulo.error">
-            <small class="help-block">Formato incorrecto. Debe ser "activity-X.X" donde las X son "tema.actividad"</small>
+            <small class="help-block">{{'TITLE-INCORRECT' | translate}}</small>
         </div>
     </div>
    
@@ -63,10 +61,10 @@
                  <a class="open-popover" tabindex="0" data-toggle="popover"><span class="fa fa-plus"></span></a>
                  
                   <div class="btn-group hide">
-                       <a class="btn btn-default" data-toggle="tooltip" title="Nueva HTML" ng-click="CrearHTML({{$index}})"><i class="fa fa-header"></i></a>
-                        <a class="btn btn-default" data-toggle="tooltip" title="Nueva free-text" ng-click="CrearFreetext({{$index}})"><i class="glyphicon glyphicon-pencil"></i></a>
-                        <a class="btn btn-default" data-toggle="tooltip" title="Nueva mult-choice" ng-click="CrearMultiplechoice({{$index}})"><i class="glyphicon glyphicon-minus"></i></a>
-                        <a class="btn btn-default" data-toggle="tooltip" title="Nueva mult-choice-list" ng-click="CrearMultiplechoiceGroup({{$index}})"><i class="glyphicon glyphicon-th-list"></i></a>
+                       <a class="btn btn-default" data-toggle="tooltip" title="{{'NEW-HTML' | translate}}" ng-click="CrearHTML({{$index}})"><i class="fa fa-header"></i></a>
+                        <a class="btn btn-default" data-toggle="tooltip" title="{{'NEW-FREETEXT' | translate}}" ng-click="CrearFreetext({{$index}})"><i class="glyphicon glyphicon-pencil"></i></a>
+                        <a class="btn btn-default" data-toggle="tooltip" title="{{'NEW-MULTICHOICE' | translate}}" ng-click="CrearMultiplechoice({{$index}})"><i class="glyphicon glyphicon-minus"></i></a>
+                        <a class="btn btn-default" data-toggle="tooltip" title="{{'NEW-GMULTICHOICE' | translate}}" ng-click="CrearMultiplechoiceGroup({{$index}})"><i class="glyphicon glyphicon-th-list"></i></a>
                   </div>
               </div>
           </div>
@@ -81,7 +79,7 @@
               <!-- Pregunta -->
                 <div class="questions-inside-right">
                     <header>
-                       <h3>Pregunta {{$index + 1}} <i>({{pregunta.questionType}}<span ng-if="pregunta.questionType == undefined">Sólo HTML</span>)</i></h3>
+                       <h3>{{'QUESTION-C' | translate}} {{$index + 1}} <i>({{pregunta.questionType}}<span ng-if="pregunta.questionType == undefined">{{'ONLY-HTML' | translate}}</span>)</i></h3>
                         <div class="question-header-buttons">
                             <a class="question-collapse" ng-click="Collapse($index)">
                               <span class="fa" ng-class="{'fa-chevron-down': pregunta.colapsado , 'fa-chevron-up': !pregunta.colapsado }"></span>
@@ -103,7 +101,7 @@
             
                 <!-- PREGUNTA en general -->
                     <div class="question-wrap" ng-if="pregunta.questionType != undefined && pregunta.questionType != 'multiple choice group'">
-                        <span class="span-label"><b>Pregunta: </b></span>
+                        <span class="span-label"><b>{{'QUESTION-C' | translate}}: </b></span>
                         <div class="input-group ">
                           <span class="form-control" name="preg" contenteditable="true" ng-bind-html="pregunta.questionHTML | unsafe" ng-model="pregunta.questionHTML" ></span>
                           <span class="input-group-btn">
@@ -138,7 +136,7 @@
             
                     <!-- Multiple choice question -->
                     <div class="container-fluid multiple-choice-wrap" ng-if="pregunta.questionType == 'multiple choice'">
-                        <div class="span-label"><b>Respuestas: </b></div>
+                        <div class="span-label"><b>{{'ANSWERS-C' | translate}}: </b></div>
                        <ol>
                            <li class="choice-animation" ng-repeat="choice in pregunta.choices track by $index">
                               <span class="num-list"></span>
@@ -159,13 +157,13 @@
                                        <div class="my-checkbox" ng-click="MarcarSingle($parent.$index, $index)">
                                             <input type="checkbox" ng-model="choice[1]" >
                                             <label></label>
-                                        </div> Correcta
+                                        </div> {{'CORRECT' | translate}}
                                        <span class="close-choice fa fa-remove" ng-click="CloseChoice($parent.$index, $index)"></span>
                                     </li>
                                </ul>
                            </li>
                            <span class="add-question fa fa-plus" ng-class="{'disabled': pregunta.choices.length >= maxRespuestas}" ng-click="AddChoice($index)"></span>
-                               <i class="text-danger" ng-if="pregunta.choices.length >= maxRespuestas"> No puedes insertar más de {{pregunta.choices.length}} respuestas</i>
+                               <i class="text-danger" ng-if="pregunta.choices.length >= maxRespuestas" translate="NO-MORE-QUESTIONS-MC"></i>
                        </ol>
                     </div>
             
@@ -174,7 +172,7 @@
                     <div class="container-fluid multiple-choice-group-wrap" ng-if="pregunta.questionType == 'multiple choice group'">
                         <!-- Enunciado -->
                         <div class="question-wrap">
-                            <span class="span-label"><b>Enunciado: </b></span>
+                            <span class="span-label"><b>{{'FORMULATION' | translate}}: </b></span>
                             <div class="input-group ">
                               <span class="form-control" name="mcgenunciado" contenteditable="true" ng-model="pregunta.questionGroupHTML" ng-bind-html="pregunta.questionGroupHTML | unsafe" ></span>
                               <span class="input-group-btn">
@@ -204,13 +202,13 @@
                             <div class="col-sm-2 ">
                                 <input name="mcgnumber" type="number" min="1" max="{{pregunta.questionsList.length}}" step="1" class="form-control" ng-model="pregunta.allCorrectMinCount" placeholder="1"  ng-blur="CheckNumber($index)"></input>
                                 
-                                <a class="btn-ayuda" data-toggle="tooltip" title="Mínimo de preguntas correctas"><span class="fa fa-question"></span></a>    
+                                <a class="btn-ayuda" data-toggle="tooltip" title="{{'MIN-QUESTIONS' | translate}}"><span class="fa fa-question"></span></a>    
                             </div>
                         </div>
                         
                         <!-- Bloque Preguntas -->
                         <div class="inner-questions-header">
-                            <h3>Preguntas</h3>
+                            <h3>{{'QUESTIONS-C' | translate}}</h3>
                             <a class="question-collapse" ng-click="GroupCollapseAll($index)">
                               <span class="fa fa-angle-double-up"></span>
                             </a>
@@ -226,7 +224,7 @@
                                 
                                 <div class="questions-inside-right">
                                    <div class="question-wrap">
-                                        <span class="span-label"><b>Pregunta {{ $index + 1 }}: </b></span>
+                                        <span class="span-label"><b>{{'QUESTION-C' | translate}} {{ $index + 1 }}: </b></span>
                                         <div class="input-group">
                                           <span class="form-control" contenteditable="true" ng-model="question.questionHTML" ng-bind-html="question.questionHTML | unsafe" ></span>
                                           <span class="input-group-btn">
@@ -245,9 +243,9 @@
                                     
                                     <div class="container-fluid multiple-choice-wrap">
                                         
-                                        <div class="span-label"><b>Respuestas: </b></div>
+                                        <div class="span-label"><b>{{'ANSWERS-C' | translate}}: </b></div>
                                         <div class="multiselect">
-                                            <b>Multi-seleccionable: </b>
+                                            <b>{{'MULTISELECT' | translate}}: </b>
                                             <div class="my-checkbox" ng-click="MarcarMultiselect($parent.$index, $index)">
                                                 <input type="checkbox" ng-model="question.multiSelect" >
                                                 <label></label>
@@ -264,14 +262,14 @@
                                                         <div class="my-checkbox">
                                                            <input type="checkbox" ng-checked="IsInArray($parent.$parent.$index, $parent.$index, $index)" > 
                                                            <label ng-click="Marcar($parent.$parent.$index, $parent.$index, $index)"></label>
-                                                        </div>Correcta 
+                                                        </div>{{'CORRECT' | translate}} 
                                                        
                                                        <span class="close-choice fa fa-remove" ng-click="InnerCloseChoice($parent.$parent.$index, $parent.$index, $index)"></span>
                                                    </li>
                                                </ul>
                                            </li>
                                            <span class="add-question fa fa-plus" ng-class="{'disabled': question.choices.length >= maxRespuestas}" ng-click="InnerAddChoice($parent.$index, $index)"></span>
-                                            <i class="text-danger" ng-if="question.choices.length >= maxPreguntasMCG"> No puedes insertar más de {{question.choices.length}} respuestas</i>
+                                            <i class="text-danger" ng-if="question.choices.length >= maxPreguntasMCG" translate="NO-MORE-QUESTIONS-GMC"></i>
                                        </ol>
                                     </div>
                                 </div>
@@ -279,7 +277,7 @@
                         </div>
                         
                         <div class="row centrado">
-                            <a class="btn btn-primary btn-lg" ng-click="InnerAddQuestion($index)"><i class="fa fa-plus"> </i> Añadir</a>
+                            <a class="btn btn-primary btn-lg" ng-click="InnerAddQuestion($index)"><i class="fa fa-plus"> </i> {{'ADD' | translate}}</a>
                         </div>
                         
                     </div>

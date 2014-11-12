@@ -20,12 +20,31 @@ var mainModule = angular.module('gcbCreatorApp', [
     'mgcrea.ngStrap.helpers.dimensions',
     'mgcrea.ngStrap.scrollspy',
     'mgcrea.ngStrap.affix',
-    'LocalStorageModule'
+    'LocalStorageModule',
+    'pascalprecht.translate'
 ]);
+
 
 // Configuramos namespace del localstorage
 mainModule.config(function(localStorageServiceProvider){
     localStorageServiceProvider.setPrefix('gcbls');
+});
+
+
+mainModule.config(function($translateProvider, $translatePartialLoaderProvider){ 
+    $translateProvider.translations('en', {
+        "LANGUAGE": "Spanish",
+        "ACTIVITY": "Activity",
+        "ASSESSMENT": "Assessment",
+        "INSTRUCTIONS": "Instructions",
+        "CREATED-BY": "Website created by <a class='fa fa-copyright'></a> <a href='http://domofera.com/'>Domofera Team</a>"
+    });
+    
+    $translatePartialLoaderProvider.addPart('index');
+    $translateProvider.useLoader('$translatePartialLoader', {
+      urlTemplate: 'i18n/{part}/{lang}.json'
+    });
+    $translateProvider.preferredLanguage('en');
 });
 
 mainModule.config(['$routeProvider', function ($routeProvider) {
@@ -135,18 +154,29 @@ mainModule.animation('.question-wrapper', function() {
         enter : function(element, done) { 
             jQuery(element).css({ 'opacity': 0 });
             jQuery(element).animate({'opacity': 1 }, 400, done);
-        },
-
-        /*leave : function(element, done) {
-            jQuery(element).css({'opacity': 1 });
-            jQuery(element).animate({'opacity': 0 }, 400, done);
-        }*/
+        }
     };
 });
 
-mainModule.controller('HeaderController',['$scope','$location',  function ($scope, $location) {
+mainModule.run(['$rootScope','$translate', '$translatePartialLoader', function ($rootScope, $translate,$translatePartialLoader) {
+  $rootScope.$on('$translatePartialLoaderStructureChanged', function () { 
+    $translate.refresh();
+  });
+}]);
+
+mainModule.controller('HeaderController',['$scope','$location', '$translate',  function ($scope, $location, $translate) {
     
     $scope.isActive = function (viewLocation) { 
         return viewLocation === $location.path();
     };
+    
+    $scope.ChangeLanguage = function (){
+        if($translate.use() === 'es')
+            $translate.use('en');
+        else
+            $translate.use('es');
+        
+        $translate.refresh();
+    };
+    
 }]);

@@ -9,7 +9,10 @@
  */
 
 angular.module('gcbCreatorApp')
-.controller('MainCtrl',['$scope', '$compile', '$http','localStorageService',  function ($scope, $compile, $http, localStorageService) {
+.controller('MainCtrl',['$scope', '$compile', '$http','localStorageService', '$translatePartialLoader',  function ($scope, $compile, $http, localStorageService, $translatePartialLoader) {
+    
+//*************** TRANSLACIONES
+    $translatePartialLoader.addPart('main');
     
     
 //**************** MODELOS ***************
