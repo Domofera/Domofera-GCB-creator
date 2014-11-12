@@ -34,36 +34,37 @@
     }
     else{ 
         
-        $i = 0;
+        $i=0;
+        $insertado = false;
         $max = count(array_keys(get_object_vars($json[0])));
         
         foreach($json[0] as $key => $value) {  
-                        
-            if($key == 'customHTML1')
-                $str .= '\''. $value . '\'';
-            else if($key == 'customHTML2')
-                $str .= $value;
-            else if($key == 'iframe1')
-                $str .= '\''.'<iframe class="custom-iframe" src="' . $value . '"></iframe>'.'\'';
-            else
-                $str .= '<iframe class="custom-iframe" src="' . $value . '"></iframe>';
-            
+                  
             $i++;
+                  
+            if(!$insertado && ($key == 'customHTML2' || $key == 'iframe2')){
+            	$str .= '\'<button onclick="VerSolucion()">Ver solucion</button>\',' . "\n";
+                $str .= '\'<div id="panel-esconder" style="display:none;">';
+            	$insertado = true;
+            }      
             
-            if($i != $max){ 
-                if($i <= 2)
-                    $str .= ',' . "\n";
-                
-                if($i==2){ // Segundo bloque
-                    $str .= '\'<button onclick="VerSolucion()">Ver solucion</button>\',' . "\n";
-                    $str .= '\'<div id="panel-esconder" style="display:none;">';
-                }
-            }
+			if($key == 'customHTML1')
+				$str .= '\''. $value . '\'';
+			else if($key == 'customHTML2')
+				$str .= $value;
+			else if($key == 'iframe1')
+				$str .= '\''.'<iframe class="custom-iframe" src="' . $value . '"></iframe>'.'\'';
+			else
+				$str .= '<iframe class="custom-iframe" src="' . $value . '"></iframe>';
+				
+			if(($key == 'customHTML1' || $key == 'iframe1') && $i < $max)
+				$str .= ",\n";
+            
        }
         
         
         
-        if($max > 2) // Si hay más de 2, cerramos el div y añadimos el js
+        if($insertado) // Si se ha insertado el botón
         {
             $str .= '</div>\'';
             $str .= "\n" . '];' . "\n\n";

@@ -388,17 +388,18 @@ main{
     padding:0;
 }
 
-span[contenteditable="true"]{
+span[contenteditable="true"]{ 
     position: relative;
     overflow-x: hidden;
     overflow-y: auto;
     height: 34px;
+    min-height: 34px;
     max-height: 120px; 
     resize: vertical;
 
     &:empty:before{
         content: attr(placeholder);
-        color: #aaa;
+        color: #aaa; 
     }
     p{margin: 0;}
 }
@@ -406,6 +407,7 @@ span[contenteditable="true"]{
 textarea.form-control{
     resize: vertical;
     height: 34px;
+    min-height: 34px;
     max-height: 120px;
 }    
     
