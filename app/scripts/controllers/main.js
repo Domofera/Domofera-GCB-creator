@@ -9,11 +9,7 @@
  */
 
 angular.module('gcbCreatorApp')
-.controller('MainCtrl',['$scope', '$compile', '$http','localStorageService', '$translatePartialLoader',  function ($scope, $compile, $http, localStorageService, $translatePartialLoader) {
-    
-//*************** TRANSLACIONES
-    $translatePartialLoader.addPart('main');
-    
+.controller('MainCtrl',['$scope', '$compile', '$http','localStorageService', '$translate','$timeout',  function ($scope, $compile, $http, localStorageService, $translate, $timeout) {
     
 //**************** MODELOS ***************
     
@@ -39,13 +35,15 @@ angular.module('gcbCreatorApp')
     
     // Si existe, preguntamos al usuario si quiere recuperarla
     if(pregArr !== null && pregArr !== undefined && pregArr.length > 0 || pregTit !== ''){
-        bootbox.confirm('Se ha encontrado una sesión abierta, ¿Deseas recuperarla?', function(result) {
-            if(result)
-                $scope.$apply(function(){  // Recuperamos sesión
-                    $scope.preguntas = pregArr; 
-                    $scope.titulo.text = pregTit;
-                });
-        }); 
+        $translate('JS-SESSION-OPENED').then(function (translation) {
+            bootbox.confirm( translation , function(result) {
+                if(result)
+                    $scope.$apply(function(){  // Recuperamos sesión
+                        $scope.preguntas = pregArr; 
+                        $scope.titulo.text = pregTit;
+                    });
+            });
+        });
     }
 
     // Seteamos el watch para estar pendiente de cambios en Preguntas y Titulo
@@ -75,7 +73,7 @@ angular.module('gcbCreatorApp')
     };
     
     $scope.CloseAll = function(){ 
-        bootbox.confirm("Se borrará todo, ¿Estás seguro?", function(result) {
+        bootbox.confirm($translate.instant('JS-CLEAN-ALL'), function(result) {
             if(result)
                 $scope.$apply( function(){ $scope.preguntas = []; });
         }); 
@@ -304,11 +302,12 @@ angular.module('gcbCreatorApp')
             if(patt.test(data))    
                 window.location='/download.php?filename=' + data;
             else{
-                bootbox.alert('No es un fichero javascript, o el nombre del fichero es incorrecto. Recuerda usar nombres de ficheros sin acentos ni simbolos poco comunes');
+                bootbox.alert($translate.instant('JS-IS-NOT-JAVASCRIPT'));
                 EnviarLogs('activity / crear-activity.php (invalid filename)', ' Data: ' + data + '  \n-- JSON: ' + JSON.stringify(jsonAux));
             }
         });
     };
+    
     
     
     //************* SUBIR **************
@@ -331,6 +330,7 @@ angular.module('gcbCreatorApp')
         
         $.post('/append-log.php', {logs: JSON.stringify(json, null, 4)});
     }
+
     
     // Cuando cambie el campo, subir el archivo
     $('#fichero-act').on('change', function () { 
@@ -358,19 +358,19 @@ angular.module('gcbCreatorApp')
                    var json = JSON.parse(toJSON(data));
                 }
                 catch(e){
-                    bootbox.alert('Ha habido un error en el servidor. Por favor, informa de esto mediante un email a la dirección <a href="mailto:domoferaapp@gmail.com?Subject=Error server" target="_top">domoferaapp@gmail.com</a>');
+                    bootbox.alert($translate.instant('JS-SERVER-ERROR'));
                     EnviarLogs('activity / upload-activity.php (server error)', data);
                     return;
                 }
 
                 // Si hubieran warnings o errores, también 
                 if(json.status === 'no-is'){
-                    bootbox.alert('Este fichero no es una actividad!!');
+                    bootbox.alert($translate.instant('JS-IS-NOT-ACTIVITY'));
                     return;
                 }
                 else if(json.status === 'error'){
-                    bootbox.alert('Ha ocurrido algún error subiendo el fichero. Prueba de nuevo');
-                    EnviarLogs('activity / upload-activity.php (upload error)', data);
+                    bootbox.alert($translate.instant('JS-UPLOAD-ERROR'), data);
+                    EnviarLogs('activity / upload-activity.php (upload error)');
                     return;
                 }
 
@@ -382,14 +382,14 @@ angular.module('gcbCreatorApp')
                 }
                 catch(e){
                     if (e instanceof SyntaxError) {
-                        bootbox.alert('Hay algún error de sintaxis en el fichero que has subido. Por favor, revisalo y vuelve a subirlo');
+                        bootbox.alert($translate.instant('JS-SYNTAX-ERROR'));
                         EnviarLogs('activity / upload-activity.php (syntax error)', data);
                         return;
                     }
                 }
                 
                 if(json.status === 'warn')
-                    bootbox.alert('No se puede insertar código javascript en una actividad, esos datos se han omitido');
+                    bootbox.alert($translate.instant('JS-NOT-JAVASCRIPT'));
 
                 // Los HTML sueltos, los convertimos a objeto.
                 for(var i in arrAux){

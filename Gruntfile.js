@@ -42,42 +42,13 @@ module.exports = function (grunt) {
       },
       
       i18nextract: {
-		  index: {
+		  todo: {
 			prefix:   '',
 			suffix:   '.json',
-			src:      [ 'app/index.html' ],
+			src:      [ 'app/index.html', 'app/views/*.html', 'app/scripts/controllers/*.js' ],
 			lang:     ['es', 'en'],
-			dest:     'app/i18n_aux/index/'
-		  },
-		  main: {
-			prefix:   '',
-			suffix:   '.json',
-			src:      [ 'app/views/main.html', 'app/js/controllers/main.js' ],
-			lang:     ['es', 'en'],
-			dest:     'app/i18n_aux/main/'
-        
-		  },
-		  assessment: {
-			prefix:   '',
-			suffix:   '.json',
-			src:      [ 'app/views/assesment.html', 'app/js/controllers/assesment.js' ],
-			lang:     ['es', 'en'],
-			dest:     'app/i18n_aux/assessment/'
-		  },
-		  about: {
-			prefix:   '',
-			suffix:   '.json',
-			src:      [ 'app/views/about.html'],
-			lang:     ['es', 'en'],
-			dest:     'app/i18n_aux/about/'
-		  },
-		  instructions: {
-			prefix:   '',
-			suffix:   '.json',
-			src:      [ 'app/views/instructions.html'],
-			lang:     ['es', 'en'],
-			dest:     'app/i18n_aux/instructions/'
-		  },
+			dest:     'app/i18n/'
+		  }
 		  
 	  },
 
@@ -228,16 +199,16 @@ module.exports = function (grunt) {
     },
 
     // Renames files for browser caching purposes
-    filerev: {
-      dist: {
-        src: [
-          '<%= yeoman.dist %>/scripts/{,*/}*.js',
-          '<%= yeoman.dist %>/styles/{,*/}*.css',
-          '<%= yeoman.dist %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
-          '<%= yeoman.dist %>/styles/fonts/*'
-        ]
-      }
-    },
+    //filerev: {
+    //  dist: {
+    //    src: [
+    //      '<%= yeoman.dist %>/scripts/{,*/}*.js',
+    //      '<%= yeoman.dist %>/styles/{,*/}*.css',
+    //      '<%= yeoman.dist %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
+    //      '<%= yeoman.dist %>/styles/fonts/*'
+    //    ]
+    //  }
+    //},
 
     // Reads HTML for usemin blocks to enable smart builds that automatically
     // concat, minify and revision files. Creates configurations in memory so
@@ -367,7 +338,8 @@ module.exports = function (grunt) {
             '*.html',
             'views/{,*/}*.html',
             'images/{,*/}*.{webp}',
-            'fonts/*'
+            'fonts/*',
+            'i18n/*'
           ]
         }, {
           expand: true,
@@ -459,7 +431,7 @@ module.exports = function (grunt) {
     'cdnify',
     'cssmin',
     'uglify',
-    'filerev',
+    //'filerev',
     'usemin',
     'htmlmin'
   ]);

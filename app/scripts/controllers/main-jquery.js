@@ -26,7 +26,7 @@ function BrowserInfo(){
 
 
 
-angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', '$timeout', function ($scope, $compile, $timeout) {
+angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', '$timeout', '$translate', function ($scope, $compile, $timeout, $translate) {
 
     var isFixed = false;
     var isInnerMoving = false;
@@ -36,7 +36,7 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', '$
     
     $scope.maxRespuestas = 6;     // Max respuestas en preguntas
     $scope.maxPreguntasMCG = 12;  // Max preguntas en Multi-choice group
-    
+
     
     
 //**************** COLAPSAR *****************
@@ -70,7 +70,6 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', '$
     function Colapsar(objeto, h, index){
         if(objeto.hasClass('colapsado')){ 
             h = objeto.find('.questions-inside-right').outerHeight(true) + objeto.height(); 
-            
             objeto.css('height', h);
             objeto.animate({ height: h-10 }, animColDur, function(){ objeto.css('height', 'auto'); });
             SetColapsado(index, false);
@@ -99,6 +98,7 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', '$
     
     function CrearModal(target, model)
     { 
+        
         $('.modal').remove(); //borramos los que hayan
         $('.summernote').destroy();
 
@@ -140,15 +140,15 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', '$
 
         // Si es un contenteditable, buscamos el campo editor y lo bindeamos
         if(!isTextarea)
-        {
-            objFinal.find('.summernote').summernote({ 
+        { 
+            var options = { 
                 height: 230,
                 minHeight: 200,
                 maxHeight: 400,
                 lang: 'es-ES',
                 toolbar: [
                     ['style', ['bold', 'italic', 'underline', 'clear']],
-                    //['font', ['strikethrough']],
+                    ['font', ['strikethrough']],
                     ['fontsize', ['fontsize']],
                     ['color', ['color']],
                     ['para', ['ul', 'ol', 'paragraph']],
@@ -160,8 +160,14 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', '$
                     objFinal.find('.note-editable').attr('ng-bind-html', model +' | unsafe').attr('ng-model', model);
                     $compile(objFinal.find('.note-editable'))($scope);
                 }
-            });
-        }    
+            };
+                    
+            // Seteamos el lenguaje, según convenga
+            if($translate.use() === 'en')
+                delete options.lang;
+            
+            objFinal.find('.summernote').summernote(options);
+        }
     }
     
 
@@ -171,16 +177,15 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', '$
     $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) { 
         
         // Reseteamos los tooltip y popover
-        $('[data-toggle="popover"]').popover('destroy');  
-        $('[data-toggle="tooltip"]').tooltip('destroy');
+        $('[data-toggle="popover"]').popover('destroy');
                     
         $timeout( function(){ 
-            $('[data-toggle="tooltip"]').tooltip({container: 'body'}); // Seteamos el tooltip
+           // $('[data-toggle="tooltip"]').tooltip({container: 'body'}); // Seteamos el tooltip
             $('[data-toggle="popover"]').popover({
                 html: true, placement: 'top', container: 'body', trigger: 'click',
                 content: function () { return $compile($(this).next().html())($scope); }
             });
-        }, 100);
+        }, 150);
     });
     
                     
@@ -192,27 +197,21 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', '$
 
     //********** Configuraciones Iniciales ***********
                     
-        // Configuramos toolbox
-        bootbox.setDefaults({ locale: 'es', });
-                    
         // Iniciamos Tooltips y Popovers
-        $timeout( function(){ 
-            $('[data-toggle="tooltip"]').tooltip({container: 'body'}); // Seteamos el tooltip
+        $timeout( function(){
             $('[data-toggle="popover"]').popover({
                 html: true, placement: 'top', container: 'body', trigger: 'click',
                 content: function () { return $compile($(this).next().html())($scope); }
             });
-        }, 100);    
+        }, 100);
         
         // Controlamos el Scroll para cambiar el Toolbar cuando sea necesario
         $(window).scroll(function(){
             if ($(this).scrollTop() > 105 && !isFixed) {
                 $('#gcbc-toolbar').hide().fadeIn(300).addClass('fixed');
-                $('#gcbc-toolbar .btn').tooltip('destroy');
                 isFixed = !isFixed;
             } else if ($(this).scrollTop() <= 105 && isFixed){
                 $('#gcbc-toolbar').hide().fadeIn(300).removeClass('fixed');
-                $('#gcbc-toolbar .btn').tooltip({container: 'body'});
                 isFixed = !isFixed;
             }
         });
@@ -255,9 +254,10 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', '$
                     
             $('span[contenteditable]').blur();
                     
+            // Cerramos todos los popover, excepto si hemos pulsado en el que está abierto
             $('[data-toggle="popover"]').each(function () {
                 if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0){
-                    $(this).popover('hide');
+                     $(this).popover('hide');
                 }
             });
         });
@@ -284,7 +284,7 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', '$
         });
         
         $('body').on('shown.bs.popover', '[data-toggle="popover"]', function(){
-            $('[data-toggle="tooltip"]').tooltip({container: 'body', trigger: 'hover click'});
+            //$('[data-toggle="tooltip"]').tooltip({container: 'body', trigger: 'hover click'});
         });
         
         $('body').on('hide.bs.popover', '[data-toggle="popover"]', function(){
@@ -292,8 +292,8 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', '$
         }); 
         
         $('body').on('click', '.popover-content .btn', function(){
-            $('[data-toggle="popover"]').popover('hide');
-        }); 
+           // $('[data-toggle="popover"]').popover('hide');
+        });
         
         
                     

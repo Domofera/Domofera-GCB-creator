@@ -20,6 +20,7 @@ var mainModule = angular.module('gcbCreatorApp', [
     'mgcrea.ngStrap.helpers.dimensions',
     'mgcrea.ngStrap.scrollspy',
     'mgcrea.ngStrap.affix',
+    'ui.bootstrap',
     'LocalStorageModule',
     'pascalprecht.translate'
 ]);
@@ -31,20 +32,16 @@ mainModule.config(function(localStorageServiceProvider){
 });
 
 
-mainModule.config(function($translateProvider, $translatePartialLoaderProvider){ 
-    $translateProvider.translations('en', {
-        "LANGUAGE": "Spanish",
-        "ACTIVITY": "Activity",
-        "ASSESSMENT": "Assessment",
-        "INSTRUCTIONS": "Instructions",
-        "CREATED-BY": "Website created by <a class='fa fa-copyright'></a> <a href='http://domofera.com/'>Domofera Team</a>"
+mainModule.config(function($translateProvider){ 
+
+    var aux = $translateProvider.useStaticFilesLoader({
+      prefix: 'i18n/',
+      suffix: '.json'
     });
     
-    $translatePartialLoaderProvider.addPart('index');
-    $translateProvider.useLoader('$translatePartialLoader', {
-      urlTemplate: 'i18n/{part}/{lang}.json'
-    });
+    
     $translateProvider.preferredLanguage('en');
+    $translateProvider.useLocalStorage();
 });
 
 mainModule.config(['$routeProvider', function ($routeProvider) {
@@ -70,16 +67,6 @@ mainModule.config(['$routeProvider', function ($routeProvider) {
         redirectTo: '/'
     });
 }]);
-
-//Add this to have access to a global variable
-mainModule.run(function ($rootScope) {
-    $rootScope.vista = { state: true }; //global variable
-    
-    $rootScope.ChangeVista = function(st){
-        $rootScope.vista.state = st;
-    }
-});
-
 
 
 mainModule.directive('contenteditable', ['$sce', function($sce) {
@@ -158,25 +145,24 @@ mainModule.animation('.question-wrapper', function() {
     };
 });
 
-mainModule.run(['$rootScope','$translate', '$translatePartialLoader', function ($rootScope, $translate,$translatePartialLoader) {
-  $rootScope.$on('$translatePartialLoaderStructureChanged', function () { 
-    $translate.refresh();
-  });
-}]);
-
-mainModule.controller('HeaderController',['$scope','$location', '$translate',  function ($scope, $location, $translate) {
+mainModule.controller('HeaderController',['$scope','$location', '$translate', '$timeout',  function ($scope, $location, $translate, $timeout) {
     
     $scope.isActive = function (viewLocation) { 
         return viewLocation === $location.path();
     };
     
     $scope.ChangeLanguage = function (){
-        if($translate.use() === 'es')
+        if($translate.use() === 'es'){
             $translate.use('en');
-        else
+        }
+        else{
             $translate.use('es');
+        }
         
         $translate.refresh();
+        $timeout(function(){
+            bootbox.setDefaults({ locale: $translate.use() });
+        }, 200);
     };
     
 }]);

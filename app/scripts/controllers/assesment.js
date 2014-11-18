@@ -7,7 +7,7 @@
  * # AssesmentCtrl
  * Controller of the gcbCreatorApp
  */
-angular.module('gcbCreatorApp').controller('AssesmentCtrl',['$scope', '$http','localStorageService', function ($scope,$http, localStorageService) {   
+angular.module('gcbCreatorApp').controller('AssesmentCtrl',['$scope', '$http','localStorageService','$timeout','$translate', function ($scope,$http, localStorageService, $timeout, $translate) {   
     //**************** MODELOS ***************
     
     // config lo usaremos para cosas generales
@@ -33,13 +33,16 @@ angular.module('gcbCreatorApp').controller('AssesmentCtrl',['$scope', '$http','l
     
     // Si existe, preguntamos al usuario si quiere recuperarla
     if(pregArr !== null && pregArr !== undefined && (pregArr.preamble !== '' || pregArr.checkAnswers !== false || pregArr.questionsList.length > 0) || pregTit !== ''){
-        bootbox.confirm('Se ha encontrado una sesión abierta, ¿Deseas recuperarla?', function(result) {
-            if(result)
-                $scope.$apply(function(){  // Recuperamos sesión
-                    $scope.preguntas = pregArr; 
-                    $scope.titulo.text = pregTit;
-                });
-        }); 
+        
+        $translate('JS-SESSION-OPENED').then(function (translation) { 
+            bootbox.confirm(translation, function(result) {
+                if(result)
+                    $scope.$apply(function(){  // Recuperamos sesión
+                        $scope.preguntas = pregArr; 
+                        $scope.titulo.text = pregTit;
+                    });
+            }); 
+        });
     }
 
     // Seteamos el watch para estar pendiente de cambios en Preguntas y Titulo
@@ -81,7 +84,7 @@ angular.module('gcbCreatorApp').controller('AssesmentCtrl',['$scope', '$http','l
     };
     
     $scope.CloseAll = function(){
-        bootbox.confirm('<b>Se borrará todo, ¿Estás seguro?</b>', function(result) {
+        bootbox.confirm($translate.instant('JS-CLEAN-ALL'), function(result) {
             if(result)
                 $scope.$apply( function(){ $scope.preguntas.questionsList = []; });
         });
@@ -183,7 +186,7 @@ angular.module('gcbCreatorApp').controller('AssesmentCtrl',['$scope', '$http','l
             if(patt.test(data))    
                 window.location='/download.php?filename=' + data;
             else{
-                bootbox.alert('No es un fichero javascript, o el nombre del fichero es incorrecto. Recuerda usar nombres de ficheros sin acentos ni simbolos poco comunes');
+                bootbox.alert($translate.instant('JS-IS-NOT-JAVASCRIPT'));
                 EnviarLogs('assessment / crear-assessment.php (invalid filename)', ' Data: ' + data + '  \n-- JSON: ' + JSON.stringify(jsonAux));
             }
         });
@@ -239,18 +242,18 @@ angular.module('gcbCreatorApp').controller('AssesmentCtrl',['$scope', '$http','l
                    var json = JSON.parse(data);
                 }
                 catch(e){
-                    bootbox.alert('Ha habido un error en el servidor. Por favor, informa de esto mediante un email a la dirección <a href="mailto:domoferaapp@gmail.com?Subject=Error server" target="_top">domoferaapp@gmail.com</a>');
+                    bootbox.alert($translate.instant('JS-SERVER-ERROR'));
                     console.log(e);
                     EnviarLogs('assessment / upload-assessment.php (server error)', data);
                     return;
                 }
 
                 if(json.status === 'no-is'){
-                    bootbox.alert('Este fichero no es un examen!!');
+                    bootbox.alert($translate.instant('JS-IS-NOT-ASSESSMENT'));
                     return;
                 }
                 else if(json.status === 'error'){ // upload error
-                    bootbox.alert('Ha ocurrido algún error subiendo el fichero. Prueba de nuevo');
+                    bootbox.alert($translate.instant('JS-UPLOAD-ERROR'));
                     EnviarLogs('assessment / upload-assessment.php (upload error)', data);
                     return;
                 }
@@ -263,18 +266,18 @@ angular.module('gcbCreatorApp').controller('AssesmentCtrl',['$scope', '$http','l
                 }
                 catch(e){ 
                     if (e instanceof SyntaxError) {
-                        bootbox.alert('Hay algún error de sintaxis en el fichero que has subido. Por favor, revisalo y vuelve a subirlo');
+                        bootbox.alert($translate.instant('JS-SYNTAX-ERROR'));
                         console.log(e);
                         EnviarLogs('assessment / upload-assessment.php (syntax error)', data);
                         return;
                     }
                 }
                 
-                // Si hubieran warnings o errores, también 
+                // Si hubieran warnings, también avisamos
                 if(json.status === 'warn')
-                    bootbox.alert('No se puede insertar código javascript en una actividad o examen, esos datos se han omitido');
+                    bootbox.alert($translate.instant('JS-NOT-JAVASCRIPT'));
                 else if(json.status === 'regex-found'){
-                    bootbox.alert('No se admite el campo correctAnswerRegex. Se ha cambiado por un correctAnswerString vacío');
+                    bootbox.alert($translate.instant('JS-NOT-REGEX'));
                 }
 
                 // Quitar los correct(...) de las multiple choice
