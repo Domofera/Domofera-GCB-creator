@@ -148,7 +148,7 @@
                                       <div class="input-group ">
                                        <textarea class="form-control" name="mcfeedback" type="text" placeholder="{{'FEEDBACK' | translate}}..." ng-model="choice[2]" ></textarea>
                                        <span class="input-group-btn">
-                                          <a class="btn editar" ng-click="Editar($event, 'preguntas[{{$index}}].choices[{{$index}}][2]', $parent.$index)"><span class="fa fa-edit"></span></a>
+                                          <a class="btn editar" ng-click="Editar($event, 'preguntas[{{$parent.$index}}].choices[{{$index}}][2]', $parent.$index)"><span class="fa fa-edit"></span></a>
                                       </span>
                                     </div>
                                        
@@ -176,7 +176,7 @@
                             <div class="input-group ">
                               <span class="form-control" name="mcgenunciado" contenteditable="true" ng-model="pregunta.questionGroupHTML"></span>
                               <span class="input-group-btn">
-                                <a class="btn editar" ng-click="Editar($event, 'preguntas[{{$index}}].questionHTML', $index)"><span class="fa fa-edit"></span></a>
+                                <a class="btn editar" ng-click="Editar($event, 'preguntas[{{$index}}].questionGroupHTML', $index)"><span class="fa fa-edit"></span></a>
                               </span>
                             </div>
                         </div>
@@ -287,6 +287,8 @@
             </div>
         </div>
     </div>
+
+    <pre>{{preguntas | json}}</pre>
     
 </div>
 
