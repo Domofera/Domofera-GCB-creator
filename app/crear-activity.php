@@ -25,9 +25,9 @@
         {
             // JSON PRETTY PRINT requiere php >= 5.4
             if(isset($json[$i]->prevHTML))
-                $str .= json_encode($json[$i]->prevHTML, JSON_PRETTY_PRINT) . ',';
+                $str .= json_encode($json[$i]->prevHTML, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) . ',';
             else
-                $str .= json_encode($json[$i], JSON_PRETTY_PRINT) . ',';
+                $str .= json_encode($json[$i], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) . ',';
         }
         
         $str .= "\n" . '];';

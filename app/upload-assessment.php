@@ -121,7 +121,7 @@ function json_minify($json) {
 		$response = array("status" => "error");
 	}
 	
-	echo json_encode($response);
+	echo json_encode($response, JSON_UNESCAPED_UNICODE);
 	
 ?>
 
