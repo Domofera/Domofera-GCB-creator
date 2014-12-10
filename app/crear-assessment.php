@@ -22,7 +22,7 @@
     
     //Reemplazar "correct(...)" por correct('...');
 	$patron = '/"correct\((.+)\)"/i';
-	$sust = 'correct(\'${1}\')';
+	$sust = 'correct("${1}")';
 	$str = preg_replace($patron, $sust, $str);
     
     

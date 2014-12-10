@@ -278,21 +278,11 @@ angular.module('gcbCreatorApp').controller('Main2Ctrl',['$scope', '$compile', '$
             $(this).removeClass('hovered');
         });
                 
-        // Cuando se abre, añadimos clase seleccionada y seteamos el tooltip;
-        $('body').on('show.bs.popover', '[data-toggle="popover"]', function(){
-            $(this).addClass('selected');
-        });
-        
-        $('body').on('shown.bs.popover', '[data-toggle="popover"]', function(){
-            //$('[data-toggle="tooltip"]').tooltip({container: 'body', trigger: 'hover click'});
-        });
-        
-        $('body').on('hide.bs.popover', '[data-toggle="popover"]', function(){
-            $(this).removeClass('selected');
-        }); 
         
         $('body').on('click', '.popover-content .btn', function(){
-           // $('[data-toggle="popover"]').popover('hide');
+            console.log($('.popover-content [tooltip]'));
+            $('.popover-content [tooltip]').tooltip('hide');
+            $('.tooltip').hide();
         });
         
         

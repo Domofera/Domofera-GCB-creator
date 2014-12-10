@@ -61,10 +61,10 @@
                  <a class="open-popover" data-toggle="popover"><span class="fa fa-plus"></span></a>
                  
                  <div class="btn-group hide">
-                       <a class="btn btn-default" tooltip="{{'NEW-HTML' | translate}}" tooltip-append-to-body="1" ng-click="CrearHTML(-1)"><i class="fa fa-header"></i></a>
-                        <a class="btn btn-default" tooltip="{{'NEW-FREETEXT' | translate}}" tooltip-append-to-body="1" ng-click="CrearFreetext(-1)"><i class="glyphicon glyphicon-pencil"></i></a>
-                        <a class="btn btn-default" tooltip="{{'NEW-MULTICHOICE' | translate}}" tooltip-append-to-body="1" ng-click="CrearMultiplechoice(-1)"><i class="glyphicon glyphicon-minus"></i></a>
-                        <a class="btn btn-default" tooltip="{{'NEW-GMULTICHOICE' | translate}}" tooltip-append-to-body="1" ng-click="CrearMultiplechoiceGroup(-1)"><i class="glyphicon glyphicon-th-list"></i></a>
+                       <a class="btn btn-default" tooltip="{{'NEW-HTML' | translate}}" tooltip-append-to-body="1" ng-click="CrearHTML({{$index}})"><i class="fa fa-header"></i></a>
+                        <a class="btn btn-default" tooltip="{{'NEW-FREETEXT' | translate}}" tooltip-append-to-body="1" ng-click="CrearFreetext({{$index}})"><i class="glyphicon glyphicon-pencil"></i></a>
+                        <a class="btn btn-default" tooltip="{{'NEW-MULTICHOICE' | translate}}" tooltip-append-to-body="1" ng-click="CrearMultiplechoice({{$index}})"><i class="glyphicon glyphicon-minus"></i></a>
+                        <a class="btn btn-default" tooltip="{{'NEW-GMULTICHOICE' | translate}}" tooltip-append-to-body="1" ng-click="CrearMultiplechoiceGroup({{$index}})"><i class="glyphicon glyphicon-th-list"></i></a>
                     </div>
               </div>
           </div>
