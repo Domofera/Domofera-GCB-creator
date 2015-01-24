@@ -16,7 +16,7 @@
 
     array_pop($json);
     
-    $str = 'var activity= [' . "\n";
+    $str = 'activity= [' . "\n";
     
     
     if($mode == Mode::Multiple){

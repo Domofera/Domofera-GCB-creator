@@ -68,7 +68,7 @@ angular.module('gcbCreatorApp')
 
 
   //****** CLOSES
-    $scope.Close = function($pIndex, $index){
+    $scope.Close = function($index){
         $scope.preguntas.splice($index,1);
     };
     
